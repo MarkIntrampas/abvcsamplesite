@@ -1,0 +1,54 @@
+
+import navlogo from "./Nav media/LOGO2.png";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { useEffect, useState } from 'react';
+import Loader from '../Loader'
+import './Nav.css';
+
+function Nav(){
+    const [status, setLoadStatus] = useState(true);
+
+    useEffect(() => {
+         const timer = setTimeout(() => {
+                         setLoadStatus(false)}, 1000);
+
+      return () => clearTimeout(timer); // cleanup
+
+        
+  }, []);
+ return(
+ <>
+ 
+ <Loader />
+ <div id="cont">
+        {/* Bootstrap Navbar */}
+        <nav className="navbar navbar-expand-md navbar-light nav">
+          <a className="navbar-brand brand"  href="#"><img id="logo"src={navlogo}></img></a>
+          <button
+            className="navbar-toggler btn-clck"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon btn-clck"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div className="navbar-nav mx-auto">
+              <a className="nav-item nav-link links" onClick={()=> this.action("Home")} href="/">HOME <span className="sr-only"></span></a>
+              <a className="nav-item nav-link links" onClick={()=> this.action("About")} href="/about">ABOUT US</a>
+              <a className="nav-item nav-link links" onClick={()=> this.action("Blogs")} href="/blogs">BLOGS</a>
+              <a className="nav-item nav-link links" onClick={()=> this.action("Contact")}  href="contact">CONTACTS</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+      </>
+ );
+}
+
+
+export default Nav;

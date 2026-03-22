@@ -1,0 +1,121 @@
+@media screen and (max-width: 1300px) {
+
+
+    #sec1{
+        width: 100%;
+        height: auto;
+        padding: 5%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+       
+        
+        }
+
+        #logoCon{
+            width: 100%;
+            height: 50%;
+            display: flex;
+            justify-content: center;
+        }
+        
+        #sec1logo{
+            width: 60%;
+            height: 200px;
+       
+            
+        }
+        
+        
+        #sec1sub{
+            width: 100%;
+            height: 50$;
+            display: flex;
+            justify-content: center;
+            margin-top: 5%;
+            }
+
+            #companyName {
+            
+                font-size: 38px;
+                color: white;
+                text-align: center;
+                width: 100%;
+              }
+
+
+
+
+              #sec2{
+                width: 100%;
+                height: auto;
+                background-color: WHITE;
+                display: flex;
+                flex-direction: column;
+                padding: 5%;
+                margin:0;
+              }
+              
+              .sec2sub{
+                height: auto;
+                width: 100%;
+              }
+
+              #sec3{
+                height: auto;
+                padding: 5%;
+
+            }
+
+
+            .sec3sub{
+                width: 100%;
+                height: 80%;
+                display: flex;
+                margin-top: 3%;
+                margin-bottom: 10%;
+                flex-direction: column;
+                align-items: space-evenly;
+                justify-content: space-evenly;
+                height: 50%;
+           padding-bottom: 5%;
+              }
+
+       .sec3subcon{
+        width: 100%;
+        height: 100%;
+        
+       }
+          
+
+              #sub3title{
+                
+                font-family: 'DroidSansMono', sans-serif;
+                font-size: 32px;
+            
+      
+              }
+
+              .sec3pic{
+                width: 100%;
+                height: 50%;
+                
+                object-fit: cover;
+              }
+      
+      
+              .pictitle{
+                height: auto;
+                width: 100%;
+                margin-top: 16%;
+                font-family: 'Orbitron', sans-serif;
+              
+                color:white;
+                align-content: center;
+      
+              }
+            
+
+
+}

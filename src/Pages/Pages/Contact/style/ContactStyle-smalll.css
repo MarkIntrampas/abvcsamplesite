@@ -1,0 +1,15 @@
+@media only screen and (max-width: 767px) {
+ #ContactSec2{
+flex-direction: column;
+height: 800px;
+    }
+
+
+.ContactSec2Sub{
+
+width: 90%;
+margin-top: 1%;
+
+}
+
+}

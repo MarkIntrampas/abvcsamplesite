@@ -1,0 +1,54 @@
+@media only screen and (max-width: 767px) {
+
+    #AbtSec1Title{
+        font-size: 40px;
+    }
+
+    .timeline{
+        width: 90%;
+    }
+
+    #barContainer{
+
+    width: 18px;
+    }
+   
+   
+    .button{
+    height: 30px;
+    width: 30px;
+    font-size: 14px;
+    } 
+
+
+    .Timelinebutton{
+
+        height: 30px;
+        width: 30px;  
+
+
+    }
+
+
+   .sub{
+   width: 100%;
+   flex-direction: column;
+   }    
+   
+   .detail{
+   overflow: auto;
+   flex-direction: column;
+   width: 98%;
+   }
+       
+   .storyTitle{
+   font-size: 18px;
+   line-height: 2opx;
+   margin: 0;
+   }
+   .story{
+   font-size: 10px;   
+   margin: 0;
+   }
+   
+   }

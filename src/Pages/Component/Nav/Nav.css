@@ -1,0 +1,81 @@
+#cont{
+    position: sticky; 
+    top: 0;
+    z-index: 1000; 
+}
+
+.nav{
+color:white;
+background-color:#E91F68;
+font-weight: 700;
+padding-left: 10%;
+padding-right: 10%;
+position: sticky; 
+top: 0;
+z-index: 1000; 
+
+}
+
+
+.btn-clck:active{
+border-color: white;
+box-shadow: none;
+transition-duration: .4s;
+}
+
+.btn-clck:hover{
+    border-color: white;
+    transition-duration: .4s;
+    box-shadow: none;
+    }
+
+
+
+.navbar-toggler {
+  border-color: white;
+
+}
+
+.navbar-toggler-icon {
+  filter: invert(1); /* turns it white */
+}
+
+.nav-link{
+    color:white;
+    font-size: 16px;
+    transition-duration: 1s;
+    text-decoration: none;
+    
+}
+
+
+.nav-link:active{
+    color:white;
+}
+.nav-link:hover{
+    font: 18px;
+    text-decoration: underline;
+}
+
+.nav-link:visited{
+    font: 18px;
+    text-decoration: underline;
+}
+.nav-item:hover{
+    color:white;
+    font: 18px;
+    text-decoration: underline;
+}
+
+.current{
+    color:white;
+    font-size: 16px;
+    text-decoration: underline;
+}
+
+#logo{
+ height: 30px;
+ width: 30px;
+ max-width: 30px;
+ max-height: 30px;
+}

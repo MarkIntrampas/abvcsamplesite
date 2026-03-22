@@ -1,0 +1,134 @@
+#ContactCon{
+ width: 100%;
+ height: auto;
+}
+
+#ContactSec1{
+    width: 100%;
+    height: 40vh;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'DroidSansMono', sans-serif;
+    background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), /* Black overlay with opacity */
+    url('../media/abtsec1.jpg'); /* Background image */
+    background-size: cover;
+    
+}
+
+
+#ContactSec2{
+    width: 100%;
+    height: 800px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'DroidSansMono', sans-serif;
+    background-image:  linear-gradient(155deg, rgba(123,16,55,1) 50%, rgba(233,31,104,1) 44%);
+    background-size: cover;
+    
+}
+
+
+#map{
+    height: 60%;
+    width: 100%
+}
+
+.ContactSec2Sub{
+padding: 2%;
+ width: 30%;   
+ height: 100%;
+display: flex;  
+flex-direction: column;
+ 
+}
+
+.ContactSubText{
+    color:white;
+    font-size:20px;
+    height: fit-content;
+    text-align: left;
+    width: 98%;
+    line-height: 20px;
+    margin:0;
+   
+}
+
+
+#contactForm{
+    width:100%;
+    height: 90%;
+    min-width:98%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+
+
+.inputContainer{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1%;
+    justify-content: space-around;
+
+}
+
+.formLabels{
+ text-align: left;
+ align-content: center;
+ padding: 0;
+ font-size: 18px;
+ color:white;
+ font-family: 'Orbitron';
+ line-height: 18px;
+ align-items: center;
+}
+    
+
+.contactInput{
+ padding:1%;
+ width: 100%;
+ height: 42px;
+ box-sizing: border-box;
+ font-family: 'Orbitron';
+ margin:0;
+}
+
+#ContactTextBox{
+ height: 160px;
+}
+
+#ContactSubmitButton{
+color:white;
+background-color:#4CAF50; 
+font-weight: 600;
+transition-duration: 0.5s;
+}
+
+#ContactSubmitButton:hover{
+ background-color: white;
+ color:#4CAF50;
+}
+
+#Contactlink{
+width: 100%;
+height: 25%;
+display: flex;
+flex-direction: column;
+justify-content: space-evenly;
+align-items: space-evenly;
+font-family: 'Orbitron';
+margin-bottom: 3%;
+
+}
+
+.ContactLinkItem{
+    text-decoration: underline;
+    font-size: 16px;
+    font-style: bold;
+}
