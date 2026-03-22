@@ -38,10 +38,10 @@ function Nav(){
           </button>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav mx-auto">
-              <a className="nav-item nav-link links" onClick={()=> this.action("Home")} href="/">HOME <span className="sr-only"></span></a>
-              <a className="nav-item nav-link links" onClick={()=> this.action("About")} href="/about">ABOUT US</a>
-              <a className="nav-item nav-link links" onClick={()=> this.action("Blogs")} href="/blogs">BLOGS</a>
-              <a className="nav-item nav-link links" onClick={()=> this.action("Contact")}  href="contact">CONTACTS</a>
+              <a className="nav-item nav-link links"  href="/">HOME <span className="sr-only"></span></a>
+              <a className="nav-item nav-link links" href="/about">ABOUT US</a>
+              <a className="nav-item nav-link links"  href="/blogs">BLOGS</a>
+              <a className="nav-item nav-link links"  href="contact">CONTACTS</a>
             </div>
           </div>
         </nav>
