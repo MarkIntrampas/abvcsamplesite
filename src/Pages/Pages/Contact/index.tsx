@@ -28,7 +28,7 @@ function Contact(){
 
                 <div className="inputContainer">
                     <h1 className="formLabels">Message:</h1>
-                    <textarea className="contactInput" id="ContactTextBox"type="text-area" rows="4" cols="50" placeholder="Message" ></textarea>
+                    <textarea className="contactInput" id="ContactTextBox"  placeholder="Message" ></textarea>
                 </div>
 
                 <div className="inputContainer">
