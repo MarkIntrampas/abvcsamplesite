@@ -12,7 +12,7 @@ function Nav(){
     useEffect(() => {
          const timer = setTimeout(() => {
                          setLoadStatus(false)}, 1000);
-
+       console.log(status);
       return () => clearTimeout(timer); // cleanup
 
         

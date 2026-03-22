@@ -22,7 +22,7 @@ function Contact(){
                 </div>
 
                 <div className="inputContainer">
-                    <h1 className="formLabels" for="Email">Email:</h1>
+                    <h1 className="formLabels" >Email:</h1>
                     <input className="contactInput" type="text" name="Email"></input>
                 </div>
 

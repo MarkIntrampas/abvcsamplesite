@@ -3,7 +3,7 @@ import './style/Aboutstyle.css';
 import './style/Aboutstyle-small.css';
 import sample from './media/abtsec1.jpg';
 import Nav from '../../Component/Nav'
-import { useState, React} from 'react';
+import { useState} from 'react';
 
 
 
