@@ -34,7 +34,7 @@ function Home(){
             <p className="mvcontext">
             To provide a quality workforce to our clients through the collaborative efforts of our competent employees. 
             The company presents quality and availability for assistance to businesses, and we strive for our valued 
-            clients’ satisfaction with our
+            clients satisfaction with our
              operations and commit ourselves to providing outstanding customer service.
             </p>
 
