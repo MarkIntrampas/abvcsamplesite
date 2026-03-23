@@ -1,5 +1,5 @@
 
-import './style/home.css';
+import './style/home.css'
 import './style/home-small.css'
 import Nav from '../../Component/Nav'
 import logo from './media/sec1logo.png'
