@@ -1,0 +1,190 @@
+@media only screen and (max-width: 767px) {
+
+
+
+
+
+
+    #BlogSec1{
+        flex-direction: column;
+        height: 800px;
+        margin-top:10%;
+        
+       }
+
+       #featuredBlog{
+        width: 90%;
+        height: 100%;
+        flex-direction:column-reverse; 
+        padding-top:16px;
+       }
+
+
+    #featuredBlogBody{
+     width: 100%;
+     height: 50%;
+     flex-direction: column;
+    }
+
+
+    
+.blogiItemImage{
+
+height: 50%;
+min-height: 50%;
+width: 100%;
+min-width: 108%;
+max-width: 108%;
+padding: auto;
+border-radius: 0;
+}
+
+
+
+
+    #featuredBlogTitle{
+    font-size: 34px;
+    justify-content: center;
+    margin: 0;
+    height: fit-content;
+    padding: 3%;
+
+    }
+
+
+
+    #featuredBlogBodyContent{
+        overflow: hidden;
+        max-height: 20%;
+        min-height: 20%;
+        height: auto;
+        width: 100%;
+    }
+
+
+    
+#blogSubTitleContainer{
+height: auto;
+max-height: 40%;
+width: 100%;
+text-align: center;
+}
+
+
+
+
+  #blogSubTitle{
+   
+    font-size: 18px;
+    max-height: 18px;
+    min-height: 18px;
+
+    }
+
+    #blogAut{
+
+    font-size: 14px;
+    }
+
+    #featuredBlogAction{
+        flex-direction: column;
+        height: 60%;
+        padding:3%;
+    
+        
+    }
+
+    
+#blogActionText{
+    width: 100%;
+    height: 70%;
+    margin: 0;
+    padding: 0;
+    
+}
+
+#actionTextContainer{
+flex-direction: column;
+height: 100%;
+width: 100%;
+padding: 0;
+margin: 0;
+align-items: center;
+justify-content: space-between;
+}
+
+
+#actionText{
+text-align: center;
+width: 100%;
+padding: 0;
+margin: 0;
+}
+
+#blogActionButton{
+    width: 80%;
+    height: 60px;
+    padding: 3px;
+}
+
+
+#BlogToggle{
+    overflow: hidden;
+    width: 95%;
+    display: flex;
+    justify-content: flex-start;
+   align-items: center;
+   padding: 0;
+
+}
+
+
+#toogleDropdown{
+    display: block;
+    height: 80%;
+    width: 35%;
+    text-align: center;
+  }
+
+#BlogButtonContainer{
+    display: none;
+    opacity: 0;
+    width: 0;
+    margin: 0;
+    padding: 0;
+}
+
+#BlogToggleText{
+    font-size: 18px;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    padding:0;
+    margin: 0;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+    .blogiItemImage{
+        height:50%;
+        min-height: 50%;
+        min-width: 90%;
+        max-width: 90%;
+      }
+
+
+#BlogItemContainer{
+    width: 100%;
+    grid-template-columns: auto;
+}
+
+
+.item{
+width: 100%;
+}
+
+}
