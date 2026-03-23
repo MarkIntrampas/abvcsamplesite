@@ -17,7 +17,7 @@ function Contact(){
             <h1 className="ContactSubText">SHARE YOUR THOUGHTS.</h1>
              <div id="contactForm">]
                 <div className="inputContainer">
-                    <h1 clanpssName="formLabels">Name:</h1>
+                    <h1 className="formLabels">Name:</h1>
                     <input className="contactInput" type="text"></input>
                 </div>
 
