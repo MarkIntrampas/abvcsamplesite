@@ -1,5 +1,5 @@
 
-import './style/Blogstyle.css'; 
+import './style/Blogstyle.css'
 import Nav from '../../Component/Nav'
 function Blogs(){
     return(

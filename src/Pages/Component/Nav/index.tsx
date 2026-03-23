@@ -1,10 +1,10 @@
 
-import navlogo from "./Nav media/LOGO2.png";
+import navlogo from "./Nav media/LOGO2.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { useEffect, useState } from 'react';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import { useEffect, useState } from 'react'
 import Loader from '../Loader'
-import './Nav.css';
+import './Nav.css'
 
 function Nav(){
     const [status, setLoadStatus] = useState(true);

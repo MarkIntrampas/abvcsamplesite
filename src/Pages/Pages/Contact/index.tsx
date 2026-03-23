@@ -1,6 +1,6 @@
 
 import './style/ContactStyle.css';
-import './style/ContactStyle-smalll.css';
+import './style/ContactStyle-smalll.css'
 import Nav from '../../Component/Nav'
 
 function Contact(){
