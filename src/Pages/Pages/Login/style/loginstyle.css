@@ -1,0 +1,186 @@
+#LoginPane{
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: -1;
+    z-index: 9999;
+    background-color:rgba(0,0,0 ,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition-duration: 0.5s;
+    transition-property: all;
+
+
+  }
+
+  .FormContainer{
+    width: 400px;
+    height: 400px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition-duration: 0.5s;
+    transition-property: all;
+  }
+
+
+  #FormHeader{
+    width: 100%;
+    padding-left:5%;
+    padding-right:5%;
+   
+    height: fit-content;
+    color:white;
+    font-size: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(233,31,104,0.2);
+
+  }
+
+
+  #FormHeaderText{
+    color:#E91F68;
+    font-size: 24px;
+    padding-top:2%;
+    display: flex;
+    align-items: center;
+    font-family: 'DroidSansMono', sans-serif;
+  }
+
+  #loginLogo{
+    height: 24px;
+    width: 24px;
+    object-fit:fill;
+  }
+
+.formContainerBody{
+  width: 100%;
+  height: 80%;
+  padding: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.loginInputContainer{
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.loginLabel{
+  font-size: 16px;
+  text-align: start;
+  color:#E91F68;
+}
+
+
+.loginInput{
+  box-sizing: border-box;
+  font-size: 16px;
+  border-radius: 5px 5px 1px 5px;
+  padding: 2%;
+  border: 1px solid #E91F68;
+}
+
+#LoginButton{
+  background-color:#E91F68;
+  color:white;
+  font-weight: bold;
+  border: 1px solid #E91F68;
+  border-radius: 0;
+
+}
+
+.formOptionsContainer{
+  width: 100%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+.showPasswordCotainer{
+  width: 102px;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+}
+
+.showPasswordText{
+  font-size: 12px;
+  height: fit-content;
+   color:#E91F68;
+  text-align: start;
+  font-weight: 700;
+}
+
+.showPasswordCheckbox{
+ width: 12px;
+ height: 16px;
+cursor: pointer;
+}
+
+
+#LoginRegister{
+  font-size: 12px;
+  height: fit-content;
+   color:#E91F68;
+  text-align: start;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+
+}
+
+
+
+  #FormFooter{
+    width: 100%;
+    padding-left:3%;
+    padding-right:3%;
+    height: 10%;
+    color:white;
+    font-size: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(233,31,104,0.2);
+  }
+  
+
+  #FormFooterText{
+    color:#E91F68;
+    font-size: 12px;
+    width: fit-content;
+    font-family:Arial, Helvetica, sans-serif;
+    
+  }
+
+
+  #FormHeaderButton{
+    font-size: 14px;
+    box-sizing: border-box;
+    border: none;
+    color:white;  
+    padding: 1%;
+    background-color: #E91F68;;
+    font-weight: 400;
+  }
+
+
+  #registerFormContainer{
+    display: none;
+  }
+
+  #registerContainer{
+    display: none;
+  }
