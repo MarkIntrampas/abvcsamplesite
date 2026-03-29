@@ -16,7 +16,7 @@
 
   .FormContainer{
     width: 400px;
-    height: 400px;
+    height: auto;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -147,6 +147,8 @@ cursor: pointer;
     width: 100%;
     padding-left:3%;
     padding-right:3%;
+    padding-top:3%;
+    padding-bottom:3%;
     height: 10%;
     color:white;
     font-size: 1px;
@@ -178,7 +180,7 @@ cursor: pointer;
 
 
   #registerFormContainer{
-    display: none;
+    display: flex;
   }
 
   #registerContainer{
