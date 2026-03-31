@@ -5,6 +5,7 @@ import Nav from '../../Component/Nav'
 import logo from './media/sec1logo.png'
 import pic1 from './media/sec3pic1.png'
 import pic2 from './media/sec3pic2.png'
+import Footer from '../../Component/Footer'
 
 
 
@@ -73,6 +74,7 @@ function Home(){
       }
       
    </div>
+   <Footer />
  </>
 
 

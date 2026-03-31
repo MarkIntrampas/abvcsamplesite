@@ -1,0 +1,60 @@
+/* Phones (Portrait) */
+@media screen and (max-width: 1300px) {
+    /* Styles for phones in portrait mode */
+    #Footercontainer{
+        display: flex;
+        flex-direction: column;
+        height:fit-content;
+        padding-top: 0;
+        padding-bottom: 3%;
+       
+    }
+
+    
+#Col1Sub{
+    height: 60%;
+    width: 100%;
+}
+    
+    .footerCol{
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+       
+       }
+
+    
+
+       #FooterLogo{
+        height: 60%;
+        width: 60%;
+        object-fit: contain;
+        object-position: center;
+       }
+
+       
+       #ColSubText{
+        font-size: 24px;
+        font-weight: 700;
+        font-style:bold;
+        padding:5%;
+        text-align: center;
+    }
+
+    li{
+        font-size: 20px;
+       text-align: center;
+    }  
+
+    #copy{
+
+        color:white;
+        margin-top: 5%;
+        font-size: 18px;
+    }
+
+  }
+  

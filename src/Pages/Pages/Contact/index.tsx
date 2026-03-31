@@ -1,7 +1,8 @@
-
+import Nav from '../../Component/Nav'
+import Footer from '../../Component/Footer';
 import './style/ContactStyle.css';
 import './style/ContactStyle-smalll.css'
-import Nav from '../../Component/Nav'
+
 
 function Contact(){
     return(
@@ -61,6 +62,7 @@ function Contact(){
        
          </div>
          </div>
+         <Footer/>
      </>
     );
 }

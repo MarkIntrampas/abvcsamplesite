@@ -4,6 +4,7 @@ import Nav from '../../Component/Nav'
 import './style/Blogstyle.css'; 
 import './style/Blogstyle-smaller.css';
 import sample from './media/abtsec1.jpg'
+import Footer from '../../Component/Footer';
 
 
 function Blogs(){
@@ -182,6 +183,8 @@ function Blogs(){
 
 
        </div>
+
+       <Footer />
      
        </>
     );
