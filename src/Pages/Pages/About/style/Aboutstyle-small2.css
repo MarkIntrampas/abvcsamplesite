@@ -1,0 +1,63 @@
+@media screen and (max-width: 900px) {
+
+  #AboutSec1 {
+    padding: 36px 24px;
+    height: 40vh;
+  }
+
+  #AbtSec1Title {
+    font-size: 40px;
+  }
+
+  #sec2AboutPage{
+    grid-template-columns: 1fr;
+    padding: 48px 24px;
+    gap: 40px;
+  }
+
+  .sec2-divider { display: none; }
+  .sec2sub { padding: 0; }
+
+  #AboutSec3 {
+    padding: 48px 24px;
+  }
+
+  .timeline {
+    flex-direction: column;
+  }
+
+  #barContainer {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(233,31,104,0.2);
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+  }
+
+  .tl-track, #bar { display: none; }
+
+  #buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .Timelinebutton {
+    width: auto;
+    padding: 10px 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: 10px;
+  }
+
+  #detailsContainter {
+    padding-left: 0;
+  }
+
+  .detail.active {
+    flex-direction: column;
+  }
+
+  .storyTitle {
+    font-size: 26px;
+  }
+}
