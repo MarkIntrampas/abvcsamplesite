@@ -34,6 +34,7 @@ overflow: hidden;
 
 #sec1sub{
     width: 50%;
+    text-align: left;
     }
     
     @font-face {
@@ -71,102 +72,49 @@ overflow: hidden;
         width: 100%;
       }
       
+  .hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 32px;
+  border: 1.5px solid var(--pink);
+  color: var(--pink);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s;
+  text-decoration: none;
+  
+}
 
-      #sec2{
-        width: 100%;
-        height: 50vh;
-        background-color: WHITE;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin:0;
-      }
+.hero-cta:hover {
+  background: var(--pink);
+  color: var(--white);
+}
 
-      .sec2sub{
-        height: 100%;
-        width: 450px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
+.hero-scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DroidSansMono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--gray);
+  z-index: 2;
+}
 
-      .mv{
-        height: 10%;
-        width: 100%;
-        font-family: 'DroidSansMono', sans-serif;
-        font-size: 38px;
-        color:#E91F68;
-      }
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--pink), transparent);
+}
 
-
-      .mvcontext{
-        width: 90%;
-        height: 60%;
-        font-size: 18px;
-        font-family: 'Orbitron', sans-serif;
-        text-align: justify;
-        font-style: oblique;
-      
-      }
-
-      #sec3{
-        width: 100%;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        background-image: 
-        linear-gradient(rgba(233, 31, 104, 0.5), rgba(0, 0, 0, 0.5)), /* Black overlay with opacity */
-        url('../media/sec3bg.jpg'); /* Background image */
-        background-size: cover;
-        background-position: center;
-        margin:0;
-        
-        }
-
-       
-
-        #sub3title{
-          height: 10%;
-          width: 100%;
-          font-family: 'DroidSansMono', sans-serif;
-          font-size: 58px;
-          color:white;
-          align-content: center;
-
-        }
-
-        .sec3sub{
-          width: 80%;
-          height: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: space-evenly;
-        }
-
-        .sec3subcon{
-          height: 100%;
-          width: 40%;
-        }
-        
-        .sec3pic{
-          width: 100%;
-         
-          height: 80%;
- 
-          object-fit: cover;
-        }
-
-
-        .pictitle{
-          height: 30%;
-          width: 100%;
-          font-family: 'Orbitron', sans-serif;
-          
-          font-size: 200%;
-          color:white;
-          align-content: center;
-
-        }
+    

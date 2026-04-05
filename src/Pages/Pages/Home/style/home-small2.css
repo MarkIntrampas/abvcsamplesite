@@ -1,0 +1,101 @@
+@media screen and (max-width: 1300px) {
+
+ 
+  /* ── MISSION / VISION ── */
+  #sec2 {
+    padding: 60px 24px;
+  }
+
+  .mv-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .mv-divider {
+    display: none;
+  }
+
+  .sec2sub {
+    padding: 0;
+  }
+
+  .mv {
+    font-size: 18px;
+  }
+
+  .section-title-dark {
+    font-size: 26px;
+  }
+
+  /* ── STATS ── */
+  #sec-stats {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 36px 24px;
+  }
+
+  .stat-item:nth-child(2) { border-right: none; }
+  .stat-item:nth-child(3) { border-top: 1px solid rgba(255,255,255,0.25); }
+  .stat-item:nth-child(4) {
+    border-top: 1px solid rgba(255,255,255,0.25);
+    border-right: none;
+  }
+
+  .stat-num { font-size: 30px; }
+
+  /* ── SERVICES ── */
+  #sec3 {
+    padding: 60px 24px;
+  }
+
+  #sub3title {
+    font-size: 28px;
+    margin-bottom: 36px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sec3subcon {
+    aspect-ratio: 16 / 9;
+  }
+
+  .service-name {
+    font-size: 18px;
+  }
+
+  .pictitle {
+    padding: 20px 24px;
+  }
+
+  /* ── WHY US ── */
+  #sec4 {
+    padding: 60px 24px;
+  }
+
+  .section-title-light {
+    font-size: 26px;
+  }
+
+  .why-grid {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .why-card {
+    padding: 36px 24px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #companyName {
+    font-size: 24px;
+  }
+
+  .section-title-dark,
+  .section-title-light {
+    font-size: 20px;
+  }
+
+  .stat-num { font-size: 24px; }
+}
