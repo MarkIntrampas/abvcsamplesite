@@ -262,13 +262,13 @@ const storedUser = sessionStorage.getItem("user");
 
           <div className="sb-section-label">Main</div>
           <div
-            className={`nav-item ${activeTab === "home" ? "active" : ""}`}
+            className={`dash-nav-item ${activeTab === "home" ? "active" : ""}`}
             onClick={() => setActiveTab("home")}
           >
             <span className="nav-icon">⌂</span> Home
           </div>
           <div
-            className={`nav-item ${activeTab === "analytics" ? "active" : ""}`}
+            className={`dash-nav-item ${activeTab === "analytics" ? "active" : ""}`}
             onClick={() => setActiveTab("analytics")}
           >
             <span className="nav-icon">◎</span> Analytics
@@ -276,7 +276,7 @@ const storedUser = sessionStorage.getItem("user");
 
           <div className="sb-section-label">Content</div>
           <div
-            className={`nav-item ${activeTab === "blogs" ? "active" : ""}`}
+            className={`dash-nav-item ${activeTab === "blogs" ? "active" : ""}`}
             onClick={() => setActiveTab("blogs")}
           >
             <span className="nav-icon">✎</span> Blogs <span className="nav-badge">3</span>
@@ -284,13 +284,13 @@ const storedUser = sessionStorage.getItem("user");
 
           <div className="sb-section-label">Admin</div>
           <div
-            className={`nav-item ${activeTab === "users" ? "active" : ""}`}
+            className={`dash-nav-item ${activeTab === "users" ? "active" : ""}`}
             onClick={() => setActiveTab("users")}
           >
             <span className="nav-icon">◉</span> Users
           </div>
           <div
-            className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+            className={`dash-nav-item ${activeTab === "settings" ? "active" : ""}`}
             onClick={() => setActiveTab("settings")}
           >
             <span className="nav-icon">◈</span> Settings

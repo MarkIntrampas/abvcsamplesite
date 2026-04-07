@@ -108,7 +108,7 @@
           z-index: 1;
         }
 
-        .nav-item {
+        .dash-nav-item {
           display: flex;
           align-items: center;
           gap: 12px;
@@ -125,20 +125,20 @@
           z-index: 1;
         }
 
-        .nav-item:hover {
+        .dash-nav-item:hover {
           background: rgba(255,255,255,0.12);
           color: var(--white);
           border-left-color: rgba(255,255,255,0.5);
         }
 
-        .nav-item.active {
+        .dash-nav-item.active {
           background: var(--white);
           color: var(--pink);
           border-left-color: var(--white);
           font-weight: 700;
         }
 
-        .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+        .dash-nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
 
         .nav-badge {
           margin-left: auto;
