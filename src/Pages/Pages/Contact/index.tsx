@@ -2,9 +2,23 @@ import Nav from '../../Component/Nav'
 import Footer from '../../Component/Footer';
 import './style/ContactStyle.css';
 import './style/ContactStyle-smalll.css'
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 
 function Contact(){
+
+      const navigate= useNavigate();
+  useEffect(()=>{
+    const storedUser = sessionStorage.getItem("user");
+
+  if (storedUser) {
+    navigate("/dashboard");
+    return;
+  }
+
+  },[]);
+
     return(
         <>
         <Nav />

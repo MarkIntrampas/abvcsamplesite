@@ -8,11 +8,26 @@ import logo from './media/sec1logo.png'
 import pic1 from './media/sec3pic1.png'
 import pic2 from './media/sec3pic2.png'
 import Footer from '../../Component/Footer'
+import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+
 
 
 
 function Home(){
   
+
+  const navigate= useNavigate();
+  useEffect(()=>{
+    const storedUser = sessionStorage.getItem("user");
+
+  if (storedUser) {
+    navigate("/dashboard");
+    return;
+  }
+
+  },[]);
+
     return(
  <>
     

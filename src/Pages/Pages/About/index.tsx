@@ -3,7 +3,8 @@ import './style/Aboutstyle-small2.css';
 import sample from './media/abtsec1.jpg';
 import Nav from '../../Component/Nav';
 import Footer from '../../Component/Footer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const milestones = [
   { id: 1, year: '2018 · Chapter 01', title: ['From Idea', 'to ', 'Reality'], story: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.', imgLeft: true },
@@ -18,6 +19,17 @@ const btnLabels = ['FOUNDING', 'SCALING', 'PARTNERS', 'GROWTH', 'PRESENT'];
 const About: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(1);
   const fillHeight = `${((activeIndex - 1) / 4) * 100}%`;
+
+  const navigate= useNavigate();
+  useEffect(()=>{
+    const storedUser = sessionStorage.getItem("user");
+
+  if (storedUser) {
+    navigate("/dashboard");
+    return;
+  }
+
+  },[]);
 
   return (
     <>

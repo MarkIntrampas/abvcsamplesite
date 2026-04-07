@@ -5,10 +5,21 @@ import './style/Blogstyle.css';
 import './style/Blogstyle-smaller.css';
 import sample from './media/abtsec1.jpg'
 import Footer from '../../Component/Footer';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 
 function Blogs(){
- 
+   const navigate= useNavigate();
+  useEffect(()=>{
+    const storedUser = sessionStorage.getItem("user");
+
+  if (storedUser) {
+    navigate("/dashboard");
+    return;
+  }
+
+  },[]);
     return(
         <>
             <Nav /> 
