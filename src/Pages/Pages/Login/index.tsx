@@ -2,6 +2,7 @@
 import './style/loginstyle.css';
 import logo from "./media/sec1logo.png";
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface LoginProps{
   closeOpenAction: ()=> void;
@@ -12,6 +13,27 @@ const Login: React.FC<LoginProps> =({closeOpenAction})=>{
   const [loginshowpasswordstatus, ShowHideLoginPass] = useState(false);
   const [regshowpasswordstatus, ShowHideregPass] = useState(false);
   const [shownForm, changeForm] = useState("Login");
+  const [LoginPassword, getLoginPassword] = useState("");
+  const [LoginUser, getLoginUser] = useState("");
+
+  const navigate = useNavigate();
+
+  const login = ()=>{
+     
+   
+     if(LoginUser==="admin" && LoginPassword==="admin"){
+            const userData = {
+            username: LoginUser,
+            isLoggedIn: true,
+          };
+
+        sessionStorage.setItem("user", JSON.stringify(userData));
+        navigate("/dashboard");
+     }else{
+      alert("Wrong Username or Password");
+     }
+
+  };
 
 
       return(
@@ -29,12 +51,12 @@ const Login: React.FC<LoginProps> =({closeOpenAction})=>{
 
               <div className="loginInputContainer">
                 <h1 className="loginLabel">Username:</h1>
-                <input className="loginInput" id="loginUsername"></input>
+                <input className="loginInput" id="loginUsername" onChange={(e)=>getLoginUser(e.target.value)}></input>
               </div>
 
               <div className="loginInputContainer">
                 <h1 className="loginLabel">Password:</h1>
-                <input type={loginshowpasswordstatus ? "text":"password"} className="loginInput" id="loginPassword"></input>
+                <input type={loginshowpasswordstatus ? "text":"password"} className="loginInput" id="loginPassword" onChange={(e)=>getLoginPassword(e.target.value)}></input>
               </div>
 
               <div className="loginInputContainer">
@@ -50,7 +72,7 @@ const Login: React.FC<LoginProps> =({closeOpenAction})=>{
                     <h1 id="LoginRegister" onClick={()=>changeForm("Register")}  >Register</h1>
 
                 </div>
-                <button type="button" className="loginInput" id="LoginButton" >LOGIN</button>
+                <button type="button" className="loginInput" id="LoginButton" onClick={()=>login()}>LOGIN</button>
               </div>
 
           </div>
