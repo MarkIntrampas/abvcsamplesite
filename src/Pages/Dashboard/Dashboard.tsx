@@ -62,6 +62,12 @@ const storedUser = sessionStorage.getItem("user");
     loadTableData();
   }, []);
 
+
+  const logout = () => {
+  sessionStorage.removeItem("user"); // remove session
+  navigate("/"); // go back to login page
+};
+
   const breadcrumbs: Record<TabKey, string> = {
     home: "HOME",
     analytics: "ANALYTICS",
@@ -320,7 +326,7 @@ const storedUser = sessionStorage.getItem("user");
               <button className="topbar-btn">🔔</button>
               <div className="user-pill">
                 <div className="user-avatar">A</div>
-                <div className="user-name">{username}</div>
+                <div className="user-name" onClick={()=>logout()}>{username}</div>
               </div>
             </div>
           </div>
