@@ -324,9 +324,20 @@ const storedUser = sessionStorage.getItem("user");
                 ↻
               </button>
               <button className="topbar-btn">🔔</button>
-              <div className="user-pill" onClick={()=>logout()}>
+               
+              <div className="user-pill" >
+                
                 <div className="user-avatar">A</div>
                 <div className="user-name" >{username}</div>
+
+                 {/* Dropdown */}
+                <div className="user-dropdown">
+                  <div className="dropdown-item">👤 Profile</div>
+                  <div className="dropdown-item">⚙️ Settings</div>
+                  <div className="dropdown-divider"></div>
+                  <div className="dropdown-item logout" onClick={()=>logout()}>🚪 Logout</div>
+                </div>
+                            
               </div>
             </div>
           </div>

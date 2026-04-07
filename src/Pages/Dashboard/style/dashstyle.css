@@ -140,6 +140,8 @@
 
         .dash-nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
 
+    
+
         .nav-badge {
           margin-left: auto;
           background: var(--black);
@@ -234,6 +236,7 @@
           border-radius: 20px;
           background: var(--pink-pale);
           cursor: pointer;
+          position: absolute;
         }
 
         .user-avatar {
@@ -250,6 +253,69 @@
           letter-spacing: 1px;
           color: var(--pink);
         }
+
+
+        .user-pill {
+  position: relative; /* important */
+}
+
+/* dropdown container */
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 160px;
+  background: white;
+  border: 1.5px solid var(--border-pink);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  padding: 6px 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: all 0.18s ease;
+  z-index: 100;
+}
+
+/* show on hover */
+.user-pill:hover .user-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* dropdown items */
+.dropdown-item {
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--black2);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.dropdown-item:hover {
+  background: var(--pink-pale);
+  color: var(--pink);
+}
+
+/* divider */
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 6px 0;
+}
+
+/* logout style */
+.dropdown-item.logout {
+  color: #d11a2a;
+}
+
+.dropdown-item.logout:hover {
+  background: #ffe9ec;
+}
+
+      
 
         #content {
           flex: 1;
