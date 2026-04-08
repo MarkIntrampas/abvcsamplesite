@@ -3,6 +3,7 @@ import './style/loginstyle.css';
 import logo from "./media/sec1logo.png";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-js';
 
 interface LoginProps{
   closeOpenAction: ()=> void;
@@ -18,23 +19,36 @@ const Login: React.FC<LoginProps> =({closeOpenAction})=>{
 
   const navigate = useNavigate();
 
-  const login = ()=>{
-     
+
+
+  const login = async () => {
+ const supabase = createClient("https://ccgrfcxtlzqurypyfcrs.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjZ3JmY3h0bHpxdXJ5cHlmY3JzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2MjgyMjUsImV4cCI6MjA5MTIwNDIyNX0.eEbdj3zFUjrYWRXTqj9rx0P6grHTt-Mw_D3SiKvhfUw");
+  // Query your custom table for matching username and password
+  const { data, error } = await supabase
+    .from('users') // or 'users', whatever your table name is
+    .select('*')
+    .eq('username',LoginUser)      // case-sensitive if you used quotes in table
+    .eq('password',LoginPassword)  // plain text, not recommended
+    .single(); // get a single row
    
-     if(LoginUser==="admin" && LoginPassword==="admin"){
-            const userData = {
-            username: LoginUser,
-            isLoggedIn: true,
-          };
 
-        sessionStorage.setItem("user", JSON.stringify(userData));
-        navigate("/dashboard");
-     }else{
-      alert("Wrong Username or Password");
-     }
+  if (error || !data) {
+   
+    alert('Wrong Username or Password');
+    return;
+  }
 
+  // User found, login successful
+  const userData = {
+    username: data.Username,
+    isLoggedIn: true,
   };
 
+  sessionStorage.setItem("user", JSON.stringify(userData));
+  navigate("/dashboard");
+};
+
+ 
 
       return(
           <>
