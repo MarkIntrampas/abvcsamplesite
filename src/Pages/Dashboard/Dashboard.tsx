@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './style/dashstyle.css'
+import { createClient } from "@supabase/supabase-js";
 
 type DataRow = {
   type: string;
@@ -9,6 +10,14 @@ type DataRow = {
   lastHour?: number;
   today?: number;
   [key: string]: string | number | undefined;
+};
+
+type Blog = {
+  id: number;
+  emoji?: string;
+  author: string;
+  blog_title?: string;
+  content?: string;
 };
 
 type TabKey = "home" | "analytics" | "blogs" | "users" | "settings";
@@ -20,6 +29,7 @@ const Dashboard: React.FC = () => {
   const [tableError, setTableError] = useState(false);
   const [tableRows, setTableRows] = useState<DataRow[]>([]);
   const [username,setUsername] = useState("");
+ const [bloglist,updateBlog] = useState<Blog[]>([]);
 
   const [darkMode, setDarkMode] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
@@ -39,7 +49,7 @@ const Dashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    
+
 const storedUser = sessionStorage.getItem("user");
 
   if (!storedUser) {
@@ -58,9 +68,25 @@ const storedUser = sessionStorage.getItem("user");
   console.log("Logged in as:", user.username);
 
   loadTableData();
-
-    loadTableData();
+ loadBlogs();
   }, []);
+
+  const loadBlogs = async () => {
+      
+        const supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
+      // Query your custom table for matching username and password
+      const { data, error } = await supabase
+        .from('blogs') // or 'users', whatever your table name is
+        .select('*');
+
+        if(error){
+          alert("something went wrong in loading the blogs");
+        }else{
+           updateBlog(data as Blog[]); // type assertion
+        }
+      
+
+  };
 
 
   const logout = () => {
@@ -558,32 +584,13 @@ const storedUser = sessionStorage.getItem("user");
                 </div>
 
                 <div className="blog-grid">
-                  {[
-                    {
-                      emoji: "📊",
-                      cat: "Data Entry",
-                      title: "How Accurate Data Entry Drives Business Growth",
-                      meta: "APR 01 · 2026 · 5 MIN READ",
-                    },
-                    {
-                      emoji: "📒",
-                      cat: "Bookkeeping",
-                      title: "Why European SMEs Trust Remote Bookkeepers",
-                      meta: "MAR 21 · 2026 · 4 MIN READ",
-                    },
-                    {
-                      emoji: "🌐",
-                      cat: "Company",
-                      title: "Ale Bosma Ventures: Bridging PH Talent to EU",
-                      meta: "MAR 10 · 2026 · 6 MIN READ",
-                    },
-                  ].map((blog) => (
-                    <div className="blog-card" key={blog.title}>
+                  {bloglist.map((blog) => (
+                    <div className="blog-card" key={blog.blog_title}>
                       <div className="blog-thumb">{blog.emoji}</div>
                       <div className="blog-body">
-                        <div className="blog-cat">{blog.cat}</div>
-                        <div className="blog-title">{blog.title}</div>
-                        <div className="blog-meta">{blog.meta}</div>
+                        <div className="blog-cat">{blog.author}</div>
+                        <div className="blog-title">{blog.content}</div>
+                        <div className="blog-meta">{blog.author}</div>
                       </div>
                       <div className="blog-actions">
                         <button className="btn-sm primary">EDIT</button>

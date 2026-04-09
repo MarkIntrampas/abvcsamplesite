@@ -22,7 +22,7 @@ const Login: React.FC<LoginProps> =({closeOpenAction})=>{
 
 
   const login = async () => {
- const supabase = createClient("https://ccgrfcxtlzqurypyfcrs.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjZ3JmY3h0bHpxdXJ5cHlmY3JzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2MjgyMjUsImV4cCI6MjA5MTIwNDIyNX0.eEbdj3zFUjrYWRXTqj9rx0P6grHTt-Mw_D3SiKvhfUw");
+ const supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
   // Query your custom table for matching username and password
   const { data, error } = await supabase
     .from('users') // or 'users', whatever your table name is
