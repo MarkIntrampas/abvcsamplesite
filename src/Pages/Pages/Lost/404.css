@@ -1,0 +1,299 @@
+@font-face {
+  font-family: 'DroidSansMono';
+  src: url('./Android.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  src: url('./Orbitron.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ══════════════════════════════════════
+   PAGE WRAPPER
+══════════════════════════════════════ */
+#pg-404 {
+  width: 100%;
+  min-height: 100vh;
+  background: #E91F68;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(32px, 6vw, 80px) clamp(16px, 5vw, 48px);
+}
+
+/* ── Background grid ── */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+}
+
+/* ── Radial glow ── */
+.bg-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70vw;
+  height: 70vw;
+  max-width: 700px;
+  max-height: 700px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ── Accent lines ── */
+.accent-line-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #0a0a0a;
+}
+
+.accent-line-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* ── Corner brackets ── */
+.corner {
+  position: absolute;
+  width: clamp(14px, 2.5vw, 24px);
+  height: clamp(14px, 2.5vw, 24px);
+  border-color: rgba(0, 0, 0, 0.35);
+  border-style: solid;
+  z-index: 1;
+}
+
+.corner-tl { top: 16px;    left: 16px;  border-width: 2px 0 0 2px; }
+.corner-tr { top: 16px;    right: 16px; border-width: 2px 2px 0 0; }
+.corner-bl { bottom: 16px; left: 16px;  border-width: 0 0 2px 2px; }
+.corner-br { bottom: 16px; right: 16px; border-width: 0 2px 2px 0; }
+
+/* ══════════════════════════════════════
+   CONTENT
+══════════════════════════════════════ */
+.content-404 {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  max-width: 680px;
+}
+
+/* ── Logo ── */
+.logo-wrap {
+  margin-bottom: clamp(20px, 3vw, 36px);
+}
+
+.logo-404 {
+  width: clamp(100px, 20vw, 180px);
+  height: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+/* ── Error badge ── */
+.label-top {
+  font-family: 'DroidSansMono', monospace;
+  font-size: clamp(8px, 1.5vw, 11px);
+  letter-spacing: clamp(3px, 1vw, 7px);
+  color: #fff;
+  text-transform: uppercase;
+  margin-bottom: clamp(12px, 2vw, 20px);
+  background: rgba(0, 0, 0, 0.18);
+  display: inline-block;
+  padding: 6px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* ── 404 number ── */
+.num-404 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(96px, 22vw, 200px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: clamp(4px, 2vw, 16px);
+  color: #fff;
+  position: relative;
+  display: block;
+}
+
+.num-404::before {
+  content: '404';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  color: #000;
+  opacity: 0.08;
+  pointer-events: none;
+  width: 100%;
+  text-align: center;
+}
+
+/* ── Divider ── */
+.divider-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+  margin: clamp(16px, 3vw, 32px) 0;
+}
+
+.divider-line {
+  flex: 1;
+  max-width: 80px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.divider-dot {
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  transform: rotate(45deg);
+}
+
+/* ── Title & subtitle ── */
+.err-title {
+  font-family: 'DroidSansMono', monospace;
+  font-size: clamp(13px, 2.8vw, 22px);
+  letter-spacing: clamp(2px, 1vw, 5px);
+  color: #fff;
+  text-transform: uppercase;
+  margin-bottom: clamp(10px, 2vw, 16px);
+}
+
+.err-sub {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(10px, 1.6vw, 13px);
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 2;
+  max-width: 420px;
+  margin: 0 auto clamp(28px, 4vw, 48px);
+  padding: 0 8px;
+}
+
+/* ── CTA button ── */
+.btn-return {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: clamp(12px, 2vw, 16px) clamp(24px, 4vw, 44px);
+  background: #0a0a0a;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(9px, 1.5vw, 11px);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, letter-spacing 0.2s;
+}
+
+.btn-return:hover {
+  background: #222;
+  letter-spacing: 4px;
+}
+
+/* ── Stats strip ── */
+.stat-row {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(36px, 5vw, 64px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  flex-wrap: wrap;
+}
+
+.stat-cell {
+  flex: 1;
+  min-width: 100px;
+  padding: clamp(12px, 2vw, 18px) 12px;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.stat-cell:last-child {
+  border-right: none;
+}
+
+.stat-v {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(14px, 2.5vw, 20px);
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.stat-l {
+  font-family: 'DroidSansMono', monospace;
+  font-size: clamp(7px, 1.2vw, 9px);
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+}
+
+/* ── Footer code ── */
+.bottom-code {
+  position: absolute;
+  bottom: 20px;
+  font-family: 'DroidSansMono', monospace;
+  font-size: clamp(7px, 1.2vw, 9px);
+  letter-spacing: clamp(2px, 1vw, 5px);
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  z-index: 1;
+  text-align: center;
+  padding: 0 16px;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media screen and (max-width: 768px) {
+  .num-404 {
+    font-size: clamp(72px, 24vw, 120px);
+  }
+
+  .stat-row {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .label-top {
+    font-size: 8px;
+    letter-spacing: 3px;
+    padding: 5px 12px;
+  }
+
+  .err-title {
+    font-size: 13px;
+    letter-spacing: 2px;
+  }
+
+  .bottom-code {
+    font-size: 7px;
+    letter-spacing: 2px;
+  }
+}

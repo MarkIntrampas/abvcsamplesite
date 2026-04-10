@@ -4,6 +4,7 @@ import Home from './Pages/Pages/Home'
 import Blogs from './Pages/Pages/Blogs'
 import Contact from './Pages/Pages/Contact'
 import Dashboard from "./Pages/Dashboard/Dashboard"
+import NotFound from "./Pages/Pages/Lost"
 import "./App.css"
 
 function App() {
@@ -17,7 +18,8 @@ function App() {
             <Route path="/about" element={<About />}></Route>
             <Route path="/blogs" element={<Blogs />}></Route>
             <Route path="/contact" element={<Contact />}></Route>
-            <Route path="/dashboard" element={<Dashboard />}></Route>           
+            <Route path="/dashboard" element={<Dashboard />}></Route>    
+            <Route path="*" element={<NotFound />}></Route>        
         </Routes>
       </BrowserRouter>
       

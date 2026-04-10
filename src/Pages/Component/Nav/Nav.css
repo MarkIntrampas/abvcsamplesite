@@ -13,7 +13,8 @@ padding-right: 10%;
 position: sticky; 
 top: 0;
 z-index: 1000; 
-
+  font-family: 'DroidSansMono', monospace;
+  font-size: 20px;
 }
 
 

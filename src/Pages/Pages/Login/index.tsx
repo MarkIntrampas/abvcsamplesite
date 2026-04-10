@@ -40,11 +40,11 @@ const Login: React.FC<LoginProps> =({closeOpenAction})=>{
 
   // User found, login successful
   const userData = {
-    username: data.Username,
+    Username: data.username,
     isLoggedIn: true,
   };
-
-  sessionStorage.setItem("user", JSON.stringify(userData));
+ 
+sessionStorage.setItem("user", JSON.stringify(userData));
   navigate("/dashboard");
 };
 

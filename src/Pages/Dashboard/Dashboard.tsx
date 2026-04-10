@@ -15,7 +15,7 @@ type DataRow = {
 type Blog = {
   id: number;
   emoji?: string;
-  author: string;
+  author?:string;
   blog_title?: string;
   content?: string;
 };
@@ -28,7 +28,7 @@ const Dashboard: React.FC = () => {
   const [tableLoading, setTableLoading] = useState(true);
   const [tableError, setTableError] = useState(false);
   const [tableRows, setTableRows] = useState<DataRow[]>([]);
-  const [username,setUsername] = useState("");
+  const [username,setUsername] = useState<String>();
  const [bloglist,updateBlog] = useState<Blog[]>([]);
 
   const [darkMode, setDarkMode] = useState(false);
@@ -64,29 +64,49 @@ const storedUser = sessionStorage.getItem("user");
     return;
   }
   
-  setUsername(user.username);
-  console.log("Logged in as:", user.username);
+  setUsername(user.Username);
+ 
 
   loadTableData();
  loadBlogs();
   }, []);
 
   const loadBlogs = async () => {
-      
-        const supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
-      // Query your custom table for matching username and password
-      const { data, error } = await supabase
-        .from('blogs') // or 'users', whatever your table name is
-        .select('*');
-
+     const supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
+    const { data, error } = await supabase
+  .from("blogs")
+  .select(`*`);
         if(error){
           alert("something went wrong in loading the blogs");
         }else{
+
+           
            updateBlog(data as Blog[]); // type assertion
+
+            data.map((e)=>{
+              e.author=updateAuthorName(e.author);
+            });
         }
       
 
   };
+
+
+  const updateAuthorName= async (id:number) => {
+     const supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
+
+
+                              const { data} = await supabase
+                    .from('users') // or 'users', whatever your table name is
+                    .select('*')
+                    .eq('id',Number(id))   
+                    .single(); // get a single row
+                          
+                    return data.username;
+            
+
+
+  }
 
 
   const logout = () => {
@@ -585,7 +605,7 @@ const storedUser = sessionStorage.getItem("user");
 
                 <div className="blog-grid">
                   {bloglist.map((blog) => (
-                    <div className="blog-card" key={blog.blog_title}>
+                    <div className="blog-card" key={blog.id}>
                       <div className="blog-thumb">{blog.emoji}</div>
                       <div className="blog-body">
                         <div className="blog-cat">{blog.author}</div>
