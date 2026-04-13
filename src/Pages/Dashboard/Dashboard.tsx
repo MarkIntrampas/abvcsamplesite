@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './style/dashstyle.css'
 import { createClient } from "@supabase/supabase-js";
+import BlogViewer from "../Component/BlogViewer";
 
 type DataRow = {
   type: string;
@@ -30,6 +31,7 @@ const Dashboard: React.FC = () => {
   const [tableRows, setTableRows] = useState<DataRow[]>([]);
   const [username,setUsername] = useState<String>();
  const [bloglist,updateBlog] = useState<Blog[]>([]);
+ const  [blogViewStatus, changeBlogViewStatus]  =useState(false);
 
   const [darkMode, setDarkMode] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
@@ -74,8 +76,8 @@ const storedUser = sessionStorage.getItem("user");
   const loadBlogs = async () => {
      const supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
     const { data, error } = await supabase
-  .from("blogs")
-  .select(`*`);
+         .from("blogs")
+         .select(`*`);
         if(error){
           alert("something went wrong in loading the blogs");
         }else{
@@ -107,6 +109,32 @@ const storedUser = sessionStorage.getItem("user");
 
 
   }
+
+   const deleteBlog= async (id:number) => {
+        const supabase = createClient(
+  import.meta.env.VITE__BACK_URL,
+  import.meta.env.VITE_BACK_KEY
+);
+
+const { error } = await supabase
+  .from("blogs")
+  .delete()
+  .eq("id", Number(id)); // 👈 pass the id here
+
+   if(error){
+    alert("deletion failed")
+   }else{
+    loadBlogs();
+   }
+
+   }
+
+   const blogViewerACTION: ()=>void =()=>{
+    
+    changeBlogViewStatus(!blogViewStatus);
+    
+   }
+
 
 
   const logout = () => {
@@ -241,6 +269,7 @@ const storedUser = sessionStorage.getItem("user");
 
     return (
       <>
+      
         {tableError && (
           <div className="error-state" style={{ paddingBottom: 16 }}>
             <div className="err-icon">⚠</div>
@@ -299,9 +328,12 @@ const storedUser = sessionStorage.getItem("user");
 
   return (
     <>
-   
+      
+           
+       {blogViewStatus===true ? <BlogViewer  closeOpenAction={blogViewerACTION} /> : <></>}
 
       <div className="dashboard-root">
+        
         {/* Sidebar */}
         <div id="sidebar">
           <div className="sb-logo">
@@ -613,9 +645,8 @@ const storedUser = sessionStorage.getItem("user");
                         <div className="blog-meta">{blog.author}</div>
                       </div>
                       <div className="blog-actions">
-                        <button className="btn-sm primary">EDIT</button>
-                        <button className="btn-sm">VIEW</button>
-                        <button className="btn-sm">DELETE</button>
+                        <button className="btn-sm primary" onClick={()=>{blogViewerACTION()}}>VIEW</button>
+                        <button className="btn-sm" onClick={()=>deleteBlog(blog.id)}>DELETE</button>
                       </div>
                     </div>
                   ))}
