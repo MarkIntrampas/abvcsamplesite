@@ -1,12 +1,42 @@
 import './BlogViewer.css'
-
+import { useEffect, useState } from 'react';
+import BlogCrud from '../../Back/BlogCrud';
 
 
 interface BlogProps{
   closeOpenAction: ()=> void;
+  selectedBlogid:Number;
 };
 
-const BlogViewer: React.FC<BlogProps> =({closeOpenAction})=>{
+type Blog = {
+  id: number;
+  emoji?: string;
+  author?:string;
+  blog_title?: string;
+  content?: string;
+};
+
+
+
+const BlogViewer: React.FC<BlogProps> = ({ closeOpenAction, selectedBlogid }) =>{
+  const BlogBack = new BlogCrud();
+
+  
+
+  const [BlogInfo, updateBlogInfo] = useState<Blog | null>(null);
+
+  useEffect(() => {
+    const loadBlogInfo = async () => {
+      const blog = await BlogBack.ViewBlogById(Number(selectedBlogid));
+      updateBlogInfo(blog); // ✅ store object directly
+    };
+
+    loadBlogInfo();
+  }, [selectedBlogid]);
+
+
+
+
 
 
 const  removeCover = ()=>{
@@ -34,7 +64,7 @@ const  removeCover = ()=>{
     return(<>
 
            
-
+ loadBlogInfo();  
 
 <div className="bp-overlay">
   <div className="bp-wrap">
@@ -79,7 +109,9 @@ const  removeCover = ()=>{
           </span>
         </div>
 
-        <textarea className="bp-post-title" id="postTitle">The Future of Decentralized Systems and What It Means for Enterprise Software</textarea>
+        <textarea className="bp-post-title" id="postTitle" value={BlogInfo?.blog_title}>
+
+        </textarea>
 
         <div className="bp-title-img-wrap" id="titleImgWrap">
           <img className="bp-title-img-thumb" id="titleImgThumb" src="" alt=""></img>
@@ -96,7 +128,7 @@ const  removeCover = ()=>{
           <div className="bp-avatar">AB</div>
           <div className="bp-author-meta">
             <span className="bp-author-role">Author</span>
-            <input className="bp-author-name" id="authorName" type="text" value="Alejandro Bosma"></input>
+            <input className="bp-author-name" id="authorName" type="text" value={BlogInfo?.author}></input>
           </div>
         </div>
 
@@ -105,10 +137,9 @@ const  removeCover = ()=>{
           Body Content
         </span>
 
-        <textarea className="bp-content" id="postContent">Decentralized systems are rapidly reshaping how enterprises think about data ownership, resilience, and governance. Unlike traditional centralized architectures, distributed ledgers and peer-to-peer networks eliminate single points of failure and give organizations greater control over their infrastructure.
-
-In the coming years, we expect to see a significant shift toward hybrid models — where companies leverage public blockchains for transparency while maintaining private chains for sensitive operations.</textarea>
-
+        <textarea className="bp-content" id="postContent"  value={BlogInfo?.content || ""}>
+         
+         </textarea>
         <div className="bp-content-images" id="contentImages"></div>
 
         <button className="bp-add-img-btn" id="addImgBtn">

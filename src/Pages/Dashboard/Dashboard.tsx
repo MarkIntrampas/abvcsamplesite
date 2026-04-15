@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './style/dashstyle.css'
-import { createClient } from "@supabase/supabase-js";
 import BlogViewer from "../Component/BlogViewer";
+import BlogCrud from "../Back/BlogCrud";
 
 type DataRow = {
   type: string;
@@ -36,6 +36,9 @@ const Dashboard: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const navigate =useNavigate();
+
+  const BlogBack= new BlogCrud();
+
   useEffect(() => {
     const updateClock = () => {
       setClock(
@@ -73,61 +76,19 @@ const storedUser = sessionStorage.getItem("user");
  loadBlogs();
   }, []);
 
-  const loadBlogs = async () => {
-     const supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
-    const { data, error } = await supabase
-         .from("blogs")
-         .select(`*`);
-        if(error){
-          alert("something went wrong in loading the blogs");
-        }else{
+const loadBlogs = async () => {
 
-           
-           updateBlog(data as Blog[]); // type assertion
+  const blogs = await BlogBack.loadAllBlogs();
+  updateBlog(blogs);
+};
 
-            data.map((e)=>{
-              e.author=updateAuthorName(e.author);
-            });
-        }
-      
+  
 
-  };
-
-
-  const updateAuthorName= async (id:number) => {
-     const supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
-
-
-                              const { data} = await supabase
-                    .from('users') // or 'users', whatever your table name is
-                    .select('*')
-                    .eq('id',Number(id))   
-                    .single(); // get a single row
-                          
-                    return data.username;
-            
-
+  const deleteBlog:(id:number)=>void = async (id:number)=>{
+    await BlogBack.deleteBlog(id);
+    await loadBlogs();
 
   }
-
-   const deleteBlog= async (id:number) => {
-        const supabase = createClient(
-  import.meta.env.VITE__BACK_URL,
-  import.meta.env.VITE_BACK_KEY
-);
-
-const { error } = await supabase
-  .from("blogs")
-  .delete()
-  .eq("id", Number(id)); // 👈 pass the id here
-
-   if(error){
-    alert("deletion failed")
-   }else{
-    loadBlogs();
-   }
-
-   }
 
    const blogViewerACTION: ()=>void =()=>{
     
@@ -326,11 +287,12 @@ const { error } = await supabase
     );
   };
 
+  
   return (
     <>
       
            
-       {blogViewStatus===true ? <BlogViewer  closeOpenAction={blogViewerACTION} /> : <></>}
+       {blogViewStatus===true ? <BlogViewer  closeOpenAction={blogViewerACTION} selectedBlogid={9}  /> : <></>}
 
       <div className="dashboard-root">
         
