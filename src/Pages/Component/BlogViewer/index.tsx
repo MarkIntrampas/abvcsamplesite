@@ -64,7 +64,7 @@ const  removeCover = ()=>{
     return(<>
 
            
- loadBlogInfo();  
+
 
 <div className="bp-overlay">
   <div className="bp-wrap">
@@ -107,6 +107,7 @@ const  removeCover = ()=>{
             <svg viewBox="0 0 24 24"><use href="#ic-calendar"/></svg>
             April 10, 2026
           </span>
+           <span className="bp-author-role">| BY: {BlogInfo?.author}</span>
         </div>
 
         <textarea className="bp-post-title" id="postTitle" value={BlogInfo?.blog_title}>
@@ -122,21 +123,17 @@ const  removeCover = ()=>{
           </button>
         </div>
 
-        <div className="bp-divider"></div>
-
+{/*}
         <div className="bp-author-row">
           <div className="bp-avatar">AB</div>
-          <div className="bp-author-meta">
-            <span className="bp-author-role">Author</span>
-            <input className="bp-author-name" id="authorName" type="text" value={BlogInfo?.author}></input>
-          </div>
+           <span className="bp-author-role">{BlogInfo?.author}</span>
         </div>
-
+ 
         <span className="bp-section-label" id="contentLabel">
           <svg viewBox="0 0 24 24"><use href="#ic-pencil"/></svg>
           Body Content
         </span>
-
+{*/}
         <textarea className="bp-content" id="postContent"  value={BlogInfo?.content || ""}>
          
          </textarea>
