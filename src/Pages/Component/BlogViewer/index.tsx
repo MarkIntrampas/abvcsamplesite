@@ -133,10 +133,15 @@ const  removeCover = ()=>{
           <svg viewBox="0 0 24 24"><use href="#ic-pencil"/></svg>
           Body Content
         </span>
-{*/}
+{
         <textarea className="bp-content" id="postContent"  value={BlogInfo?.content || ""}>
          
          </textarea>
+    */}  
+         <p className="bp-content-viewing">
+           {BlogInfo?.content}
+
+         </p>
         <div className="bp-content-images" id="contentImages"></div>
 
         <button className="bp-add-img-btn" id="addImgBtn">
