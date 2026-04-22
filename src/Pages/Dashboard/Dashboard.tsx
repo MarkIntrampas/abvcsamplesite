@@ -32,6 +32,7 @@ const Dashboard: React.FC = () => {
   const [username,setUsername] = useState<String>();
  const [bloglist,updateBlog] = useState<Blog[]>([]);
  const  [blogViewStatus, changeBlogViewStatus]  =useState(false);
+ const [selectedBlogItem, selectBlog] = useState<Number>();
 
   const [darkMode, setDarkMode] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
@@ -84,17 +85,24 @@ const loadBlogs = async () => {
 
   
 
-  const deleteBlog:(id:number)=>void = async (id:number)=>{
-    await BlogBack.deleteBlog(id);
+  const deleteBlog:(id:Number)=>void = async (id:Number)=>{
+    await BlogBack.deleteBlog(Number(id));
     await loadBlogs();
 
   }
 
-   const blogViewerACTION: ()=>void =()=>{
+   const blogViewerACTION: ()=>void = () => {
     
+    
+    loadBlogs();
     changeBlogViewStatus(!blogViewStatus);
     
    }
+
+  const setBeforeViewing = async (id: number) => {
+  await selectBlog(id);
+  blogViewerACTION();
+};
 
 
 
@@ -292,7 +300,7 @@ const loadBlogs = async () => {
     <>
       
            
-       {blogViewStatus===true ? <BlogViewer  closeOpenAction={blogViewerACTION} selectedBlogid={9}  /> : <></>}
+       {blogViewStatus===true ? <BlogViewer  closeOpenAction={blogViewerACTION} selectedBlogid={Number(selectedBlogItem)}  /> : <></>}
 
       <div className="dashboard-root">
         
@@ -607,7 +615,7 @@ const loadBlogs = async () => {
                         <div className="blog-meta">{blog.author}</div>
                       </div>
                       <div className="blog-actions">
-                        <button className="btn-sm primary" onClick={()=>{blogViewerACTION()}}>VIEW</button>
+                        <button className="btn-sm primary" onClick={()=>{ setBeforeViewing(blog.id)}}>VIEW</button>
                         <button className="btn-sm" onClick={()=>deleteBlog(blog.id)}>DELETE</button>
                       </div>
                     </div>

@@ -24,20 +24,28 @@ const BlogViewer: React.FC<BlogProps> = ({ closeOpenAction, selectedBlogid }) =>
   
 
   const [BlogInfo, updateBlogInfo] = useState<Blog | null>(null);
+  const [deletingOverlay, changeDeleting] = useState(false);
 
   useEffect(() => {
     const loadBlogInfo = async () => {
       const blog = await BlogBack.ViewBlogById(Number(selectedBlogid));
       updateBlogInfo(blog); // ✅ store object directly
     };
-
+      
     loadBlogInfo();
   }, [selectedBlogid]);
 
 
 
 
+const deleteAction = ()=>{
+ changeDeleting(!deletingOverlay);
+}
 
+const deleteConfirmed = async ()=>{
+  await BlogBack.deleteBlog(Number(selectedBlogid));
+  closeOpenAction();
+}
 
 const  removeCover = ()=>{
  /* 
@@ -168,7 +176,7 @@ const  removeCover = ()=>{
           <button className="bp-btn bp-btn-save" id="saveBtn">
             <svg viewBox="0 0 24 24"><use href="#ic-save"/></svg>Save
           </button>
-          <button className="bp-btn bp-btn-delete" >
+          <button className="bp-btn bp-btn-delete" onClick={()=>{deleteAction()}}>
             <svg viewBox="0 0 24 24"><use href="#ic-trash"/></svg>Delete
           </button>
           <button className="bp-btn bp-btn-close" onClick={()=>closeOpenAction()}>
@@ -178,7 +186,7 @@ const  removeCover = ()=>{
       </div>
     </div>
 
-    <div className="bp-confirm" id="confirmOverlay">
+    <div className="bp-confirm" id="confirmOverlay" style={{ display: deletingOverlay ? 'flex' : 'none' }} >
       <div className="bp-confirm-box">
         <div className="bp-confirm-icon">
           <svg viewBox="0 0 24 24"><use href="#ic-warn"/></svg>
@@ -186,10 +194,10 @@ const  removeCover = ()=>{
         <h3>Delete this post?</h3>
         <p>This action cannot be undone. The post will be permanently removed.</p>
         <div className="bp-confirm-btns">
-          <button className="bp-btn bp-btn-delete">
+          <button className="bp-btn bp-btn-delete" onClick={()=>{deleteConfirmed()}}>
             <svg viewBox="0 0 24 24"><use href="#ic-trash"/></svg>Delete
           </button>
-          <button className="bp-btn bp-btn-close" >
+          <button className="bp-btn bp-btn-close" onClick={()=>{changeDeleting(!deletingOverlay)}} >
             <svg viewBox="0 0 24 24"><use href="#ic-close"/></svg>Cancel
           </button>
         </div>
