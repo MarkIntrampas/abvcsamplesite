@@ -333,7 +333,7 @@ const loadBlogs = async () => {
             className={`dash-nav-item ${activeTab === "blogs" ? "active" : ""}`}
             onClick={() => setActiveTab("blogs")}
           >
-            <span className="nav-icon">✎</span> Blogs <span className="nav-badge">3</span>
+            <span className="nav-icon">✎</span> Blogs <span className="nav-badge">{bloglist.length}</span>
           </div>
 
           <div className="sb-section-label">Admin</div>
