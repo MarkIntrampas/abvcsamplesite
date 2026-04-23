@@ -78,7 +78,7 @@ const  removeCover = ()=>{
   <div className="bp-wrap">
     <div className="bp-modal" id="bpModal">
 
-      <div className="bp-header">
+      <div className="bp-header" >
         <div className="bp-header-left">
           <div className="bp-logo-box">
             <svg viewBox="0 0 24 24" fill="none"><use href="#ic-blog" stroke="white"/></svg>
@@ -88,7 +88,7 @@ const  removeCover = ()=>{
             Blog Post
           </span>
         </div>
-        <span className="bp-status viewing" id="statusBadge">
+        <span className="bp-status viewing" id="statusBadge" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
           <svg viewBox="0 0 24 24"><use href="#ic-eye"/></svg>
           Viewing
         </span>
@@ -164,22 +164,22 @@ const  removeCover = ()=>{
         </span>
       </div>
 
-      <div className="bp-footer">
+      <div className="bp-footer" >
         <span className="bp-copyright">
           <svg viewBox="0 0 24 24"><use href="#ic-copyright"/></svg>
           Ale Bosma Ventures Corporation
         </span>
         <div className="bp-actions">
-          <button className="bp-btn bp-btn-edit" id="editBtn">
+          <button className="bp-btn bp-btn-edit" id="editBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
             <svg viewBox="0 0 24 24"><use href="#ic-pencil"/></svg>Edit
           </button>
-          <button className="bp-btn bp-btn-save" id="saveBtn">
+          <button className="bp-btn bp-btn-save" id="saveBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
             <svg viewBox="0 0 24 24"><use href="#ic-save"/></svg>Save
           </button>
-          <button className="bp-btn bp-btn-delete" onClick={()=>{deleteAction()}}>
+          <button className="bp-btn bp-btn-delete" onClick={()=>{deleteAction()}} style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
             <svg viewBox="0 0 24 24"><use href="#ic-trash"/></svg>Delete
           </button>
-          <button className="bp-btn bp-btn-close" onClick={()=>closeOpenAction()}>
+          <button className="bp-btn bp-btn-close" onClick={()=>closeOpenAction()} >
             <svg viewBox="0 0 24 24"><use href="#ic-close"/></svg>Close
           </button>
         </div>

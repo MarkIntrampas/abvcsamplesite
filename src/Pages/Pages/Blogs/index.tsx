@@ -6,11 +6,30 @@ import './style/Blogstyle-smaller.css';
 import sample from './media/abtsec1.jpg'
 import Footer from '../../Component/Footer';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import BlogCrud from '../../Back/BlogCrud';
+import BlogViewer from '../../Component/BlogViewer';
+
+
+
+type Blog = {
+  id: number;
+  emoji?: string;
+  author?:string;
+  blog_title?: string;
+  content?: string;
+};
 
 
 function Blogs(){
-   const navigate= useNavigate();
+  const navigate= useNavigate();
+  const [bloglist,updateBlog] = useState<Blog[]>([]);
+  const [blogViewStatus, changeBlogViewStatus] =useState(false);
+   const [selectedBlogItem, selectBlog] = useState<Number>();
+
+  const BlogBack= new BlogCrud();
+
+
   useEffect(()=>{
     const storedUser = sessionStorage.getItem("user");
 
@@ -19,9 +38,35 @@ function Blogs(){
     return;
   }
 
+  loadBlogs();
+
+
   },[]);
+
+    const blogViewerACTION: ()=>void = () => {
+    
+    
+    loadBlogs();
+    changeBlogViewStatus(!blogViewStatus);
+    
+   }
+
+   const setBeforeViewing = async (id: number) => {
+    await selectBlog(id);
+    blogViewerACTION();
+};
+
+
+const loadBlogs = async () => {
+
+  const blogs = await BlogBack.loadAllBlogs();
+ 
+  updateBlog(blogs);
+};
+
     return(
-        <>
+        <> 
+             {blogViewStatus===true ? <BlogViewer  closeOpenAction={blogViewerACTION} selectedBlogid={Number(selectedBlogItem)}  /> : <></>}
             <Nav /> 
             <div id="BlogContainer">
 
@@ -97,17 +142,23 @@ function Blogs(){
                 </div>
 
                 <div id ="BlogItemContainer">
-                  <div className="item">
+                 
+
+
+
+                 
+
+                {bloglist.map((blog) => (
+                  <div className="item" onClick={()=>{ setBeforeViewing(blog.id)}}>
                     <img src={sample} alt="featured" className="blogItemImage"></img>
                     <div className="blogItemAuthorContainer">
 
                        <img src={sample} alt="featured" className="blogItemAuthorImage"></img>
-                       <h1 className="blogItemAuthorName">Author Name</h1>
+                       <h1 className="blogItemAuthorName">{blog.author}</h1>
                     </div>
                     <div className="blogItemBodyContainer">
-                       <h1 className="blogItemTitle">Blog Title</h1>
-                       <h1 className="blogItemContext"> Headlines Sample Text. small details about the featured blog.
-                       Headlines Sample Text. small details about the featured blog.
+                       <h1 className="blogItemTitle">{blog.blog_title}</h1>
+                       <h1 className="blogItemContext"> {blog.content}
                        </h1>
                        {/*}
                        <div className="blogItemActionContainer">
@@ -120,70 +171,12 @@ function Blogs(){
 
 
                     </div>
+                  
                     
                  
 
                   </div>
-
-
-
-                  <div className="item">
-                    <img src={sample} alt="featured" className="blogItemImage"></img>
-                    <div className="blogItemAuthorContainer">
-
-                       <img src={sample} alt="featured" className="blogItemAuthorImage"></img>
-                       <h1 className="blogItemAuthorName">Author Name</h1>
-                    </div>
-                     <div className="blogItemBodyContainer">
-                       <h1 className="blogItemTitle">Blog Title</h1>
-                       <h1 className="blogItemContext"> Headlines Sample Text. small details about the featured blog.
-                       Headlines Sample Text. small details about the featured blog.
-                       </h1>
-                       {/*}
-                       <div className="blogItemActionContainer">
-                          <button className="blogItemAction">
-                            Show more
-                          </button>
-                       
-                       </div> 
-                        {*/}
-
-
-                     </div>
-                    
-                 
-
-                  </div>
-
-
-                  <div className="item">
-                    <img src={sample} alt="featured" className="blogItemImage"></img>
-                    <div className="blogItemAuthorContainer">
-
-                       <img src={sample} alt="featured" className="blogItemAuthorImage"></img>
-                       <h1 className="blogItemAuthorName">Author Name</h1>
-                    </div>
-                    <div className="blogItemBodyContainer">
-                       <h1 className="blogItemTitle">Blog Title</h1>
-                       <h1 className="blogItemContext"> Headlines Sample Text. small details about the featured blog.
-                       Headlines Sample Text. small details about the featured blog.
-                       </h1>
-                       {/*}
-                       <div className="blogItemActionContainer">
-                          <button className="blogItemAction">
-                            Show more
-                          </button>
-                       
-                       </div> 
-                        {*/}
-
-
-                    </div>
-                    
-                 
-
-                  </div>
-
+                   ))} 
 
 
               

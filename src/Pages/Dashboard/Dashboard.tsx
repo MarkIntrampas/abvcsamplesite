@@ -24,6 +24,8 @@ type Blog = {
 type TabKey = "home" | "analytics" | "blogs" | "users" | "settings";
 
 const Dashboard: React.FC = () => {
+
+  
   const [activeTab, setActiveTab] = useState<TabKey>("home");
   const [clock, setClock] = useState("00:00:00");
   const [tableLoading, setTableLoading] = useState(true);
