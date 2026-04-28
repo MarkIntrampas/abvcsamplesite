@@ -185,7 +185,12 @@ const loadRecentBlog= async () =>{
                     </div>
                     <div className="blogItemBodyContainer">
                        <h1 className="blogItemTitle">{blog.blog_title}</h1>
-                       <h1 className="blogItemContext"> {blog.content}
+                       <h1 className="blogItemContext"> 
+                        {blog.content
+                                ? blog.content.length > 300
+                                  ? blog.content.slice(0, 300) + "..."
+                                  : blog.content
+                                : ""}
                        </h1>
                        {/*}
                        <div className="blogItemActionContainer">
