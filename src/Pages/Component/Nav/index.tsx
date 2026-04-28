@@ -32,7 +32,7 @@ function Nav(){
  <div id="cont">
         {/* Bootstrap Navbar */}
         <nav className="navbar navbar-expand-md navbar-light nav">
-          <a className="navbar-brand brand"  href="#"><img id="logo"src={navlogo}></img></a>
+          <a className="navbar-brand brand"  href="/"><img id="logo"src={navlogo}></img></a>
           <button
             className="navbar-toggler btn-clck"
             type="button"

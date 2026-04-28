@@ -223,7 +223,8 @@
      border-radius: 3px;
     cursor: default; font-family: 'DM Sans', sans-serif;
     scrollbar-width: none;
-    white-space: pre-wrap;
+   
+      white-space: pre-line;
   }
 
   .bp-content-viewing{
@@ -231,6 +232,7 @@
   min-height:50%; 
   font-size: 14px;
   text-align: justify;
+  white-space: pre-line;
   }
 
   .bp-content.editable {

@@ -76,6 +76,34 @@ class BlogCrud{
             }
 
 
+            ViewRecentBlog =async (): Promise<Blog> => {
+                const supabase2 = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
+                    
+
+                const { data, error } = await supabase2
+                    .from('blogs')
+                    .select('*')
+                    .order('id', { ascending: false })
+                    .limit(1)
+                    .single();
+
+                    if (error) {
+                    console.log(error);
+                   
+                    }
+
+                    if (data) {
+                    data.author= await this.updateAuthorName(data.author);
+                
+                    }
+
+
+                    return data as Blog;
+
+                
+            }
+
+
 
 
 

@@ -24,6 +24,7 @@ type Blog = {
 function Blogs(){
   const navigate= useNavigate();
   const [bloglist,updateBlog] = useState<Blog[]>([]);
+ const [BlogInfo, loadRecent] = useState<Blog | null>(null);
   const [blogViewStatus, changeBlogViewStatus] =useState(false);
    const [selectedBlogItem, selectBlog] = useState<Number>();
 
@@ -33,19 +34,24 @@ function Blogs(){
   useEffect(()=>{
     const storedUser = sessionStorage.getItem("user");
 
-  if (storedUser) {
-    navigate("/dashboard");
-    return;
-  }
-
-  loadBlogs();
-
+    if (storedUser) {
+      navigate("/dashboard");
+      return;
+    }
+  
+   
+  
+    loadBlogs();
+    loadRecentBlog();
 
   },[]);
 
+
+
+ 
+
     const blogViewerACTION: ()=>void = () => {
-    
-    
+   
     loadBlogs();
     changeBlogViewStatus(!blogViewStatus);
     
@@ -64,6 +70,18 @@ const loadBlogs = async () => {
   updateBlog(blogs);
 };
 
+
+const loadRecentBlog= async () =>{
+
+   const recentBlog = await BlogBack.ViewRecentBlog();
+
+       loadRecent(recentBlog);
+
+    
+ 
+
+}
+
     return(
         <> 
              {blogViewStatus===true ? <BlogViewer  closeOpenAction={blogViewerACTION} selectedBlogid={Number(selectedBlogItem)}  /> : <></>}
@@ -73,23 +91,37 @@ const loadBlogs = async () => {
         
 
           <div id="BlogSec1">
-
-               
+                
+                  
               <div id="featuredBlog">
                  
                   <div id="featuredBlogBody">
                     
-                        <h1 id="featuredBlogTitle">BLOG TITLE</h1>
+                        <h1 id="featuredBlogTitle">{BlogInfo?.blog_title}</h1>
 
-
+                         <div id="featuredBlogAction">
+                          <div id="actionTextContainer">
+                            <div id="blogActionText">
+                            
+                                        {BlogInfo?.author}
+                            </div>
+                           
+                            
+                          </div>
+                        </div>
                         <div id="featuredBlogBodyContent">
                           <div id="blogAutContainer">
-                               <h1 id="blogAut">Author</h1>
+                               
                           </div>
                           <div id="blogSubTitleContainer">
                             <h1 id="blogSubTitle">
-                            Sub title: Lorem   eyJ1cmwiOiJtZWRpYS9zYW1wbGUucG5nIiwiaWF0IjoxNzQyMjc1ODc5LCJleHAiOjE3NzM4MTE4Nzl9
+                                       {BlogInfo?.content
+                                ? BlogInfo.content.length > 40
+                                  ? BlogInfo.content.slice(0, 40) + "..."
+                                  : BlogInfo.content
+                                : ""}
                               </h1>
+                              
 
                           </div>
 
@@ -98,29 +130,24 @@ const loadBlogs = async () => {
 
 
                         
-                        <div id="featuredBlogAction">
-                          <div id="actionTextContainer">
-                            <div id="blogActionText">
-                              <h1 id="actionText">
-                                Headlines Sample Text. small details about the featured blog.
-                                Headlines Sample Text. small details about the featured blog.
-                              </h1>
-
-                            </div>
-                            <button id="blogActionButton">
-                              Show more
-                            </button>
-                            
-                          </div>
-                        </div>
+                        
                         
                   </div>
-                  <img  src={sample}  className="blogiItemImage" alt="featured"></img>
 
+                  <div   className="blogiItemImage">
+                    <button id="blogActionButton"  onClick={() => {
+                                if (BlogInfo) {
+                                  setBeforeViewing(BlogInfo.id);
+                                }
+                              }}>
+                              Show more {">>>"}
+                            </button>
+                  </div>
                 </div>
 
-             
+              
           </div>
+               
             
             <div id="BlogSec2">
                 <div id="BlogToggle">
@@ -149,7 +176,7 @@ const loadBlogs = async () => {
                  
 
                 {bloglist.map((blog) => (
-                  <div className="item" onClick={()=>{ setBeforeViewing(blog.id)}}>
+                  <div className="item" key={blog.id} onClick={()=>{ setBeforeViewing(blog.id)}}>
                     <img src={sample} alt="featured" className="blogItemImage"></img>
                     <div className="blogItemAuthorContainer">
 
