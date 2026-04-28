@@ -612,7 +612,12 @@ const loadBlogs = async () => {
                     <div className="blog-card" key={blog.id}>
                       <div className="blog-thumb">{blog.emoji}</div>
                       <div className="blog-body">
-                        <div className="blog-cat">{blog.author}</div>
+                        <div className="blog-cat"><b> {blog.blog_title
+                                ? blog.blog_title.length > 30
+                                  ? blog.blog_title.slice(0, 40) + "..."
+                                  : blog.blog_title
+                                : ""}</b>
+                                </div>
                         <div className="blog-title">
                            {blog.content
                                 ? blog.content.length > 300
