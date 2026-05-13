@@ -101,6 +101,15 @@ const loadBlogs = async () => {
     
    }
 
+   const blogCreateACTION: ()=>void = () => {
+    
+    
+    loadBlogs();
+    selectBlog(0);
+    changeBlogViewStatus(!blogViewStatus);
+    
+   }
+
   const setBeforeViewing = async (id: number) => {
   await selectBlog(id);
   blogViewerACTION();
@@ -303,7 +312,7 @@ const loadBlogs = async () => {
       
            
        {blogViewStatus===true ? <BlogViewer  closeOpenAction={blogViewerACTION} selectedBlogid={Number(selectedBlogItem)}  /> : <></>}
-
+       
       <div className="dashboard-root">
         
         {/* Sidebar */}
@@ -602,6 +611,7 @@ const loadBlogs = async () => {
                   <button
                     className="btn-sm primary"
                     style={{ padding: "8px 20px", fontSize: 10, borderRadius: 6 }}
+                     onClick={()=>{blogCreateACTION()}}
                   >
                     + NEW POST
                   </button>

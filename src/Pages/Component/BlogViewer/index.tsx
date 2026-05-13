@@ -28,8 +28,10 @@ const BlogViewer: React.FC<BlogProps> = ({ closeOpenAction, selectedBlogid }) =>
 
   useEffect(() => {
     const loadBlogInfo = async () => {
+      if(selectedBlogid){
       const blog = await BlogBack.ViewBlogById(Number(selectedBlogid));
       updateBlogInfo(blog); // ✅ store object directly
+      }
     };
       
     loadBlogInfo();
@@ -68,150 +70,170 @@ const  removeCover = ()=>{
     document.getElementById('titleFileInput').value = '';
     */
   }
-
+  
+  if(Number(selectedBlogid) > 0){
     return(<>
 
            
 
 
-<div className="bp-overlay">
-  <div className="bp-wrap">
-    <div className="bp-modal" id="bpModal">
+    <div className="bp-overlay">
+      <div className="bp-wrap">
+        <div className="bp-modal" id="bpModal">
 
-      <div className="bp-header" >
-        <div className="bp-header-left">
-          <div className="bp-logo-box">
-            <svg viewBox="0 0 24 24" fill="none"><use href="#ic-blog" stroke="white"/></svg>
+          <div className="bp-header" >
+            <div className="bp-header-left">
+              <div className="bp-logo-box">
+                <svg viewBox="0 0 24 24" fill="none"><use href="#ic-blog" stroke="white"/></svg>
+              </div>
+              <span className="bp-title-label">
+                <svg viewBox="0 0 24 24"><use href="#ic-blog"/></svg>
+                Blog Post
+              </span>
+            </div>
+            <span className="bp-status viewing" id="statusBadge" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
+              <svg viewBox="0 0 24 24"><use href="#ic-eye"/></svg>
+              Viewing
+            </span>
           </div>
-          <span className="bp-title-label">
-            <svg viewBox="0 0 24 24"><use href="#ic-blog"/></svg>
-            Blog Post
-          </span>
-        </div>
-        <span className="bp-status viewing" id="statusBadge" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
-          <svg viewBox="0 0 24 24"><use href="#ic-eye"/></svg>
-          Viewing
-        </span>
-      </div>
 
-      <div className="bp-body">
-        <div className="bp-cover-wrap" id="coverWrap">
-          <div className="bp-cover-placeholder" id="coverPlaceholder">
-            <svg viewBox="0 0 24 24" fill="none"><use href="#ic-image"/></svg>
-            <span>Add Cover Image</span>
+          <div className="bp-body">
+            <div className="bp-cover-wrap" id="coverWrap">
+              <div className="bp-cover-placeholder" id="coverPlaceholder">
+                <svg viewBox="0 0 24 24" fill="none"><use href="#ic-image"/></svg>
+                <span>Add Cover Image</span>
+              </div>
+              <img className="bp-cover-img" id="coverImg" src="" alt="cover"></img>
+              <button className="bp-cover-remove" id="coverRemove" onClick={()=>removeCover()}>
+                <svg viewBox="0 0 24 24" width="11" height="11"><use href="#ic-close" stroke="white"/></svg>
+              </button>
+            </div>
+
+            <div className="bp-meta">
+              <span className="bp-tag">
+                <svg viewBox="0 0 24 24" width="10" height="10"><use href="#ic-tag"/></svg>
+                Technology
+              </span>
+              <span className="bp-date">
+                <svg viewBox="0 0 24 24"><use href="#ic-calendar"/></svg>
+                April 10, 2026
+              </span>
+              <span className="bp-author-role">| BY: {BlogInfo?.author}</span>
+            </div>
+
+            <textarea className="bp-post-title" id="postTitle" value={BlogInfo?.blog_title}>
+
+            </textarea>
+
+            <div className="bp-title-img-wrap" id="titleImgWrap">
+              <img className="bp-title-img-thumb" id="titleImgThumb" src="" alt=""></img>
+              <span className="bp-title-img-name" id="titleImgName"></span>
+              <button className="bp-title-img-remove" onClick={ ()=>removeTitleImg()}>
+                <svg viewBox="0 0 24 24" width="10" height="10"><use href="#ic-close"/></svg>
+                Remove
+              </button>
+            </div>
+
+    {/*}
+            <div className="bp-author-row">
+              <div className="bp-avatar">AB</div>
+              <span className="bp-author-role">{BlogInfo?.author}</span>
+            </div>
+    
+            <span className="bp-section-label" id="contentLabel">
+              <svg viewBox="0 0 24 24"><use href="#ic-pencil"/></svg>
+              Body Content
+            </span>
+    {
+            <textarea className="bp-content" id="postContent"  value={BlogInfo?.content || ""}>
+            
+            </textarea>
+        */}  
+            <p className="bp-content-viewing">
+              {BlogInfo?.content}
+
+            </p>
+            <div className="bp-content-images" id="contentImages"></div>
+
+            <button className="bp-add-img-btn" id="addImgBtn">
+              <svg viewBox="0 0 24 24"><use href="#ic-plus"/></svg>
+              <svg viewBox="0 0 24 24"><use href="#ic-image"/></svg>
+              Add Image to Content
+            </button>
+
+            <span className="bp-hint" id="editHint">
+              <svg viewBox="0 0 24 24" width="11" height="11"><use href="#ic-pencil"/></svg>
+              Click any field to edit its content.
+            </span>
           </div>
-          <img className="bp-cover-img" id="coverImg" src="" alt="cover"></img>
-          <button className="bp-cover-remove" id="coverRemove" onClick={()=>removeCover()}>
-            <svg viewBox="0 0 24 24" width="11" height="11"><use href="#ic-close" stroke="white"/></svg>
-          </button>
+
+          <div className="bp-footer" >
+            <span className="bp-copyright">
+              <svg viewBox="0 0 24 24"><use href="#ic-copyright"/></svg>
+              Ale Bosma Ventures Corporation
+            </span>
+            <div className="bp-actions">
+              <button className="bp-btn bp-btn-edit" id="editBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
+                <svg viewBox="0 0 24 24"><use href="#ic-pencil"/></svg>Edit
+              </button>
+              <button className="bp-btn bp-btn-save" id="saveBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
+                <svg viewBox="0 0 24 24"><use href="#ic-save"/></svg>Save
+              </button>
+              <button className="bp-btn bp-btn-delete" onClick={()=>{deleteAction()}} style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
+                <svg viewBox="0 0 24 24"><use href="#ic-trash"/></svg>Delete
+              </button>
+              <button className="bp-btn bp-btn-close" onClick={()=>closeOpenAction()} >
+                <svg viewBox="0 0 24 24"><use href="#ic-close"/></svg>Close
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="bp-meta">
-          <span className="bp-tag">
-            <svg viewBox="0 0 24 24" width="10" height="10"><use href="#ic-tag"/></svg>
-            Technology
-          </span>
-          <span className="bp-date">
-            <svg viewBox="0 0 24 24"><use href="#ic-calendar"/></svg>
-            April 10, 2026
-          </span>
-           <span className="bp-author-role">| BY: {BlogInfo?.author}</span>
-        </div>
-
-        <textarea className="bp-post-title" id="postTitle" value={BlogInfo?.blog_title}>
-
-        </textarea>
-
-        <div className="bp-title-img-wrap" id="titleImgWrap">
-          <img className="bp-title-img-thumb" id="titleImgThumb" src="" alt=""></img>
-          <span className="bp-title-img-name" id="titleImgName"></span>
-          <button className="bp-title-img-remove" onClick={ ()=>removeTitleImg()}>
-            <svg viewBox="0 0 24 24" width="10" height="10"><use href="#ic-close"/></svg>
-            Remove
-          </button>
-        </div>
-
-{/*}
-        <div className="bp-author-row">
-          <div className="bp-avatar">AB</div>
-           <span className="bp-author-role">{BlogInfo?.author}</span>
-        </div>
- 
-        <span className="bp-section-label" id="contentLabel">
-          <svg viewBox="0 0 24 24"><use href="#ic-pencil"/></svg>
-          Body Content
-        </span>
-{
-        <textarea className="bp-content" id="postContent"  value={BlogInfo?.content || ""}>
-         
-         </textarea>
-    */}  
-         <p className="bp-content-viewing">
-           {BlogInfo?.content}
-
-         </p>
-        <div className="bp-content-images" id="contentImages"></div>
-
-        <button className="bp-add-img-btn" id="addImgBtn">
-          <svg viewBox="0 0 24 24"><use href="#ic-plus"/></svg>
-          <svg viewBox="0 0 24 24"><use href="#ic-image"/></svg>
-          Add Image to Content
-        </button>
-
-        <span className="bp-hint" id="editHint">
-          <svg viewBox="0 0 24 24" width="11" height="11"><use href="#ic-pencil"/></svg>
-          Click any field to edit its content.
-        </span>
-      </div>
-
-      <div className="bp-footer" >
-        <span className="bp-copyright">
-          <svg viewBox="0 0 24 24"><use href="#ic-copyright"/></svg>
-          Ale Bosma Ventures Corporation
-        </span>
-        <div className="bp-actions">
-          <button className="bp-btn bp-btn-edit" id="editBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
-            <svg viewBox="0 0 24 24"><use href="#ic-pencil"/></svg>Edit
-          </button>
-          <button className="bp-btn bp-btn-save" id="saveBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
-            <svg viewBox="0 0 24 24"><use href="#ic-save"/></svg>Save
-          </button>
-          <button className="bp-btn bp-btn-delete" onClick={()=>{deleteAction()}} style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
-            <svg viewBox="0 0 24 24"><use href="#ic-trash"/></svg>Delete
-          </button>
-          <button className="bp-btn bp-btn-close" onClick={()=>closeOpenAction()} >
-            <svg viewBox="0 0 24 24"><use href="#ic-close"/></svg>Close
-          </button>
+        <div className="bp-confirm" id="confirmOverlay" style={{ display: deletingOverlay ? 'flex' : 'none' }} >
+          <div className="bp-confirm-box">
+            <div className="bp-confirm-icon">
+              <svg viewBox="0 0 24 24"><use href="#ic-warn"/></svg>
+            </div>
+            <h3>Delete this post?</h3>
+            <p>This action cannot be undone. The post will be permanently removed.</p>
+            <div className="bp-confirm-btns">
+              <button className="bp-btn bp-btn-delete" onClick={()=>{deleteConfirmed()}}>
+                <svg viewBox="0 0 24 24"><use href="#ic-trash"/></svg>Delete
+              </button>
+              <button className="bp-btn bp-btn-close" onClick={()=>{changeDeleting(!deletingOverlay)}} >
+                <svg viewBox="0 0 24 24"><use href="#ic-close"/></svg>Cancel
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div className="bp-confirm" id="confirmOverlay" style={{ display: deletingOverlay ? 'flex' : 'none' }} >
-      <div className="bp-confirm-box">
-        <div className="bp-confirm-icon">
-          <svg viewBox="0 0 24 24"><use href="#ic-warn"/></svg>
-        </div>
-        <h3>Delete this post?</h3>
-        <p>This action cannot be undone. The post will be permanently removed.</p>
-        <div className="bp-confirm-btns">
-          <button className="bp-btn bp-btn-delete" onClick={()=>{deleteConfirmed()}}>
-            <svg viewBox="0 0 24 24"><use href="#ic-trash"/></svg>Delete
-          </button>
-          <button className="bp-btn bp-btn-close" onClick={()=>{changeDeleting(!deletingOverlay)}} >
-            <svg viewBox="0 0 24 24"><use href="#ic-close"/></svg>Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+    <input type="file" id="coverFileInput"   accept="image/*" ></input>
+    <input type="file" id="titleFileInput"   accept="image/*" ></input>
+    <input type="file" id="contentFileInput" accept="image/*" ></input>
 
-<input type="file" id="coverFileInput"   accept="image/*" ></input>
-<input type="file" id="titleFileInput"   accept="image/*" ></input>
-<input type="file" id="contentFileInput" accept="image/*" ></input>
-
+        
+        </>);
+  }else{
+     return(<>
      
-    </>);
+    <div className="bp-overlay">
+      <div className="bp-wrap">
+        <div className="bp-modal" id="bpModal">
+
+        </div>
+      </div>
+      </div>
+     
+     
+     
+     
+     
+     
+     
+     </>)
+  }
 }
 
 
