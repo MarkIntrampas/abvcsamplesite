@@ -173,9 +173,7 @@ const  removeCover = ()=>{
               Ale Bosma Ventures Corporation
             </span>
             <div className="bp-actions">
-              <button className="bp-btn bp-btn-edit" id="editBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
-                <svg viewBox="0 0 24 24"><use href="#ic-pencil"/></svg>Edit
-              </button>
+              
               <button className="bp-btn bp-btn-save" id="saveBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
                 <svg viewBox="0 0 24 24"><use href="#ic-save"/></svg>Save
               </button>
@@ -221,7 +219,64 @@ const  removeCover = ()=>{
     <div className="bp-overlay">
       <div className="bp-wrap">
         <div className="bp-modal" id="bpModal">
+          <div className="bp-header" >
+            <div className="bp-header-left">
+              <div className="bp-logo-box">
+                <svg viewBox="0 0 24 24" fill="none"><use href="#ic-blog" stroke="white"/></svg>
+              </div>
+              <span className="bp-title-label">
+                <svg viewBox="0 0 24 24"><use href="#ic-blog"/></svg>
+                Create Post
+              </span>
+            </div>
+            
+          </div>
 
+          <div className="bp-body">
+
+                  <div className="bp-cover-wrap" id="coverWrap">
+              <div className="bp-cover-placeholder" id="coverPlaceholder">
+                <svg viewBox="0 0 24 24" fill="none"><use href="#ic-image"/></svg>
+                <span>Add Cover Image</span>
+              </div>
+              <img className="bp-cover-img" id="coverImg" src="" alt="cover"></img>
+              
+            </div>
+
+            <div className="bp-meta">
+
+           
+
+                    <select id="employees" name="employees" className="bp-tag">
+                      <option value="">-- SELECT POST CATEGORY --</option>
+                      <option value="EVENT">EVENT</option>
+                      <option value="ACHIEVEMENT">ACHIEVEMENT</option>
+                      <option value="ANOUNCEMENT">ANOUNCEMENT</option>
+                    </select>
+         
+
+          </div>
+
+          </div>
+
+
+
+          <div className="bp-footer" >
+            <span className="bp-copyright">
+              <svg viewBox="0 0 24 24"><use href="#ic-copyright"/></svg>
+              Ale Bosma Ventures Corporation
+            </span>
+                <div className="bp-actions">
+                  <button className="bp-btn bp-btn-edit" id="editBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
+                    PUBLISH POST
+                  </button>
+                  <button className="bp-btn bp-btn-close" onClick={()=>closeOpenAction()} >
+                    <svg viewBox="0 0 24 24"><use href="#ic-close"/></svg>Close
+                  </button>
+                </div>
+            </div>
+          
+    
         </div>
       </div>
       </div>
