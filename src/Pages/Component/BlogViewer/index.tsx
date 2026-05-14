@@ -256,6 +256,20 @@ const  removeCover = ()=>{
          
 
           </div>
+             <div className="bp-meta">
+                 <span className="bp-author-role">TITLE:</span>
+             </div>
+            
+            <textarea className="bp-post-title-edit" id="postTitle"></textarea>
+            <div className="bp-meta">
+                  <span className="bp-author-role">CONTENT</span>
+            </div>
+             
+           <textarea className="bp-content-edit"></textarea>
+
+            
+
+          
 
           </div>
 
