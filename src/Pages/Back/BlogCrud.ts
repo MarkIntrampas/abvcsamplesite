@@ -114,7 +114,7 @@ class BlogCrud{
                              
 
                                 const user = JSON.parse(storedUser);
-                                       alert(user.Id)
+                                     
                             
                             const { error } = await this.supabase
                                 .from('blogs')
