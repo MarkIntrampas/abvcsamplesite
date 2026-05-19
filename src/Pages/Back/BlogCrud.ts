@@ -102,8 +102,35 @@ class BlogCrud{
 
                 
             }
+                        CreateBlog = async (name: string, content:string): Promise<void> => {
+                            
+                          
+                                const storedUser = sessionStorage.getItem("user");
 
+                                if (!storedUser) {
+                                    alert("Error finding user ID");
+                                    return;
+                                }
+                             
 
+                                const user = JSON.parse(storedUser);
+                                       alert(user.Id)
+                            
+                            const { error } = await this.supabase
+                                .from('blogs')
+                                .insert([
+                                    {
+                                        author:Number(user.Id),
+                                        blog_title: name,
+                                        content: content,
+                                    }
+                                ]);
+
+                            if (error) {
+                                alert("error adding blog");
+                                throw error;
+                            }
+                        };
 
 
 

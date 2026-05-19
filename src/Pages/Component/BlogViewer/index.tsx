@@ -25,6 +25,9 @@ const BlogViewer: React.FC<BlogProps> = ({ closeOpenAction, selectedBlogid }) =>
 
   const [BlogInfo, updateBlogInfo] = useState<Blog | null>(null);
   const [deletingOverlay, changeDeleting] = useState(false);
+  const [title, getTitle] = useState<string>();
+  const [blogContent, getBlogContent] = useState<string>();
+
 
   useEffect(() => {
     const loadBlogInfo = async () => {
@@ -46,6 +49,15 @@ const deleteAction = ()=>{
 
 const deleteConfirmed = async ()=>{
   await BlogBack.deleteBlog(Number(selectedBlogid));
+  closeOpenAction();
+}
+
+const createBlog = async ()=>{
+  
+ 
+
+  await  BlogBack.CreateBlog(String(title), String(blogContent));
+
   closeOpenAction();
 }
 
@@ -260,12 +272,12 @@ const  removeCover = ()=>{
                  <span className="bp-author-role">TITLE:</span>
              </div>
             
-            <textarea className="bp-post-title-edit" id="postTitle"></textarea>
+            <textarea className="bp-post-title-edit" id="postTitle" value={title} onChange={(e) => getTitle(e.target.value)}></textarea>
             <div className="bp-meta">
                   <span className="bp-author-role">CONTENT</span>
             </div>
              
-           <textarea className="bp-content-edit"></textarea>
+           <textarea className="bp-content-edit" value={blogContent} onChange={(e) => getBlogContent(e.target.value)}></textarea>
 
             
 
@@ -281,7 +293,7 @@ const  removeCover = ()=>{
               Ale Bosma Ventures Corporation
             </span>
                 <div className="bp-actions">
-                  <button className="bp-btn bp-btn-edit" id="editBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
+                  <button className="bp-btn bp-btn-edit" onClick={()=>createBlog()} id="editBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
                     PUBLISH POST
                   </button>
                   <button className="bp-btn bp-btn-close" onClick={()=>closeOpenAction()} >
