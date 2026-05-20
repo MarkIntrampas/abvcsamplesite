@@ -43,23 +43,60 @@ class BlogCrud{
             }
 
 
-            deleteBlog= async (id:number) => {
-                const supabase = createClient(
-                import.meta.env.VITE__BACK_URL,
-                import.meta.env.VITE_BACK_KEY
-                );
+                deleteBlog = async (id: number) => {
+                    const supabase = createClient(
+                        import.meta.env.VITE__BACK_URL,
+                        import.meta.env.VITE_BACK_KEY
+                    );
 
-                const { error } = await supabase
-                .from("blogs")
-                .delete()
-                .eq("id", Number(id)); // 👈 pass the id here
+                    // get image path first
+                    const { data: blog, error: fetchError } = await supabase
+                        .from("blogs")
+                        .select("images")
+                        .eq("id", id)
+                        .single();
 
-                if(error){
-                    alert("deletion failed")
-                }
+                    if (fetchError) {
+                        alert("Failed to fetch blog");
+                        return;
+                    }
 
-             }
+                      const parts = blog.images.split("/storage/v1/object/public/blog-images/");
+  
+                    alert(parts[1]);
 
+                    // delete image from storage bucket
+                    if (blog?.images) {
+                        const { error: storageError } = await supabase.storage
+                        .from('blog-images')
+                        .remove([parts[1]]);
+
+                        if (storageError) {
+                         alert(storageError);
+                        alert("Failed to delete image");
+                        return;
+                        }
+                    }
+
+                    // delete blog row
+                    const { error } = await supabase
+                        .from("blogs")
+                        .delete()
+                        .eq("id", id);
+
+                    if (error) {
+                        console.error(error);
+                        alert("Deletion failed");
+                        return;
+                    }
+
+                    alert("Blog deleted successfully");
+                    };
+
+
+
+
+                    
 
             ViewBlogById =async (id:Number): Promise<Blog> => {
            
@@ -134,7 +171,7 @@ class BlogCrud{
 
 
 
-                CreateBlog = async (name: string, content:string, selectedFile:File | null): Promise<void> => {
+                CreateBlog = async (name: string, content:string, selectedFile:File | null, cat:string): Promise<void> => {
                     
                     
                         const storedUser = sessionStorage.getItem("user");
@@ -159,6 +196,7 @@ class BlogCrud{
                                 blog_title: name,
                                 content: content,
                                 images: uploadLink,
+                                category:cat,
                             }
                         ]);
 

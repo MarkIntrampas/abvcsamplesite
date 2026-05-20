@@ -15,6 +15,8 @@ type Blog = {
   blog_title?: string;
   content?: string;
   images?:string;
+  created_at?:string,
+  category?:string,
 };
 
 
@@ -28,6 +30,7 @@ const BlogViewer: React.FC<BlogProps> = ({ closeOpenAction, selectedBlogid }) =>
   const [deletingOverlay, changeDeleting] = useState(false);
   const [title, getTitle] = useState<string>();
   const [blogContent, getBlogContent] = useState<string>();
+    const [category, setCategory] = useState<string>("EVENT");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);  
 
@@ -75,7 +78,7 @@ const createBlog = async ()=>{
   
  
 
-  await  BlogBack.CreateBlog(String(title), String(blogContent),selectedFile);
+  await  BlogBack.CreateBlog(String(title), String(blogContent),selectedFile, category);
 
   closeOpenAction();
 }
@@ -132,11 +135,18 @@ const createBlog = async ()=>{
             <div className="bp-meta">
               <span className="bp-tag">
                 <svg viewBox="0 0 24 24" width="10" height="10"><use href="#ic-tag"/></svg>
-                Technology
+                 {BlogInfo?.category}
               </span>
               <span className="bp-date">
                 <svg viewBox="0 0 24 24"><use href="#ic-calendar"/></svg>
-                April 10, 2026
+            
+              
+                {new Date(String(BlogInfo?.created_at)).toLocaleDateString("en-US", {
+                  timeZone: "Asia/Manila",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
               </span>
               <span className="bp-author-role">| BY: {BlogInfo?.author}</span>
             </div>
@@ -282,7 +292,7 @@ const createBlog = async ()=>{
 
            
 
-                    <select id="employees" name="employees" className="bp-tag">
+                    <select id="employees" name="employees" className="bp-tag" onChange={(e) => setCategory(e.target.value)}>
                       <option value="">-- SELECT POST CATEGORY --</option>
                       <option value="EVENT">EVENT</option>
                       <option value="ACHIEVEMENT">ACHIEVEMENT</option>
