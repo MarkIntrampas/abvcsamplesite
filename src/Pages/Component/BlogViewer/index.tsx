@@ -29,7 +29,7 @@ const BlogViewer: React.FC<BlogProps> = ({ closeOpenAction, selectedBlogid }) =>
   const [title, getTitle] = useState<string>();
   const [blogContent, getBlogContent] = useState<string>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  
+  const [preview, setPreview] = useState<string | null>(null);  
 
 
   // Select File
@@ -37,9 +37,15 @@ const BlogViewer: React.FC<BlogProps> = ({ closeOpenAction, selectedBlogid }) =>
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
       setSelectedFile(e.target.files[0]);
+        setPreview(URL.createObjectURL(file));
     }
   };
+
+
+  
+
 
 
   useEffect(() => {
@@ -248,21 +254,27 @@ const createBlog = async ()=>{
 
           <div className="bp-body">
 
-                  <div className="bp-cover-wrap" id="coverWrap">
-              <div className="bp-cover-placeholder" id="coverPlaceholder">
-                <svg viewBox="0 0 24 24" fill="none"><use href="#ic-image"/></svg>
-                <span>Add Cover Image</span>
-              </div>
+                  
+                   <div
+                 className="bp-cover-wrap" id="coverWrap2"
+                  style={{
+                    backgroundImage: `url(${preview})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                >
+              
                <input
         type="file"
         accept="image/*"
         onChange={handleFileChange}
+        id="uploadimage"
       />
       
 
       
 
-              <img className="bp-cover-img" id="coverImg" src="" alt="cover"></img>
+              
               
             </div>
 

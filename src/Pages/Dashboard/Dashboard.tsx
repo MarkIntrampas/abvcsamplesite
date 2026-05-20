@@ -19,6 +19,7 @@ type Blog = {
   author?:string;
   blog_title?: string;
   content?: string;
+  images?:string;
 };
 
 type TabKey = "home" | "analytics" | "blogs" | "users" | "settings";
@@ -620,7 +621,7 @@ const loadBlogs = async () => {
                 <div className="blog-grid">
                   {bloglist.map((blog) => (
                     <div className="blog-card" key={blog.id}>
-                      <div className="blog-thumb">{blog.emoji}</div>
+                       <img src={blog.images} alt="featured" className="blogItemImage"></img>
                       <div className="blog-body">
                         <div className="blog-cat"><b> {blog.blog_title
                                 ? blog.blog_title.length > 30

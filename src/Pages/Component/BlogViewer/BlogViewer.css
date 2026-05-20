@@ -79,6 +79,19 @@
     max-height: 80%;
 
   }
+
+
+  #coverWrap2{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  }
+
+  #uploadimage{
+    background-color: black;
+    color:wheat;
+  }
   .bp-title-label {
     font-size: 12px; font-weight: 600; color: var(--pink);
     letter-spacing: 0.1em; text-transform: uppercase;
