@@ -14,6 +14,7 @@ type Blog = {
   author?:string;
   blog_title?: string;
   content?: string;
+  images?:string;
 };
 
 
@@ -27,6 +28,18 @@ const BlogViewer: React.FC<BlogProps> = ({ closeOpenAction, selectedBlogid }) =>
   const [deletingOverlay, changeDeleting] = useState(false);
   const [title, getTitle] = useState<string>();
   const [blogContent, getBlogContent] = useState<string>();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
+
+
+  // Select File
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
 
 
   useEffect(() => {
@@ -56,22 +69,12 @@ const createBlog = async ()=>{
   
  
 
-  await  BlogBack.CreateBlog(String(title), String(blogContent));
+  await  BlogBack.CreateBlog(String(title), String(blogContent),selectedFile);
 
   closeOpenAction();
 }
 
-const  removeCover = ()=>{
- /* 
-    const img = document.getElementById('coverImg');
-    img.style.display = 'none'; img.src = '';
-    document.getElementById('coverWrap').classList.remove('has-image');
-    document.getElementById('coverRemove').style.display = 'none';
-    if (isEditing) document.getElementById('coverPlaceholder').style.display = 'flex';
-    document.getElementById('coverFileInput').value = '';
 
-    */
-  };
 
 
  const removeTitleImg =()=>{
@@ -110,15 +113,14 @@ const  removeCover = ()=>{
           </div>
 
           <div className="bp-body">
-            <div className="bp-cover-wrap" id="coverWrap">
+            <div  id="coverWrap">
               <div className="bp-cover-placeholder" id="coverPlaceholder">
                 <svg viewBox="0 0 24 24" fill="none"><use href="#ic-image"/></svg>
                 <span>Add Cover Image</span>
               </div>
-              <img className="bp-cover-img" id="coverImg" src="" alt="cover"></img>
-              <button className="bp-cover-remove" id="coverRemove" onClick={()=>removeCover()}>
-                <svg viewBox="0 0 24 24" width="11" height="11"><use href="#ic-close" stroke="white"/></svg>
-              </button>
+              <img  id="coverImg" src={BlogInfo?.images} alt="cover"></img>
+             
+               
             </div>
 
             <div className="bp-meta">
@@ -251,6 +253,15 @@ const  removeCover = ()=>{
                 <svg viewBox="0 0 24 24" fill="none"><use href="#ic-image"/></svg>
                 <span>Add Cover Image</span>
               </div>
+               <input
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
+      
+
+      
+
               <img className="bp-cover-img" id="coverImg" src="" alt="cover"></img>
               
             </div>

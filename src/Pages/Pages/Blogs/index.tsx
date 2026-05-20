@@ -18,6 +18,7 @@ type Blog = {
   author?:string;
   blog_title?: string;
   content?: string;
+  images?:string;
 };
 
 
@@ -133,16 +134,28 @@ const loadRecentBlog= async () =>{
                         
                         
                   </div>
+                  <div
+                  className="blogiItemImage"
+                  style={{
+                    backgroundImage: `url(${BlogInfo?.images})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                >
+                  <button
+                    id="blogActionButton"
+                    onClick={() => {
+                      if (BlogInfo) {
+                        setBeforeViewing(BlogInfo.id);
+                      }
+                    }}
+                  >
+                    Show more {">>>"}
+                  </button>
+                </div>       
 
-                  <div   className="blogiItemImage">
-                    <button id="blogActionButton"  onClick={() => {
-                                if (BlogInfo) {
-                                  setBeforeViewing(BlogInfo.id);
-                                }
-                              }}>
-                              Show more {">>>"}
-                            </button>
-                  </div>
+                
+                
                 </div>
 
               
@@ -177,7 +190,7 @@ const loadRecentBlog= async () =>{
 
                 {bloglist.map((blog) => (
                   <div className="item" key={blog.id} onClick={()=>{ setBeforeViewing(blog.id)}}>
-                    <img src={sample} alt="featured" className="blogItemImage"></img>
+                    <img src={blog.images} alt="featured" className="blogItemImage"></img>
                     <div className="blogItemAuthorContainer">
 
                        <img src={sample} alt="featured" className="blogItemAuthorImage"></img>

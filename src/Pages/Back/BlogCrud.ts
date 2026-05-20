@@ -8,27 +8,27 @@ type Blog = {
 };
 
 class BlogCrud{
-        private supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
+            private supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
+            
+            loadAllBlogs = async (): Promise<Blog[]> => {
+            const { data, error } = await this.supabase
+                .from("blogs")
+                .select("*");
 
-        loadAllBlogs = async (): Promise<Blog[]> => {
-        const { data, error } = await this.supabase
-            .from("blogs")
-            .select("*");
+            if (error) {
+                alert("something went wrong in loading the blogs");
+                return [];
+            }else{
+                data.map((e)=>{
+                    
+                    e.author=this.updateAuthorName(e.author);
+                });
+            }
 
-        if (error) {
-            alert("something went wrong in loading the blogs");
-            return [];
-        }else{
-            data.map((e)=>{
-                
-                e.author=this.updateAuthorName(e.author);
-            });
-        }
+            return data as Blog[];
+            };
 
-        return data as Blog[];
-        };
-
-       updateAuthorName= async (id:number) => {
+            updateAuthorName= async (id:number) => {
             const supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
         
         
@@ -58,10 +58,10 @@ class BlogCrud{
                     alert("deletion failed")
                 }
 
-        }
+             }
 
 
-        ViewBlogById =async (id:Number): Promise<Blog> => {
+            ViewBlogById =async (id:Number): Promise<Blog> => {
            
         
                                         const { data} = await this.supabase
@@ -100,37 +100,73 @@ class BlogCrud{
 
                     return data as Blog;
 
-                
+                    
             }
-                        CreateBlog = async (name: string, content:string): Promise<void> => {
-                            
+            
+                uploadImage = async (file: File | null): Promise<string> => {
+
+                    if (!file) {
+                        throw new Error("No file selected");
+                    }
+                      
+                    const fileName = "public/blog-"+file.name;
+
+                    // Upload image
+                    const { error } = await this.supabase.storage
+                        .from('blog-images')
+                        .upload(fileName, file);
+                         
+                    if (error) {
+                        alert(error);
+                        throw new Error("Upload failed");
+                    }
+                    
+
+                    // Get public URL
+                    const { data } =  this.supabase.storage
+                        .from('blog-images')
+                        .getPublicUrl(fileName);
+                       
+
+                    return data.publicUrl;
+
+                }
+
+
+
+                CreateBlog = async (name: string, content:string, selectedFile:File | null): Promise<void> => {
+                    
+                    
+                        const storedUser = sessionStorage.getItem("user");
+
+                        if (!storedUser) {
+                            alert("Error finding user ID");
+                            return;
+                        }
+                        
+
+                        const user = JSON.parse(storedUser);
+                       const uploadLink = await this.uploadImage(selectedFile);
                           
-                                const storedUser = sessionStorage.getItem("user");
-
-                                if (!storedUser) {
-                                    alert("Error finding user ID");
-                                    return;
-                                }
-                             
-
-                                const user = JSON.parse(storedUser);
-                                     
-                            
-                            const { error } = await this.supabase
-                                .from('blogs')
-                                .insert([
-                                    {
-                                        author:Number(user.Id),
-                                        blog_title: name,
-                                        content: content,
-                                    }
-                                ]);
-
-                            if (error) {
-                                alert("error adding blog");
-                                throw error;
+                       
+                                
+                    
+                    const { error } = await this.supabase
+                        .from('blogs')
+                        .insert([
+                            {
+                                author:Number(user.Id),
+                                blog_title: name,
+                                content: content,
+                                images: uploadLink,
                             }
-                        };
+                        ]);
+
+                    if (error) {
+                        alert("error adding blog");
+                        throw error;
+                    }
+                };
 
 
 
