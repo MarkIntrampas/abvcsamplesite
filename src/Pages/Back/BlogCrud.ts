@@ -43,56 +43,56 @@ class BlogCrud{
             }
 
 
-                deleteBlog = async (id: number) => {
-                    const supabase = createClient(
-                        import.meta.env.VITE__BACK_URL,
-                        import.meta.env.VITE_BACK_KEY
-                    );
+               deleteBlog = async (id: number) => {
+                        const supabase = createClient(
+                            import.meta.env.VITE__BACK_URL,
+                            import.meta.env.VITE_BACK_KEY
+                        );
 
-                    // get image path first
-                    const { data: blog, error: fetchError } = await supabase
-                        .from("blogs")
-                        .select("images")
-                        .eq("id", id)
-                        .single();
+                        const { data: blog, error: fetchError } = await supabase
+                            .from("blogs")
+                            .select("images")
+                            .eq("id", id)
+                            .single();
 
-                    if (fetchError) {
-                        alert("Failed to fetch blog");
-                        return;
-                    }
-
-                      const parts = blog.images.split("/storage/v1/object/public/blog-images/");
-  
-                    alert(parts[1]);
-
-                    // delete image from storage bucket
-                    if (blog?.images) {
-                        const { error: storageError } = await supabase.storage
-                        .from('blog-images')
-                        .remove([parts[1]]);
-
-                        if (storageError) {
-                         alert(storageError);
-                        alert("Failed to delete image");
-                        return;
+                        if (fetchError) {
+                            console.error(fetchError);
+                            return alert("Failed to fetch blog");
                         }
-                    }
 
-                    // delete blog row
-                    const { error } = await supabase
-                        .from("blogs")
-                        .delete()
-                        .eq("id", id);
+                        if (blog?.images) {
+                            const marker = "/storage/v1/object/public/blog-images/";
+                            
+                            // extract storage path
+                            let imagePath = blog.images.split(marker)[1];
 
-                    if (error) {
-                        console.error(error);
-                        alert("Deletion failed");
-                        return;
-                    }
+                            // decode %20 etc.
+                            imagePath = decodeURIComponent(imagePath);
 
-                    alert("Blog deleted successfully");
+                            console.log("Deleting:", imagePath);
+
+                            const { error: storageError } = await supabase.storage
+                                .from("blog-images")
+                                .remove([imagePath]);
+
+                            if (storageError) {
+                                console.error(storageError);
+                                return alert(storageError.message);
+                            }
+                        }
+
+                        const { error } = await supabase
+                            .from("blogs")
+                            .delete()
+                            .eq("id", id);
+
+                        if (error) {
+                            console.error(error);
+                            return alert("Deletion failed");
+                        }
+
+                        alert("Blog deleted successfully");
                     };
-
 
 
 
