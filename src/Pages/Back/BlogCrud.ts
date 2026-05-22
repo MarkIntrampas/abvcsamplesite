@@ -145,29 +145,35 @@ class BlogCrud{
                     if (!file) {
                         throw new Error("No file selected");
                     }
-                      
-                    const fileName = "public/blog-"+file.name;
 
-                    // Upload image
+                   const fileExtension = file.name.split('.').pop();
+
+                    const fileName = `public/blog-${Date.now()}-${Math.random()
+                    .toString(36)
+                    .substring(2, 8)}.${fileExtension}`;
+                    const bucket = 'blog-images';
+
+                    // Try upload
                     const { error } = await this.supabase.storage
-                        .from('blog-images')
+                        .from(bucket)
                         .upload(fileName, file);
-                         
-                    if (error) {
-                        alert(error);
+
+                    // If upload fails for reasons OTHER than existing file
+                    if (error && !String(error.message).includes("already exists")) {
+                        console.error(error);
                         throw new Error("Upload failed");
                     }
-                    
 
-                    // Get public URL
-                    const { data } =  this.supabase.storage
-                        .from('blog-images')
+                    // Return the public URL whether uploaded now or already existed
+                    const { data } = this.supabase.storage
+                        .from(bucket)
                         .getPublicUrl(fileName);
-                       
 
                     return data.publicUrl;
-
                 }
+                    
+
+                  
 
 
 
