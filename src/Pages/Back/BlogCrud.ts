@@ -175,45 +175,59 @@ class BlogCrud{
                 }
 
 
+                 
                   deleteOldImage = async (id:Number) => {
 
-                       const supabase = createClient(
-                            import.meta.env.VITE__BACK_URL,
-                            import.meta.env.VITE_BACK_KEY
-                        );
+                    const supabase = createClient(
+                        import.meta.env.VITE__BACK_URL,
+                        import.meta.env.VITE_BACK_KEY
+                    );
 
-                        const { data: blog, error: fetchError } = await supabase
-                            .from("blogs")
-                            .select("images")
-                            .eq("id", id)
-                            .single();
+                    const { data: blog, error: fetchError } = await supabase
+                        .from("blogs")
+                        .select("images")
+                        .eq("id", id)
+                        .single();
 
-                        if (fetchError) {
-                            console.error(fetchError);
-                            return alert("Failed to fetch blog");
-                        }
+                    if (fetchError) {
+                        console.error(fetchError);
+                        return;
+                    }
 
-                        if (blog?.images) {
-                            const marker = "/storage/v1/object/public/blog-images/";
-                            
-                            // extract storage path
-                            let imagePath = blog.images.split(marker)[1];
+                    // no image stored
+                    if (!blog?.images) {
+                        return;
+                    }
 
-                            // decode %20 etc.
-                            imagePath = decodeURIComponent(imagePath);
+                    const marker = "/storage/v1/object/public/blog-images/";
 
-                            console.log("Deleting:", imagePath);
+                    // invalid url
+                    if (!blog.images.includes(marker)) {
+                        return;
+                    }
 
-                            const { error: storageError } = await supabase.storage
-                                .from("blog-images")
-                                .remove([imagePath]);
+                    let imagePath = blog.images.split(marker)[1];
 
-                            if (storageError) {
-                                console.error(storageError);
-                                return alert(storageError.message);
-                            }
-                        }
-                  }
+                    if (!imagePath) {
+                        return;
+                    }
+
+                    imagePath = decodeURIComponent(imagePath);
+
+                    console.log("Deleting:", imagePath);
+
+                    const { error: storageError } = await supabase.storage
+                        .from("blog-images")
+                        .remove([imagePath]);
+
+                    // ignore "not found" errors
+                    if (
+                        storageError &&
+                        !storageError.message.toLowerCase().includes("not found")
+                    ) {
+                        console.error(storageError);
+                    }
+                };
                     
 
                   
