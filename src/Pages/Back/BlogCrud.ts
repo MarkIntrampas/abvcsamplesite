@@ -2,9 +2,11 @@ import { createClient } from "@supabase/supabase-js";
 
 type Blog = {
   id: number;
-  title: string;
+  blog_title: string;
   content: string;
   author:string;
+  category?:string;
+  images?:string;
 };
 
 class BlogCrud{
@@ -171,6 +173,47 @@ class BlogCrud{
 
                     return data.publicUrl;
                 }
+
+
+                  deleteOldImage = async (id:Number) => {
+
+                       const supabase = createClient(
+                            import.meta.env.VITE__BACK_URL,
+                            import.meta.env.VITE_BACK_KEY
+                        );
+
+                        const { data: blog, error: fetchError } = await supabase
+                            .from("blogs")
+                            .select("images")
+                            .eq("id", id)
+                            .single();
+
+                        if (fetchError) {
+                            console.error(fetchError);
+                            return alert("Failed to fetch blog");
+                        }
+
+                        if (blog?.images) {
+                            const marker = "/storage/v1/object/public/blog-images/";
+                            
+                            // extract storage path
+                            let imagePath = blog.images.split(marker)[1];
+
+                            // decode %20 etc.
+                            imagePath = decodeURIComponent(imagePath);
+
+                            console.log("Deleting:", imagePath);
+
+                            const { error: storageError } = await supabase.storage
+                                .from("blog-images")
+                                .remove([imagePath]);
+
+                            if (storageError) {
+                                console.error(storageError);
+                                return alert(storageError.message);
+                            }
+                        }
+                  }
                     
 
                   
@@ -211,6 +254,39 @@ class BlogCrud{
                         throw error;
                     }
                 };
+
+
+                UpdateBlog = async ( id:number, name: string, content:string,selectedFile:File | null,cat:string): Promise<void> => {
+
+                            let uploadLink = null;
+
+                            // upload only if new image selected
+                            if(selectedFile){
+                                 await this.deleteOldImage(id);
+                                uploadLink = await this.uploadImage(selectedFile);
+                            }
+
+                            const updateData:any = {
+                                blog_title: name,
+                                content: content,
+                                category: cat,
+                            };
+
+                            // only update image when new one exists
+                            if(uploadLink){
+                                updateData.images = uploadLink;
+                            }
+
+                            const { error } = await this.supabase
+                                .from('blogs')
+                                .update(updateData)
+                                .eq('id', id);
+
+                            if (error) {
+                                alert("error updating blog");
+                                throw error;
+                            }
+                            };
 
 
 

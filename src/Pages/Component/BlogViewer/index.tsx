@@ -33,6 +33,7 @@ const BlogViewer: React.FC<BlogProps> = ({ closeOpenAction, selectedBlogid }) =>
     const [category, setCategory] = useState<string>("EVENT");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);  
+  const [mode, setMode] = useState("VIEW");
 
 
   // Select File
@@ -51,16 +52,42 @@ const BlogViewer: React.FC<BlogProps> = ({ closeOpenAction, selectedBlogid }) =>
 
 
 
-  useEffect(() => {
-    const loadBlogInfo = async () => {
-      if(selectedBlogid){
+ useEffect(() => {
+
+  let mounted = true;
+
+  const loadBlogInfo = async () => {
+
+    try {
+
+      if (!selectedBlogid) return;
+
       const blog = await BlogBack.ViewBlogById(Number(selectedBlogid));
-      updateBlogInfo(blog); // ✅ store object directly
-      }
-    };
-      
-    loadBlogInfo();
-  }, [selectedBlogid]);
+
+      if (!mounted || !blog) return;
+
+      updateBlogInfo(blog);
+
+      getTitle(blog.blog_title ?? "");
+      getBlogContent(blog.content ?? "");
+      setCategory(blog.category ?? "EVENT");
+      setPreview(blog.images ?? null);
+
+    } catch (error) {
+
+      console.error("Failed loading blog info:", error);
+
+    }
+
+  };
+
+  loadBlogInfo();
+
+  return () => {
+    mounted = false;
+  };
+
+}, [selectedBlogid]);
 
 
 
@@ -74,14 +101,31 @@ const deleteConfirmed = async ()=>{
   closeOpenAction();
 }
 
-const createBlog = async ()=>{
-  
- 
+const createBlog = async () => {
 
-  await  BlogBack.CreateBlog(String(title), String(blogContent),selectedFile, category);
+  if(mode !== "EDIT"){
+
+    await BlogBack.CreateBlog(
+      String(title),
+      String(blogContent),
+      selectedFile,
+      category
+    );
+
+  } else {
+
+    await BlogBack.UpdateBlog(
+      Number(selectedBlogid),
+      String(title),
+      String(blogContent),
+      selectedFile,
+      category
+    );
+
+  }
 
   closeOpenAction();
-}
+};
 
 
 
@@ -95,7 +139,7 @@ const createBlog = async ()=>{
     */
   }
   
-  if(Number(selectedBlogid) > 0){
+  if(Number(selectedBlogid) > 0 && mode!="EDIT"){
     return(<>
 
            
@@ -152,7 +196,7 @@ const createBlog = async ()=>{
             </div>
 
             <textarea className="bp-post-title" id="postTitle" value={BlogInfo?.blog_title}>
-
+                   {BlogInfo?.content}
             </textarea>
 
             <div className="bp-title-img-wrap" id="titleImgWrap">
@@ -164,21 +208,10 @@ const createBlog = async ()=>{
               </button>
             </div>
 
-    {/*}
-            <div className="bp-author-row">
-              <div className="bp-avatar">AB</div>
-              <span className="bp-author-role">{BlogInfo?.author}</span>
-            </div>
-    
-            <span className="bp-section-label" id="contentLabel">
-              <svg viewBox="0 0 24 24"><use href="#ic-pencil"/></svg>
-              Body Content
-            </span>
-    {
-            <textarea className="bp-content" id="postContent"  value={BlogInfo?.content || ""}>
-            
-            </textarea>
-        */}  
+             <p className="bp-title-viewing">
+              {BlogInfo?.blog_title}
+
+            </p>
             <p className="bp-content-viewing">
               {BlogInfo?.content}
 
@@ -204,8 +237,8 @@ const createBlog = async ()=>{
             </span>
             <div className="bp-actions">
               
-              <button className="bp-btn bp-btn-save" id="saveBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
-                <svg viewBox="0 0 24 24"><use href="#ic-save"/></svg>Save
+              <button className="bp-btn bp-btn-edit" onClick={()=>{setMode("EDIT")}} id="saveBtn" style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
+                EDIT
               </button>
               <button className="bp-btn bp-btn-delete" onClick={()=>{deleteAction()}} style={{ display:  sessionStorage.getItem("user") ? 'flex' : 'none' }}>
                 <svg viewBox="0 0 24 24"><use href="#ic-trash"/></svg>Delete
@@ -244,8 +277,10 @@ const createBlog = async ()=>{
         
         </>);
   }else{
+    
+
      return(<>
-     
+   
     <div className="bp-overlay">
       <div className="bp-wrap">
         <div className="bp-modal" id="bpModal">
@@ -256,7 +291,7 @@ const createBlog = async ()=>{
               </div>
               <span className="bp-title-label">
                 <svg viewBox="0 0 24 24"><use href="#ic-blog"/></svg>
-                Create Post
+                {mode==="EDIT"? "EDIT BLOG":"CREATE BLOG"}
               </span>
             </div>
             
@@ -305,7 +340,9 @@ const createBlog = async ()=>{
                  <span className="bp-author-role">TITLE:</span>
              </div>
             
-            <textarea className="bp-post-title-edit" id="postTitle" value={title} onChange={(e) => getTitle(e.target.value)}></textarea>
+            <textarea className="bp-post-title-edit" id="postTitle" value={title} onChange={(e) => getTitle(e.target.value)}>
+              
+            </textarea>
             <div className="bp-meta">
                   <span className="bp-author-role">CONTENT</span>
             </div>
