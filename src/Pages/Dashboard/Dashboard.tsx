@@ -118,6 +118,7 @@ const loadMessages = async () => {
 
   const deleteMsg = async (id:Number) =>{
     await Contact.DeleteMessage(Number(id));
+    loadMessages();
 
   }
 
