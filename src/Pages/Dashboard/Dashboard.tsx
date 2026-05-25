@@ -15,7 +15,6 @@ type DataRow = {
 
 type Blog = {
   id: number;
-  emoji?: string;
   author?:string;
   blog_title?: string;
   content?: string;
@@ -622,14 +621,14 @@ const loadBlogs = async () => {
                   {bloglist.map((blog) => (
                     <div className="blog-card" key={blog.id}>
                        <img src={blog.images} alt="featured" className="blogItemImage"></img>
-                      <div className="blog-body">
+                      <div className="blog-body-dashboard">
                         <div className="blog-cat"><b> {blog.blog_title
                                 ? blog.blog_title.length > 30
                                   ? blog.blog_title.slice(0, 40) + "..."
                                   : blog.blog_title
                                 : ""}</b>
                                 </div>
-                        <div className="blog-title">
+                        <div className="blog-title-dashboard">
                            {blog.content
                                 ? blog.content.length > 300
                                   ? blog.content.slice(0, 300) + "..."
@@ -638,11 +637,12 @@ const loadBlogs = async () => {
 
                         </div>
                         <div className="blog-meta">{blog.author}</div>
+                            <div className="blog-actions-dashboard">
+                              <button className="btn-sm primary" onClick={()=>{ setBeforeViewing(blog.id)}}>VIEW</button>
+                              <button className="btn-sm" onClick={()=>deleteBlog(blog.id)}>DELETE</button>
+                          </div>
                       </div>
-                      <div className="blog-actions">
-                        <button className="btn-sm primary" onClick={()=>{ setBeforeViewing(blog.id)}}>VIEW</button>
-                        <button className="btn-sm" onClick={()=>deleteBlog(blog.id)}>DELETE</button>
-                      </div>
+                     
                     </div>
                   ))}
                 </div>
