@@ -387,7 +387,7 @@ const reload = ()=>{
             className={`dash-nav-item ${activeTab === "messages" ? "active" : ""}`}
             onClick={() => setActiveTab("messages")}
           >
-            <span className="nav-icon">◉</span> Contact Msg. <span className="nav-badge">{bloglist.length}</span>
+            <span className="nav-icon">◉</span> Contact Msg. <span className="nav-badge">{messageList.length}</span>
           </div>
 
           <div className="sb-section-label">Admin</div>
@@ -432,7 +432,19 @@ const reload = ()=>{
                
               <div className="user-pill" >
                 
-                <div className="user-avatar">A</div>
+                <div className="user-avatar">
+                   {(() => {
+                                const words = String(username).trim().split(" ");
+
+                                const first = words[0]?.charAt(0).toUpperCase() || "";
+                                const last =
+                                  words.length > 1
+                                    ? words[words.length - 1].charAt(0).toUpperCase()
+                                    : "";
+
+                                return first + last;
+                              })()}
+                </div>
                 <div className="user-name" >{username}</div>
 
                  {/* Dropdown */}
