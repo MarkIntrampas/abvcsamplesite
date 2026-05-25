@@ -21,7 +21,7 @@ type Blog = {
   images?:string;
 };
 
-type TabKey = "home" | "analytics" | "blogs" | "users" | "settings";
+type TabKey = "home" | "analytics" | "blogs" | "users" | "settings" | "messages";
 
 const Dashboard: React.FC = () => {
 
@@ -128,6 +128,7 @@ const loadBlogs = async () => {
     blogs: "BLOGS",
     users: "USERS",
     settings: "SETTINGS",
+     messages: "MESSAGES",
   };
 
   const getSampleData = (): DataRow[] => [
@@ -344,7 +345,14 @@ const loadBlogs = async () => {
             className={`dash-nav-item ${activeTab === "blogs" ? "active" : ""}`}
             onClick={() => setActiveTab("blogs")}
           >
+          
             <span className="nav-icon">✎</span> Blogs <span className="nav-badge">{bloglist.length}</span>
+          </div>
+           <div
+            className={`dash-nav-item ${activeTab === "messages" ? "active" : ""}`}
+            onClick={() => setActiveTab("messages")}
+          >
+            <span className="nav-icon">◉</span> Contact Msg. <span className="nav-badge">{bloglist.length}</span>
           </div>
 
           <div className="sb-section-label">Admin</div>
@@ -354,6 +362,9 @@ const loadBlogs = async () => {
           >
             <span className="nav-icon">◉</span> Users
           </div>
+
+          
+
           <div
             className={`dash-nav-item ${activeTab === "settings" ? "active" : ""}`}
             onClick={() => setActiveTab("settings")}
@@ -648,6 +659,72 @@ const loadBlogs = async () => {
                 </div>
               </>
             )}
+
+
+
+              {/* MESSAGE */}
+            {activeTab === "messages" && (
+              <>
+                <div className="page-title">
+                  <div className="page-title-bar" />
+                  <div>
+                    <div className="label">//MESSAGES FROM CONTACT PAGE</div>
+                    <h1>CONTACT MESSAGES</h1>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 16,
+                  }}
+                >
+                 
+                 
+                </div>
+
+                <div className="card">
+                  <table className="data-table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email Address</th>
+                        <th>Messagae</th>
+                       
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        ["Maria Reyes", "m@gmail.com", "this is nice"]
+                        
+                      ].map(([msgName,msgMail,msgMessage]) => (
+                        <tr key={msgName}>
+                          <td>
+                            <span className="user-row-avatar"></span>
+                            {msgName}
+                          </td>
+                          <td className="mono">{msgMail}</td>
+                          <td className="mono">{msgMessage}</td>
+                          
+                          <td>
+                            <button className={status === "ACTIVE" ? "btn-sm primary" : "btn-sm"}>
+                              DELETE
+                            </button>
+                            <button className={status === "ACTIVE" ? "btn-sm primary" : "btn-sm"}>
+                              VIEW
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
 
             {/* USERS */}
             {activeTab === "users" && (
