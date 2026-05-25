@@ -108,6 +108,12 @@ const loadMessages = async () => {
 };
 
 
+const reload = ()=>{
+  loadBlogs();
+  loadMessages();
+};
+
+
   
 
   const deleteBlog:(id:Number)=>void = async (id:Number)=>{
@@ -419,7 +425,7 @@ const loadMessages = async () => {
 
             <div className="topbar-right">
               <div className="topbar-clock">{clock}</div>
-              <button className="topbar-btn" onClick={loadTableData}>
+              <button className="topbar-btn" onClick={reload}>
                 ↻
               </button>
               <button className="topbar-btn">🔔</button>
