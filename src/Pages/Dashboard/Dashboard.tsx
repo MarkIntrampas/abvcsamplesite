@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import './style/dashstyle.css'
 import BlogViewer from "../Component/BlogViewer";
 import BlogCrud from "../Back/BlogCrud";
+import ContacBack from "../Back/ContactCrud";
 
 type DataRow = {
   type: string;
@@ -14,12 +15,23 @@ type DataRow = {
 };
 
 type Blog = {
-  id: number;
+  id: number,
   author?:string;
   blog_title?: string;
   content?: string;
   images?:string;
 };
+
+
+
+type Message = {
+  id:number,
+  name:string,
+  email:string,
+  message:string,
+  created_at:string,
+};
+
 
 type TabKey = "home" | "analytics" | "blogs" | "users" | "settings" | "messages";
 
@@ -36,11 +48,14 @@ const Dashboard: React.FC = () => {
  const  [blogViewStatus, changeBlogViewStatus]  =useState(false);
  const [selectedBlogItem, selectBlog] = useState<Number>();
 
+ const [messageList,updateMessage] = useState<Message[]>([]);
+
   const [darkMode, setDarkMode] = useState(false);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const navigate =useNavigate();
 
   const BlogBack= new BlogCrud();
+  const Contact= new ContacBack();
 
   useEffect(() => {
     const updateClock = () => {
@@ -77,6 +92,7 @@ const storedUser = sessionStorage.getItem("user");
 
   loadTableData();
  loadBlogs();
+ loadMessages();
   }, []);
 
 const loadBlogs = async () => {
@@ -85,11 +101,23 @@ const loadBlogs = async () => {
   updateBlog(blogs);
 };
 
+const loadMessages = async () => {
+
+  const msg = await Contact.loadAllMessages();
+  updateMessage(msg);
+};
+
+
   
 
   const deleteBlog:(id:Number)=>void = async (id:Number)=>{
     await BlogBack.deleteBlog(Number(id));
     await loadBlogs();
+
+  }
+
+  const deleteMsg = async (id:Number) =>{
+    await Contact.DeleteMessage(Number(id));
 
   }
 
@@ -691,26 +719,42 @@ const loadBlogs = async () => {
                       <tr>
                         <th>Name</th>
                         <th>Email Address</th>
-                        <th>Messagae</th>
-                       
+                        <th>Message</th>
+                        <th>Date Sent.</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {[
-                        ["Maria Reyes", "m@gmail.com", "this is nice"]
-                        
-                      ].map(([msgName,msgMail,msgMessage]) => (
-                        <tr key={msgName}>
+                      {messageList.map((i) => (
+                        <tr key={i.name}>
                           <td>
-                            <span className="user-row-avatar"></span>
-                            {msgName}
+                              <span className="user-row-avatar">
+                              {(() => {
+                                const words = i.name.trim().split(" ");
+
+                                const first = words[0]?.charAt(0).toUpperCase() || "";
+                                const last =
+                                  words.length > 1
+                                    ? words[words.length - 1].charAt(0).toUpperCase()
+                                    : "";
+
+                                return first + last;
+                              })()}
+                            </span>
+                              {i.name}
                           </td>
-                          <td className="mono">{msgMail}</td>
-                          <td className="mono">{msgMessage}</td>
-                          
+                          <td className="mono">{i.email}</td>
+                          <td className="mono">{i.message}</td>
+                             <td className="mono">
+                                {new Date(String(i.created_at)).toLocaleDateString("en-US", {
+                                timeZone: "Asia/Manila",
+                                month: "long",
+                                day: "numeric",
+                                year: "numeric",
+                               })}
+                              </td>
                           <td>
-                            <button className={status === "ACTIVE" ? "btn-sm primary" : "btn-sm"}>
+                            <button className={status === "ACTIVE" ? "btn-sm primary" : "btn-sm"} onClick={()=>deleteMsg(i.id)}>
                               DELETE
                             </button>
                             <button className={status === "ACTIVE" ? "btn-sm primary" : "btn-sm"}>
