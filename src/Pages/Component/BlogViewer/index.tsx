@@ -327,7 +327,7 @@ const createBlog = async () => {
 
            
 
-                    <select id="employees" name="employees" className="bp-tag" onChange={(e) => setCategory(e.target.value)}>
+                    <select id="employees" name="employees" className="bp-tag" value={category} onChange={(e) => setCategory(e.target.value)}>
                       <option value="">-- SELECT POST CATEGORY --</option>
                       <option value="EVENT">EVENT</option>
                       <option value="ACHIEVEMENT">ACHIEVEMENT</option>
