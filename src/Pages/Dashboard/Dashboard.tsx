@@ -109,7 +109,7 @@ const storedUser = sessionStorage.getItem("user");
 
   useEffect(() => {
   console.log(dataLoad);
-  alert(`Length: ${dataLoad.length}`);
+ 
 }, [dataLoad]);
 
 const loadDataFromTellerRecord = async ()=>{
