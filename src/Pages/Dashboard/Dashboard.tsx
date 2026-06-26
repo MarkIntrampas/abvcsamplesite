@@ -4,6 +4,8 @@ import './style/dashstyle.css'
 import BlogViewer from "../Component/BlogViewer";
 import BlogCrud from "../Back/BlogCrud";
 import ContacBack from "../Back/ContactCrud";
+import DataBack from "../Back/DataCrud";
+
 
 type DataRow = {
   type: string;
@@ -32,6 +34,10 @@ type Message = {
   created_at:string,
 };
 
+type DataDetail = {
+    Num: number;
+};
+
 
 type TabKey = "home" | "analytics" | "blogs" | "users" | "settings" | "messages";
 
@@ -47,6 +53,7 @@ const Dashboard: React.FC = () => {
  const [bloglist,updateBlog] = useState<Blog[]>([]);
  const  [blogViewStatus, changeBlogViewStatus]  =useState(false);
  const [selectedBlogItem, selectBlog] = useState<Number>();
+ const [dataLoad , loadData] = useState<DataDetail[]>([]);
 
  const [messageList,updateMessage] = useState<Message[]>([]);
 
@@ -56,6 +63,9 @@ const Dashboard: React.FC = () => {
 
   const BlogBack= new BlogCrud();
   const Contact= new ContacBack();
+  const Data = new DataBack();
+  
+ 
 
   useEffect(() => {
     const updateClock = () => {
@@ -88,12 +98,27 @@ const storedUser = sessionStorage.getItem("user");
   }
   
   setUsername(user.Username);
- 
-
+  loadDataFromTellerRecord();
   loadTableData();
  loadBlogs();
  loadMessages();
+
+
   }, []);
+
+
+  useEffect(() => {
+  console.log(dataLoad);
+  alert(`Length: ${dataLoad.length}`);
+}, [dataLoad]);
+
+const loadDataFromTellerRecord = async ()=>{
+  const Teller = await Data.latestData();
+  
+  loadData(Teller);
+ 
+};
+
 
 const loadBlogs = async () => {
 
@@ -115,6 +140,7 @@ const reload = ()=>{
 
 
   
+
 
   const deleteBlog:(id:Number)=>void = async (id:Number)=>{
     await BlogBack.deleteBlog(Number(id));

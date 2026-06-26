@@ -28,12 +28,34 @@ function Home(){
 
   },[]);
 
+
+   useEffect(() => {
+    const elements = document.querySelectorAll(".scroll-animate");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+          }
+        });
+      },
+      {
+        threshold: 0.15,
+      }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
     return(
  <>
     
     <Nav />
     <div id="container">
-      <div id="sec1">
+      <div id="sec1"  >
         <div id="logoCon">
           <img  id ="sec1logo" src={logo}></img>
         </div>
@@ -48,13 +70,13 @@ function Home(){
 
 
        {/* ── SECTION 2: MISSION / VISION ── */}
-        <div id="sec2">
+        <div id="sec2" className='scroll-animate'>
           <div className="sec2-header">
             <div className="section-label">Who We Are</div>
             <h2 className="section-title-dark">OUR CORE VALUES</h2>
           </div>
           <div className="mv-grid">
-            <div className="sec2sub">
+            <div className="sec2sub scroll-animate">
               <div className="mv-number">01</div>
               <h3 className="mv">Our Mission</h3>
               <p className="mvcontext">
@@ -66,7 +88,7 @@ function Home(){
               </p>
             </div>
             <div className="mv-divider"></div>
-            <div className="sec2sub">
+            <div className="sec2sub scroll-animate">
               <div className="mv-number">02</div>
               <h3 className="mv">Our Vision</h3>
               <p className="mvcontext">
@@ -102,13 +124,13 @@ function Home(){
         </div>
 
         {/* ── SECTION 3: SERVICES ── */}
-        <div id="sec3">
+        <div id="sec3" className='scroll-animate'>
           <div className="sec3-bg-accent"></div>
           <div className="sec3-header">
             <div className="section-label">What We Do</div>
             <h2 id="sub3title">OUR SERVICES</h2>
           </div>
-          <div className="services-grid">
+          <div className="services-grid " >
             <div className="sec3subcon">
               <img className="sec3pic" src={pic1} alt="Data Entry" />
               <div className="service-overlay"></div>
@@ -142,7 +164,7 @@ function Home(){
             <h2 className="section-title-light">BUILT ON EXCELLENCE</h2>
           </div>
           <div className="why-grid">
-            <div className="why-card">
+            <div className="why-card  scroll-animate scroll-right">
               <div className="why-icon">◈</div>
               <div className="why-title">Quality Workforce</div>
               <p className="why-text">
@@ -150,7 +172,7 @@ function Home(){
                 top-tier service delivery for every client.
               </p>
             </div>
-            <div className="why-card">
+            <div className="why-card scroll-animate">
               <div className="why-icon">◉</div>
               <div className="why-title">Client-Focused</div>
               <p className="why-text">
@@ -158,7 +180,7 @@ function Home(){
                 services to meet your unique business requirements.
               </p>
             </div>
-            <div className="why-card">
+            <div className="why-card scroll-animate">
               <div className="why-icon">◆</div>
               <div className="why-title">European Reach</div>
               <p className="why-text">

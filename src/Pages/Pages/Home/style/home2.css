@@ -27,6 +27,33 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+  will-change: transform, opacity;
+}
+
+.scroll-animate.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* optional variations */
+.scroll-left {
+  transform: translateX(-40px);
+}
+
+.scroll-right {
+  transform: translateX(40px);
+}
+
+.scroll-left.show,
+.scroll-right.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
 
 
 /* ══════════════════════════════════════
