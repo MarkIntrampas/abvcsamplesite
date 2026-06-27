@@ -36,6 +36,24 @@ type Message = {
 
 type DataDetail = {
     Num: number;
+    Name:string;
+    LastHour: number;
+    Todo:number;
+    Total:number;
+    EndOfDayTotal:number;
+    InactivityTime:string;
+    PauseTime:string;
+    RecordRef:number;
+    id:number;
+};
+
+type DataDetailMore = {
+    DataTable:DataDetail[];
+    total:number;
+    totalTodo:number;
+    totalEntry:number;
+    datetime:string;
+     active:number;
 };
 
 
@@ -53,7 +71,8 @@ const Dashboard: React.FC = () => {
  const [bloglist,updateBlog] = useState<Blog[]>([]);
  const  [blogViewStatus, changeBlogViewStatus]  =useState(false);
  const [selectedBlogItem, selectBlog] = useState<Number>();
- const [dataLoad , loadData] = useState<DataDetail[]>([]);
+ const [dataLoad , loadData] = useState< DataDetailMore>();
+ 
 
  const [messageList,updateMessage] = useState<Message[]>([]);
 
@@ -109,11 +128,12 @@ const storedUser = sessionStorage.getItem("user");
 
   useEffect(() => {
   console.log(dataLoad);
+
  
 }, [dataLoad]);
 
 const loadDataFromTellerRecord = async ()=>{
-  const Teller = await Data.latestData();
+  const Teller = await Data.loadDetailByRefId();
   
   loadData(Teller);
  
@@ -215,6 +235,33 @@ const reload = ()=>{
     return [];
   };
 
+
+ const formatTaipeiTime = (timestamp: string): string => {
+    const created = new Date(timestamp);
+
+    if (isNaN(created.getTime())) {
+        return "Invalid Date";
+    }
+
+    const fmt = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Taipei",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+    });
+
+    const parts = fmt.formatToParts(created);
+
+    const get = (type: Intl.DateTimeFormatPartTypes): string =>
+        parts.find((p) => p.type === type)?.value ?? "";
+
+    return `${get("hour")}:${get("minute")} ${get("dayPeriod")} - ${get("month")} ${get("day")}, ${get("year")}`;
+};
+
+
   const loadTableData = async () => {
     setTableLoading(true);
     setTableError(false);
@@ -253,14 +300,11 @@ const reload = ()=>{
     [tableRows]
   );
 
-  const elapsedHours = useMemo(() => {
-    const now = new Date();
-    return now.getHours() + now.getMinutes() / 60 || 1;
-  }, [clock]);
 
-  const statTotal = total.toLocaleString();
-  const statEod = Math.round((total / elapsedHours) * 24).toLocaleString();
-  const statLastHour = Math.round(total / elapsedHours).toLocaleString();
+
+
+
+  
 
   const homeChartData = useMemo(() => {
     const hours = ["08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"];
@@ -498,21 +542,28 @@ const reload = ()=>{
                 </div>
 
                 <div className="mini-stats">
+                  
+
                   <div className="mini-stat">
-                    <div className="mini-stat-label">Total Processed</div>
-                    <div className="mini-stat-val">{statTotal}</div>
-                    <div className="mini-stat-sub">All-time entries</div>
+                    <div className="mini-stat-label">Today's Total Data Processed </div>
+                    <div className="mini-stat-val">{dataLoad?.total?.toLocaleString()}</div>
+                    <div className="mini-stat-sub"> On latest recorded hour:  { formatTaipeiTime(String(dataLoad?.datetime))}</div>
                     <div className="mini-stat-trend">↑ LIVE</div>
                   </div>
+
+                  
+                  
                   <div className="mini-stat">
-                    <div className="mini-stat-label">Est. End of Day</div>
-                    <div className="mini-stat-val">{statEod}</div>
-                    <div className="mini-stat-sub">Projected by 23:59</div>
+                    <div className="mini-stat-label">Current Todo</div>
+                    <div className="mini-stat-val">{dataLoad?.totalTodo.toLocaleString()}</div>
+                    <div className="mini-stat-sub">On latest recorded hour: { formatTaipeiTime(String(dataLoad?.datetime))}</div>
                   </div>
+
                   <div className="mini-stat">
-                    <div className="mini-stat-label">Last Hour</div>
-                    <div className="mini-stat-val">{statLastHour}</div>
-                    <div className="mini-stat-sub">Recent throughput</div>
+                    <div className="mini-stat-label">TOTAL PROCESSORS</div>
+                    <div className="mini-stat-val">{dataLoad?.active}</div>
+                      <div className="mini-stat-sub">On latest recorded hour: { formatTaipeiTime(String(dataLoad?.datetime))}</div>
+                    
                   </div>
                 </div>
 

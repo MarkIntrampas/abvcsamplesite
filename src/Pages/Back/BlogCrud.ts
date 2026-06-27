@@ -136,7 +136,7 @@ class BlogCrud{
                 
                     }
 
-                   alert(data.length);
+                  
                     return data as Blog;
 
                     
