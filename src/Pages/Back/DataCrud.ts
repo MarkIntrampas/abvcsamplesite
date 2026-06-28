@@ -23,6 +23,7 @@ type DataDetailMore = {
 };
 
 class DataBack {
+  
    
   private supabase = createClient(import.meta.env.VITE__BACK_URL,import.meta.env.VITE_BACK_KEY);
     
@@ -48,6 +49,9 @@ class DataBack {
 
     
     };
+
+  
+
 
     loadDetailByRefId = async (): Promise<DataDetailMore> => {
      const ref = await this.latestRef();
@@ -106,6 +110,32 @@ class DataBack {
 
     return todaysTotal;
 }
+
+
+
+
+TopTable = async (): Promise<any[]> => {
+  const ref = await this.latestRef();
+
+  const { data, error } = await this.supabase
+    .from("SUMMARY_TOP")
+    .select("*")
+    .eq("RecordRef", ref.id);
+
+  if (error || !data || data.length === 0) {
+    throw error ?? new Error("No data found");
+  }
+
+  // get column names
+  const keys = Object.keys(data[0]);
+
+  // transpose: column -> array
+  const result = keys.map((key) =>
+    data.map((row) => row[key])
+  );
+
+  return result;
+};
 
 }
 

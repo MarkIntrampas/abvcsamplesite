@@ -72,6 +72,7 @@ const Dashboard: React.FC = () => {
  const  [blogViewStatus, changeBlogViewStatus]  =useState(false);
  const [selectedBlogItem, selectBlog] = useState<Number>();
  const [dataLoad , loadData] = useState< DataDetailMore>();
+ const [topTable, setTopData] = useState<any[]>([]);
  
 
  const [messageList,updateMessage] = useState<Message[]>([]);
@@ -134,8 +135,14 @@ const storedUser = sessionStorage.getItem("user");
 
 const loadDataFromTellerRecord = async ()=>{
   const Teller = await Data.loadDetailByRefId();
+  const top = await Data.TopTable();
+
   
   loadData(Teller);
+  setTopData(top);
+  
+  
+ 
  
 };
 
@@ -573,15 +580,15 @@ const reload = ()=>{
             <>
             <tr>
               <th>Preprocess ToDo</th>
-              <td></td>
+              <td>{topTable[2]}</td>
             </tr>
             <tr>
-              <th>Preprocess ToDo</th>
-              <td></td>
+              <th>Validate ToDo</th>
+              <td>{topTable[3]}</td>
             </tr>
             <tr>
-              <th>Preprocess ToDo</th>
-              <td></td>
+              <th>Validate ToDo	</th>
+              <td>{topTable[4]}</td>
             </tr>
 
         
