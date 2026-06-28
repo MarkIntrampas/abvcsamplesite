@@ -402,43 +402,116 @@
           border-color: var(--pink-dark);
         }
 
-        .data-table { width: 100%; border-collapse: collapse; }
+/* ===========================
+   Shared Table Styles
+=========================== */
+.data-table,
+.data-table2 {
+  border-collapse: collapse;
+  background: #fff;
+}
 
-        .data-table thead th {
-          font-size: 9px;
-          letter-spacing: 3px;
-          color: var(--white);
-          text-transform: uppercase;
-          padding: 11px 20px;
-          text-align: left;
-          background: var(--pink-dark);
-        }
+/* Shared Header */
+.data-table thead th,
+.data-table2 thead th {
+  padding: 12px 18px;
+  text-align: left;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    var(--pink-dark),
+    var(--pink)
+  );
+}
 
-        .data-table tbody tr {
-          border-bottom: 1px solid rgba(233,31,104,0.08);
-          transition: background 0.12s;
-        }
+/* Shared Rows */
+.data-table tbody tr,
+.data-table2 tbody tr {
+  border-bottom: 1px solid rgba(233, 31, 104, 0.08);
+  transition: background-color 0.2s ease;
+}
 
-        .data-table tbody tr:hover { background: var(--pink-pale); }
-        .data-table tbody tr:nth-child(even) { background: var(--pink-pale); }
-        .data-table tbody tr:nth-child(even):hover { background: var(--pink-light); }
+.data-table tbody tr:nth-child(even),
+.data-table2 tbody tr:nth-child(even) {
+  background: var(--pink-pale);
+}
 
-        .data-table tbody td {
-          font-size: 13px; font-weight: 600;
-          color: var(--black2);
-          padding: 11px 20px;
-          letter-spacing: 0.5px;
-        }
+.data-table tbody tr:hover,
+.data-table2 tbody tr:hover {
+  background: var(--pink-light);
+}
 
-        .data-table tbody td.mono {
-          font-size: 11px;
-          color: var(--gray);
-        }
+/* Shared Cells */
+.data-table tbody td,
+.data-table2 tbody td,
+.data-table2 tbody th {
+  padding: 12px 18px;
+  color: var(--black2);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
 
-        .data-table tbody td.num {
-          font-size: 13px; font-weight: 700;
-          color: var(--pink);
-        }
+/* ===========================
+   Original data-table
+=========================== */
+.data-table {
+  width: 100%;
+}
+
+.data-table tbody td {
+  font-weight: 600;
+}
+
+.data-table tbody td.mono {
+  font-size: 11px;
+  color: var(--gray);
+}
+
+.data-table tbody td.num {
+  font-weight: 700;
+  color: var(--pink);
+}
+
+/* ===========================
+   data-table2 Enhancements
+=========================== */
+.data-table2 {
+  width: 40%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.05),
+    0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.data-table2 tbody th {
+  font-weight: 700;
+  color: var(--pink-dark);
+  white-space: nowrap;
+}
+
+.data-table2 tbody td {
+  text-align: right;
+  font-weight: 600;
+}
+
+.data-table2 tbody td:last-child {
+  color: var(--pink);
+  font-weight: 700;
+}
+
+.data-table2 tbody tr:last-child {
+  border-bottom: none;
+}
 
         .badge {
           display: inline-block;
@@ -485,6 +558,36 @@
           gap: 16px;
           margin-bottom: 20px;
         }
+
+
+
+          .mini-stats2 {
+            width: 100%;
+            min-height: 200px;
+            margin: 10px 0;
+            padding: 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+
+          
+            border: 1px solid red;
+            border-radius: 16px;
+
+          
+
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+          }
+
+          .mini-stats2:hover {
+            transform: translateY(-3px);
+            box-shadow:
+              0 6px 12px rgba(0, 0, 0, 0.08),
+              0 16px 32px rgba(0, 0, 0, 0.12);
+          }
+        
 
         .mini-stat {
           background: var(--pink);
@@ -794,6 +897,8 @@
           .mini-stats {
             grid-template-columns: 1fr;
           }
+
+          
         }
 
         @media (max-width: 900px) {

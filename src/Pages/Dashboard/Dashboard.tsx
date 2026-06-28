@@ -65,7 +65,7 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>("home");
   const [clock, setClock] = useState("00:00:00");
   const [tableLoading, setTableLoading] = useState(true);
-  const [tableError, setTableError] = useState(false);
+  
   const [tableRows, setTableRows] = useState<DataRow[]>([]);
   const [username,setUsername] = useState<String>();
  const [bloglist,updateBlog] = useState<Blog[]>([]);
@@ -264,7 +264,7 @@ const reload = ()=>{
 
   const loadTableData = async () => {
     setTableLoading(true);
-    setTableError(false);
+   
 
     try {
       // IMPORTANT:
@@ -278,7 +278,7 @@ const reload = ()=>{
       const rows = normalizeRows(data);
       setTableRows(rows);
     } catch {
-      setTableError(true);
+     
       setTableRows(getSampleData());
     } finally {
       setTableLoading(false);
@@ -343,7 +343,7 @@ const reload = ()=>{
       );
     }
 
-    if (!tableRows.length) {
+    if (!dataLoad) {
       return (
         <div className="error-state">
           <div className="err-text">NO DATA</div>
@@ -351,62 +351,41 @@ const reload = ()=>{
       );
     }
 
-    const keys = Object.keys(tableRows[0]);
+   
 
     return (
       <>
       
-        {tableError && (
-          <div className="error-state" style={{ paddingBottom: 16 }}>
-            <div className="err-icon">⚠</div>
-            <div className="err-text">
-              CORS / NETWORK RESTRICTION
-              <br />
-              Showing sample data for layout preview.
-            </div>
-          </div>
-        )}
+    
 
         <table className="data-table">
           <thead>
             <tr>
-              {keys.map((key) => (
-                <th key={key}>{key.replace(/_/g, " ").toUpperCase()}</th>
-              ))}
-              <th>SHARE</th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Last Hour</th>
+              <th>Todo</th>
+              <th>Total</th>
+              <th>End of day total</th>
+              <th>Inactivity</th>
+                <th> Pause time</th>
             </tr>
           </thead>
-          <tbody>
-            {tableRows.map((row, idx) => (
-              <tr key={`${row.type}-${idx}`}>
-                {keys.map((key, i) => {
-                  const value = row[key];
-
-                  if (i === 0) return <td key={key}>{String(value)}</td>;
-
-                  if (typeof value === "number") {
-                    return (
-                      <td key={key} className="num">
-                        {value.toLocaleString()}
-                      </td>
-                    );
-                  }
-
-                  return (
-                    <td key={key} className="mono">
-                      {String(value ?? "")}
-                    </td>
-                  );
-                })}
-
-                <td>
-                  <span className="badge badge-pink">
-                    {total ? Math.round((getNum(row) / total) * 100) : 0}%
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+           
+           <tbody>
+          {dataLoad?.DataTable?.map((item, index) => (
+            <tr key={index}>
+              <td>{item.Num}</td>
+              <td>{item.Name}</td>
+              <td>{item.LastHour}</td>
+              <td>{item.Todo}</td>
+              <td>{item.Total}</td>
+              <td>{item.EndOfDayTotal}</td>
+              <td>{item.InactivityTime}</td>
+              <td>{item.PauseTime}</td>
+            </tr>
+          ))}
+        </tbody>
         </table>
       </>
     );
@@ -569,13 +548,102 @@ const reload = ()=>{
 
                 <div className="card">
                   <div className="card-header">
-                    <div className="card-title">◆ LIVE DATA ENTRY TYPE COUNTER</div>
-                    <button className="card-action" onClick={loadTableData}>
-                      ↻ REFRESH
-                    </button>
+                    <div className="card-title">RECORD FROM Filipijnen AS OF :</div>
+                    <div className="card-action">
+                       <b>{formatTaipeiTime(String(dataLoad?.datetime))}</b>
+                    </div>
                   </div>
                   <div>{renderTable()}</div>
                 </div>
+
+                
+                <div className="card-header">
+                    <div className="card-title">OTHER TABLES :</div>
+                    <div className="card-action">
+                       <b>{formatTaipeiTime(String(dataLoad?.datetime))}</b>
+                    </div>
+                  </div>
+                 <div className="mini-stats2">
+                    
+            <table className="data-table2">
+          
+           
+           <tbody>
+          
+            <>
+            <tr>
+              <th>Preprocess ToDo</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Preprocess ToDo</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th>Preprocess ToDo</th>
+              <td></td>
+            </tr>
+
+        
+
+            </>
+       
+        </tbody>
+        </table>
+
+
+
+        <table className="data-table2">
+          
+           
+           <tbody>
+          
+            <>
+            <tr>
+    <th>go2UBL NL</th>
+    <td>1855</td>
+    <td>1201</td>
+    <td>7597</td>
+  </tr>
+  <tr>
+    <th>go2UBL BE</th>
+    <td>394</td>
+    <td>508</td>
+    <td>2328</td>
+  </tr>
+  <tr>
+    <th>go2UBL DE</th>
+    <td>0</td>
+    <td>9</td>
+    <td>10</td>
+  </tr>
+  <tr>
+    <th>go2UBL FR</th>
+    <td>0</td>
+    <td>3</td>
+    <td>23</td>
+  </tr>
+  <tr>
+    <th>go2UBL ES</th>
+    <td>2</td>
+    <td>2</td>
+    <td>81</td>
+  </tr>
+  <tr>
+    <th>go2UBL GB</th>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+            </>
+       
+        </tbody>
+        </table>
+
+                    
+                   </div>
+
 
                 <div className="card">
                   <div className="card-header">
@@ -600,6 +668,9 @@ const reload = ()=>{
                     ))}
                   </div>
                 </div>
+
+                
+
               </>
             )}
 
@@ -655,6 +726,9 @@ const reload = ()=>{
                       ))}
                     </div>
                   </div>
+
+
+                  
 
                   <div className="card">
                     <div className="card-header">
