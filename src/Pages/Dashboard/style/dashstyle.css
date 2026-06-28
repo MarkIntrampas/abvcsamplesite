@@ -898,6 +898,11 @@
             grid-template-columns: 1fr;
           }
 
+          .mini-stats2{
+            flex-direction: column;
+
+          }
+
           
         }
 

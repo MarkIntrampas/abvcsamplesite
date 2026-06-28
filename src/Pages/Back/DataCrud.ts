@@ -22,6 +22,14 @@ type DataDetailMore = {
     active:number;
 };
 
+type bottom = {
+SolutionGroup:string;
+LastHour:number;
+Todo:number;
+Total:number;
+
+};
+
 class DataBack {
   
    
@@ -111,6 +119,24 @@ class DataBack {
     return todaysTotal;
 }
 
+
+BottomTable = async (): Promise<bottom[]> => {
+
+    const ref = await this.latestRef();
+
+    const { data, error } = await this.supabase
+        .from("Bottom_Record")
+        .select("*")
+        .eq("ref", ref.id);
+
+    if (error || !data) {
+        throw error ?? new Error("Bottom_Record not found");
+    }
+
+    
+
+    return data as bottom[];
+}
 
 
 

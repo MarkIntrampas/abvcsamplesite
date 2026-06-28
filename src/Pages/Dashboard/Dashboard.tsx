@@ -57,6 +57,15 @@ type DataDetailMore = {
 };
 
 
+type bottom = {
+SolutionGroup:string;
+LastHour:number;
+Todo:number;
+Total:number;
+
+};
+
+
 type TabKey = "home" | "analytics" | "blogs" | "users" | "settings" | "messages";
 
 const Dashboard: React.FC = () => {
@@ -73,6 +82,7 @@ const Dashboard: React.FC = () => {
  const [selectedBlogItem, selectBlog] = useState<Number>();
  const [dataLoad , loadData] = useState< DataDetailMore>();
  const [topTable, setTopData] = useState<any[]>([]);
+ const [bottomTable, setBottomTable] = useState<bottom[]>([]);
  
 
  const [messageList,updateMessage] = useState<Message[]>([]);
@@ -136,10 +146,12 @@ const storedUser = sessionStorage.getItem("user");
 const loadDataFromTellerRecord = async ()=>{
   const Teller = await Data.loadDetailByRefId();
   const top = await Data.TopTable();
+  const bottomdata= await Data.BottomTable();
 
   
   loadData(Teller);
   setTopData(top);
+  setBottomTable(bottomdata);
   
   
  
@@ -564,17 +576,52 @@ const reload = ()=>{
                 </div>
 
                 
-                <div className="card-header">
-                    <div className="card-title">OTHER TABLES :</div>
-                    <div className="card-action">
-                       <b>{formatTaipeiTime(String(dataLoad?.datetime))}</b>
-                    </div>
-                  </div>
+                
                  <div className="mini-stats2">
+
+                  <table className="data-table2">
+                
+                <thead>
+                  <tr>
+                    <th>SolutionGroup</th>
+                    <th>Last hour</th>
+                    <th>Todo</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {bottomTable.map((item) => (
+
+                  
+                <tr>
+                
+                <td>{item.SolutionGroup}</td>
+                <td>{item.LastHour}</td>
+                <td>{item.Todo}</td>
+                <td>{item.Total}</td>
+              </tr>
+        
+        
+
+                
+                ))}
+                
+            
+              </tbody>
+              </table>
+
+
                     
             <table className="data-table2">
           
-           
+           <thead>
+            <tr>
+              <th></th>
+              <th>Quality Control Data</th>
+              <th></th>
+            </tr>
+           </thead>
+          
            <tbody>
           
             <>
@@ -600,54 +647,7 @@ const reload = ()=>{
 
 
 
-        <table className="data-table2">
-          
-           
-           <tbody>
-          
-            <>
-            <tr>
-    <th>go2UBL NL</th>
-    <td>1855</td>
-    <td>1201</td>
-    <td>7597</td>
-  </tr>
-  <tr>
-    <th>go2UBL BE</th>
-    <td>394</td>
-    <td>508</td>
-    <td>2328</td>
-  </tr>
-  <tr>
-    <th>go2UBL DE</th>
-    <td>0</td>
-    <td>9</td>
-    <td>10</td>
-  </tr>
-  <tr>
-    <th>go2UBL FR</th>
-    <td>0</td>
-    <td>3</td>
-    <td>23</td>
-  </tr>
-  <tr>
-    <th>go2UBL ES</th>
-    <td>2</td>
-    <td>2</td>
-    <td>81</td>
-  </tr>
-  <tr>
-    <th>go2UBL GB</th>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-
-            </>
        
-        </tbody>
-        </table>
-
                     
                    </div>
 
