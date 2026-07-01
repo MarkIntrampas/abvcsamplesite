@@ -58,6 +58,25 @@ class DataBack {
     
     };
 
+
+
+      latestRefIds = async (): Promise<{id: number, datetime:string}[]> => {
+    const { data, error } = await this.supabase
+        .from("Data_Record_Reference")
+        .select("*")
+        .order("id", { ascending: false })
+        .limit(13);
+
+    if (error || !data) {
+        throw new Error("Latest refIds not found");
+    }
+
+    return data.map(item => ({
+        id: item.id,
+        datetime: item.created_at,
+    }));
+        };
+
   
 
 
@@ -134,10 +153,39 @@ BottomTable = async (): Promise<bottom[]> => {
     }
 
     
-
+   
     return data as bottom[];
 }
 
+            BottomTableTotal = async (ref:number): Promise<number> => {
+              
+
+                const { data, error } = await this.supabase
+                    .from("Bottom_Record")
+                    .select("Total")
+                    .eq("ref", ref);
+
+                if (error || !data) {
+                    throw error ?? new Error("Bottom_Record not found");
+                }
+
+                const total = data.reduce((sum, row) => sum + Number(row.Total), 0);
+
+                return total;
+            };
+        
+
+ hourlyTotal = async (): Promise<{ id: number; datetime: string; total: number }[]> => {
+    const refs = await this.latestRefIds();
+
+    return Promise.all(
+        refs.map(async (ref) => ({
+            id: ref.id,
+            datetime: ref.datetime,
+            total: await this.BottomTableTotal(ref.id),
+        }))
+    );
+};
 
 
 TopTable = async (): Promise<any[]> => {
@@ -162,6 +210,9 @@ TopTable = async (): Promise<any[]> => {
 
   return result;
 };
+
+
+
 
 }
 
