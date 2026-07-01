@@ -546,14 +546,14 @@ const reload = ()=>{
                     <div className="mini-stat-label">Today's Total Data Processed </div>
                     <div className="mini-stat-val">{dataLoad?.total?.toLocaleString()}</div>
                     <div className="mini-stat-sub"> On latest recorded hour:  { formatTaipeiTime(String(dataLoad?.datetime))}</div>
-                    <div className="mini-stat-trend">↑ LIVE</div>
+                    
                   </div>
 
                   
                   
                   <div className="mini-stat">
                     <div className="mini-stat-label">Current Todo</div>
-                    <div className="mini-stat-val">{dataLoad?.totalTodo.toLocaleString()}</div>
+                    <div className="mini-stat-val">{Number(dataLoad?.totalTodo).toLocaleString()}</div>
                     <div className="mini-stat-sub">On latest recorded hour: { formatTaipeiTime(String(dataLoad?.datetime))}</div>
                   </div>
 
@@ -572,20 +572,22 @@ const reload = ()=>{
                        <b>{formatTaipeiTime(String(dataLoad?.datetime))}</b>
                     </div>
                   </div>
-                  <div>{renderTable()}</div>
+                  <div className="table-container">{renderTable()}</div>
                 </div>
 
-                
-                
+              
                  <div className="mini-stats2">
 
+                <div className="table-container2">
+
+              
                   <table className="data-table2">
                 
                 <thead>
                   <tr>
                     <th>SolutionGroup</th>
                     <th>Last hour</th>
-                    <th>Todo</th>
+                    <th>Todo</th> 
                     <th>Total</th>
                   </tr>
                 </thead>
@@ -609,16 +611,21 @@ const reload = ()=>{
             
               </tbody>
               </table>
+              </div>
 
 
-                    
+            <div className="table-container2">
+               
             <table className="data-table2">
           
            <thead>
             <tr>
-              <th></th>
-              <th>Quality Control Data</th>
-              <th></th>
+            <th>
+                    Quality Control Data
+            </th>
+             <th></th>
+             <th></th>
+              
             </tr>
            </thead>
           
@@ -644,7 +651,7 @@ const reload = ()=>{
        
         </tbody>
         </table>
-
+          </div>           
 
 
        
