@@ -65,7 +65,7 @@ class DataBack {
         .from("Data_Record_Reference")
         .select("*")
         .order("id", { ascending: false })
-        .limit(13);
+        .limit(14);
 
     if (error || !data) {
         throw new Error("Latest refIds not found");

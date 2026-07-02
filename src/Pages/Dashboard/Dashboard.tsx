@@ -83,6 +83,7 @@ const Dashboard: React.FC = () => {
  const [dataLoad , loadData] = useState< DataDetailMore>();
  const [topTable, setTopData] = useState<any[]>([]);
  const [bottomTable, setBottomTable] = useState<bottom[]>([]);
+ const [hourlyTotals, setHourlyTotals] = useState<{ id: number; datetime: string; total: number }[]>([]);
  
 
  const [messageList,updateMessage] = useState<Message[]>([]);
@@ -147,11 +148,13 @@ const loadDataFromTellerRecord = async ()=>{
   const Teller = await Data.loadDetailByRefId();
   const top = await Data.TopTable();
   const bottomdata= await Data.BottomTable();
+  const hourly = await Data.hourlyTotal();
 
   
   loadData(Teller);
   setTopData(top);
   setBottomTable(bottomdata);
+  setHourlyTotals(hourly);
   
   
  
@@ -281,6 +284,22 @@ const reload = ()=>{
 };
 
 
+const formatTaipeiTimeOnly = (timestamp: string): string => {
+  const created = new Date(timestamp);
+
+  if (isNaN(created.getTime())) {
+    return "Invalid Date";
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Taipei",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(created);
+};
+
+
   const loadTableData = async () => {
     setTableLoading(true);
    
@@ -325,22 +344,35 @@ const reload = ()=>{
 
   
 
-  const homeChartData = useMemo(() => {
-    const hours = ["08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"];
-    const vals = hours.map(() => Math.random() * 0.9 + 0.1);
-    const max = Math.max(...vals);
+ const homeChartData = useMemo(() => {
+  if (!hourlyTotals.length) return [];
 
-    return hours.map((hour, i) => {
-      const pct = (vals[i] / max) * 100;
-      const est = Math.round(vals[i] * ((total || 1000) / hours.length) * 1.8);
+  const hours = hourlyTotals.map(e => formatTaipeiTimeOnly(e.datetime));
 
-      return {
-        hour,
-        pct,
-        est,
-      };
-    });
-  }, [total]);
+ const vals = hourlyTotals.map((e, i, arr) => {
+  const taipeiTime = formatTaipeiTimeOnly(e.datetime);
+
+  // Matches 7:00 AM through 7:59 AM
+  const isSevenAM = /^7:\d{2}\sAM$/.test(taipeiTime);
+
+  if (isSevenAM) {
+    return e.total;
+  }
+
+  return i < arr.length - 1
+    ? e.total - arr[i + 1].total
+    : 0;
+});
+
+  const max = Math.max(...vals);
+
+  return hours.map((hour, i) => ({
+    hour,
+    pct: max === 0 ? 0 : (vals[i] / max) * 100,
+    est: vals[i], // Display the actual value
+  }));
+}, [hourlyTotals, total]);
+
 
   const analyticsChartData = [
     { day: "MON", val: 65 },
@@ -661,7 +693,7 @@ const reload = ()=>{
 
                 <div className="card">
                   <div className="card-header">
-                    <div className="card-title">◆ HOURLY ACTIVITY ESTIMATE</div>
+                    <div className="card-title">◆ ESTIMATED HOURLY DATA PROCE</div>
                   </div>
                   <div className="chart-area">
                     {homeChartData.map((item, i) => (
