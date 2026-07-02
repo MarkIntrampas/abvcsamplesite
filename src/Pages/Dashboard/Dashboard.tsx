@@ -353,7 +353,7 @@ const formatTaipeiTimeOnly = (timestamp: string): string => {
   const taipeiTime = formatTaipeiTimeOnly(e.datetime);
 
   // Matches 7:00 AM through 7:59 AM
-  const isSevenAM = /^7:\d{2}\sAM$/.test(taipeiTime);
+  const isSevenAM = /^6:\d{2}\sAM$/.test(taipeiTime);
 
   if (isSevenAM) {
     return e.total;
