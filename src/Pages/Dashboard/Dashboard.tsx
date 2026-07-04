@@ -339,7 +339,32 @@ const formatTaipeiTimeOnly = (timestamp: string): string => {
   );
 
 
+const formatNumber = (
+  value: number,
+  decimals: number = 1
+): string => {
+  if (!Number.isFinite(value)) return "0";
 
+  const abs = Math.abs(value);
+
+  const units = [
+    { value: 1e12, suffix: "T" },
+    { value: 1e9, suffix: "B" },
+    { value: 1e6, suffix: "M" },
+    { value: 1e3, suffix: "K" },
+  ];
+
+  for (const unit of units) {
+    if (abs >= unit.value) {
+      const formatted = (value / unit.value).toFixed(decimals);
+
+      // Remove trailing zeros (e.g. "1.0" -> "1")
+      return `${parseFloat(formatted)}${unit.suffix}`;
+    }
+  }
+
+  return value.toLocaleString();
+};
 
 
   
@@ -693,15 +718,19 @@ const formatTaipeiTimeOnly = (timestamp: string): string => {
 
                 <div className="card">
                   <div className="card-header">
-                    <div className="card-title">◆ ESTIMATED HOURLY DATA PROCE</div>
+                    <div className="card-title">◆ ESTIMATED HOURLY DATA PROCESSED</div>
                   </div>
                   <div className="chart-area">
                     {homeChartData.map((item, i) => (
+                    
+                   
                       <div
                         key={`${item.hour}-${i}`}
                         className="bar-wrap"
-                        title={`${item.hour}:00 — ~${item.est} entries`}
+                        title={`${item.hour}:00 — ~${item.est} Documents`}
                       >
+                         <div className="bar-label">{formatNumber(item.est)}</div>
+
                         <div
                           className="bar"
                           style={{
@@ -711,6 +740,7 @@ const formatTaipeiTimeOnly = (timestamp: string): string => {
                         />
                         <div className="bar-label">{item.hour}</div>
                       </div>
+                      
                     ))}
                   </div>
                 </div>

@@ -716,6 +716,12 @@ body {
   gap: 6px;
 }
 
+.totalPerBar{
+  height: 0;
+  opacity: o;
+  width: 100%;
+  background-color: red;
+}
 .bar {
   width: 100%;
   border-radius: 4px 4px 0 0;
@@ -726,6 +732,11 @@ body {
 
 .bar:hover {
   opacity: 0.75;
+}
+
+.bar:hover .totalPerBar{
+  opacity: 1;
+  height: 100px;
 }
 
 @keyframes bar-grow {
