@@ -453,15 +453,7 @@ const formatNumber = (
 }, [hourlyTotals, total]);
 
 
-  const analyticsChartData = [
-    { day: "MON", val: 65 },
-    { day: "TUE", val: 78 },
-    { day: "WED", val: 82 },
-    { day: "THU", val: 91 },
-    { day: "FRI", val: 100 },
-    { day: "SAT", val: 55 },
-    { day: "SUN", val: 42 },
-  ];
+
 
   const renderTable = () => {
     if (tableLoading) {
