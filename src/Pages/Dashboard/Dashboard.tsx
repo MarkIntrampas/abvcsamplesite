@@ -832,7 +832,13 @@ const formatNumber = (
                   <div className="card">
                     <div className="card-header">
                       <div className="card-title">◆ VOLUME TREND — 7 DAYS</div>
+                       <div className="card-action">
+                       <b>GENERATE REPORT</b>
                     </div>
+                    
+                    
+                    </div>
+                    
                     <div className="chart-area">
                       
                     {DailyTotals.map((item, i) => (
