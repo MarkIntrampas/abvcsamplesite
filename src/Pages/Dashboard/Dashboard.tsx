@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
  const [topTable, setTopData] = useState<any[]>([]);
  const [bottomTable, setBottomTable] = useState<bottom[]>([]);
  const [hourlyTotals, setHourlyTotals] = useState<{ id: number; datetime: string; total: number }[]>([]);
- 
+  const [DailyTotals, setDailyTotal] = useState<{ id: number; datetime: string; total: number }[]>([]);
 
  const [messageList,updateMessage] = useState<Message[]>([]);
 
@@ -149,12 +149,14 @@ const loadDataFromTellerRecord = async ()=>{
   const top = await Data.TopTable();
   const bottomdata= await Data.BottomTable();
   const hourly = await Data.hourlyTotal();
+  const daily = await Data.DailyTotalInAweek();
 
   
   loadData(Teller);
   setTopData(top);
   setBottomTable(bottomdata);
   setHourlyTotals(hourly);
+  setDailyTotal(daily);
   
   
  
@@ -281,6 +283,58 @@ const reload = ()=>{
         parts.find((p) => p.type === type)?.value ?? "";
 
     return `${get("hour")}:${get("minute")} ${get("dayPeriod")} - ${get("month")} ${get("day")}, ${get("year")}`;
+};
+
+
+const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
+    const created = new Date(timestamp);
+
+    if (isNaN(created.getTime())) {
+        return "Invalid Date";
+    }
+
+    const now = new Date();
+
+    // Get today's date in Taipei
+    const todayTaipei = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Taipei",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).format(now);
+
+    // Subtract one day from today's Taipei date
+    const yesterdayTaipei = new Date(todayTaipei);
+    yesterdayTaipei.setDate(yesterdayTaipei.getDate() - 1);
+
+    const yesterdayStr = new Intl.DateTimeFormat("en-CA").format(yesterdayTaipei);
+
+    // Get the created date in Taipei
+    const createdDateStr = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Taipei",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).format(created);
+
+  const dateLabel = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Taipei",
+    month: "short",
+    day: "2-digit",
+})
+    .format(created)
+    .replace(" ", "/");
+
+// "Yesterday" if applicable, otherwise "Mon", "Tue", etc.
+const dayLabel =
+    createdDateStr === yesterdayStr
+        ? "Yesterday"
+        : new Intl.DateTimeFormat("en-US", {
+              timeZone: "Asia/Taipei",
+              weekday: "short",
+          }).format(created);
+
+return `${dateLabel} - ${dayLabel}`;
 };
 
 
@@ -788,18 +842,26 @@ const formatNumber = (
                       <div className="card-title">◆ VOLUME TREND — 7 DAYS</div>
                     </div>
                     <div className="chart-area">
-                      {analyticsChartData.map((item, i) => (
-                        <div key={item.day} className="bar-wrap">
-                          <div
-                            className="bar"
-                            style={{
-                              height: `${item.val}%`,
-                              animationDelay: `${i * 0.07}s`,
-                            }}
-                          />
-                          <div className="bar-label">{item.day}</div>
-                        </div>
-                      ))}
+                      
+                    {DailyTotals.map((item, i) => (
+                          <div key={item.datetime} className="bar-wrap">
+                            <div className="bar-label">{formatNumber(item.total)}</div>
+                            <div
+                              className="bar"
+                              style={{
+                                height: `${
+                                  (item.total /
+                                    Math.max(...DailyTotals.map((d) => d.total), 1)) *
+                                  100
+                                }%`,
+                                animationDelay: `${i * 0.07}s`,
+                              }}
+                            />
+                            <div className="bar-label">
+                              {formatTaipeiTimeDaysOfTheWeek(item.datetime)}
+                            </div>
+                          </div>
+                        ))}
                     </div>
                   </div>
 

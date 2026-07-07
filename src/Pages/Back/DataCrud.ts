@@ -30,6 +30,13 @@ Total:number;
 
 };
 
+
+    type RefRow = {
+  id: number;
+  created_at: string;
+};
+
+
 class DataBack {
   
    
@@ -78,6 +85,20 @@ class DataBack {
         };
 
   
+
+
+latestRefIdsDaily = async (): Promise<RefRow[]> => {
+  const { data, error } = await this.supabase
+  .rpc("data_record_reference_time_window_10_00_10_59")
+  .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error('RPC error:', error);
+    throw error;
+  }
+
+  return data ?? [];
+};
 
 
     loadDetailByRefId = async (): Promise<DataDetailMore> => {
@@ -182,6 +203,19 @@ BottomTable = async (): Promise<bottom[]> => {
         refs.map(async (ref) => ({
             id: ref.id,
             datetime: ref.datetime,
+            total: await this.BottomTableTotal(ref.id),
+        }))
+    );
+};
+
+
+ DailyTotalInAweek = async (): Promise<{ id: number; datetime: string; total: number }[]> => {
+    const refs = await this.latestRefIdsDaily();
+    
+    return Promise.all(
+        refs.map(async (ref) => ({
+            id: ref.id,
+            datetime: ref.created_at,
             total: await this.BottomTableTotal(ref.id),
         }))
     );
