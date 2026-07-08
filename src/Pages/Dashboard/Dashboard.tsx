@@ -438,12 +438,13 @@ const formatNumber = (
     return e.total;
   }
 
-  return i < arr.length - 1
+  return i < arr.length-1
     ? e.total - arr[i + 1].total
     : 0;
 });
 
   const max = Math.max(...vals);
+  hours.pop();
 
   return hours.map((hour, i) => ({
     hour,
@@ -842,6 +843,7 @@ const formatNumber = (
                     <div className="chart-area">
                       
                     {DailyTotals.map((item, i) => (
+                       
                           <div key={item.datetime} className="bar-wrap">
                             <div className="bar-label">{formatNumber(item.total)}</div>
                             <div
