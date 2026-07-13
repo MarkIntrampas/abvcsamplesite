@@ -2,9 +2,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './style/dashstyle.css'
 import BlogViewer from "../Component/BlogViewer";
+import DataLoading from "../Component/DataLoading";
 import BlogCrud from "../Back/BlogCrud";
 import ContacBack from "../Back/ContactCrud";
 import DataBack from "../Back/DataCrud";
+
 
 
 type DataRow = {
@@ -75,6 +77,7 @@ const Dashboard: React.FC = () => {
   const [clock, setClock] = useState("00:00:00");
   const [tableLoading, setTableLoading] = useState(true);
   
+
   const [tableRows, setTableRows] = useState<DataRow[]>([]);
   const [username,setUsername] = useState<String>();
  const [bloglist,updateBlog] = useState<Blog[]>([]);
@@ -647,25 +650,68 @@ const formatNumber = (
                   
 
                   <div className="mini-stat">
-                    <div className="mini-stat-label">Today's Total Data Processed </div>
-                    <div className="mini-stat-val">{dataLoad?.total?.toLocaleString()}</div>
-                    <div className="mini-stat-sub"> On latest recorded hour:  { formatTaipeiTime(String(dataLoad?.datetime))}</div>
-                    
+                    {!dataLoad ? (
+                      <>
+                      <div className="mini-stat-label">Today's Total Data Processed</div>
+                      <DataLoading />
+                      </>
+                    ) : (
+                      <>
+                        <div className="mini-stat-label">Today's Total Data Processed</div>
+                        <div className="mini-stat-val">{dataLoad?.total?.toLocaleString()}</div>
+                        <div className="mini-stat-sub">
+                          On latest recorded hour: {formatTaipeiTime(String(dataLoad?.datetime))}
+                        </div>
+                      </>
+                    )}
+                                        
                   </div>
 
                   
                   
                   <div className="mini-stat">
-                    <div className="mini-stat-label">Current Todo</div>
-                    <div className="mini-stat-val">{Number(dataLoad?.totalTodo).toLocaleString()}</div>
-                    <div className="mini-stat-sub">On latest recorded hour: { formatTaipeiTime(String(dataLoad?.datetime))}</div>
+
+
+
+                     {!dataLoad ? (
+                      <>
+                      <div className="mini-stat-label">Today's Total Data Processed</div>
+                      <DataLoading />
+                      </>
+                    ) : (
+                      <>  
+                           <div className="mini-stat-label">Current Todo</div>
+                          <div className="mini-stat-val">{Number(dataLoad?.totalTodo).toLocaleString()}</div>
+                          <div className="mini-stat-sub">On latest recorded hour: { formatTaipeiTime(String(dataLoad?.datetime))}</div>
+                        
+                      </>
+                    )}
+
+
+                   
                   </div>
 
+
+                  
+
                   <div className="mini-stat">
-                    <div className="mini-stat-label">TOTAL PROCESSORS</div>
-                    <div className="mini-stat-val">{dataLoad?.active}</div>
-                      <div className="mini-stat-sub">On latest recorded hour: { formatTaipeiTime(String(dataLoad?.datetime))}</div>
+
+                           {!dataLoad ? (
+                      <>
+                      <div className="mini-stat-label">TOTAL PROCESSORS</div>
+                      <DataLoading />
+                      </>
+                    ) : (
+                      <>  
+                           <div className="mini-stat-label">TOTAL PROCESSORS</div>
+                            <div className="mini-stat-val">{dataLoad?.active}</div>
+                             <div className="mini-stat-sub">On latest recorded hour: { formatTaipeiTime(String(dataLoad?.datetime))}</div>
                     
+                        
+                      </>
+                    )}
+                     
+                   
                   </div>
                 </div>
 

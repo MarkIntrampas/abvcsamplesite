@@ -88,9 +88,10 @@ class DataBack {
 
 
 latestRefIdsDaily = async (): Promise<RefRow[]> => {
-  const { data, error } = await this.supabase
+ const { data, error } = await this.supabase
   .rpc("data_record_reference_time_window_10_00_10_59")
-  .order("created_at", { ascending: false });
+  .order("created_at", { ascending: false })
+  .limit(7);
 
   if (error) {
     console.error('RPC error:', error);
