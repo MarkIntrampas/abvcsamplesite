@@ -1,0 +1,522 @@
+.tv-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 17, 21, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.tv-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tv-modal {
+  position: relative;
+  width: 80vw;
+  height: 80vh;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.tv-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+.tv-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tv-date-range {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tv-date-input {
+  font-size: 12px;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 6px 8px;
+  background: #f9fafb;
+  outline: none;
+}
+
+.tv-date-input:focus {
+  border-color: #111827;
+  background: #ffffff;
+}
+
+.tv-date-separator {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.tv-generate-btn {
+  background: #111827;
+  color: #ffffff;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.tv-generate-btn:hover {
+  background: #1f2937;
+}
+
+/* Pill switcher, centered on the header regardless of side content */
+.tv-pill {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  background: #f3f4f6;
+  border-radius: 999px;
+  padding: 4px;
+  width: 200px;
+}
+
+.tv-pill-btn {
+  flex: 1;
+  position: relative;
+  z-index: 2;
+  border: none;
+  background: transparent;
+  padding: 8px 0;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.tv-pill-btn.active {
+  color: #111827;
+}
+
+.tv-pill-slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: #ffffff;
+  border-radius: 999px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  transition: transform 0.25s ease;
+  z-index: 1;
+}
+
+.tv-pill-slider.right {
+  transform: translateX(100%);
+}
+
+.tv-modal-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f3f4f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tv-modal-close-btn:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.tv-modal-close-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+}
+
+/* Body */
+.tv-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #f9fafb;
+}
+
+/* Shared export button */
+.tv-export-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #111827;
+  color: #ffffff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.tv-export-btn:hover {
+  background: #1f2937;
+}
+
+.tv-export-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+}
+
+/* --- Sheet (Excel-style) view --- */
+.tv-sheet-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tv-sheet-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.tv-sheet-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.tv-grid-scroll {
+  flex: 1;
+  overflow: auto;
+  background: #ffffff;
+}
+
+.tv-grid {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+}
+
+.tv-grid th,
+.tv-grid td {
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tv-grid-corner {
+  width: 44px;
+  background: #f3f4f6;
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 3;
+}
+
+.tv-grid-col-header {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #374151;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.tv-grid-row-header {
+  background: #f3f4f6;
+  font-weight: 600;
+  color: #6b7280;
+  text-align: center;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.tv-grid-cell {
+  background: #ffffff;
+  color: #111827;
+}
+
+.tv-sheet-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 12px 0;
+  background: #f3f4f6;
+  border-top: 1px solid #e5e7eb;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.tv-sheet-tab {
+  padding: 8px 18px;
+  border-radius: 6px 6px 0 0;
+  border: none;
+  background: #e5e7eb;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tv-sheet-tab.active {
+  background: #ffffff;
+  color: #111827;
+  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* --- PDF (Word-style) view --- */
+.tv-pdf-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tv-pdf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.tv-pdf-filename {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.tv-pdf-page-scroll {
+  flex: 1;
+  overflow: auto;
+  background: #e5e7eb;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.tv-pdf-page {
+  width: 700px;
+  max-width: 100%;
+  min-height: 900px;
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  padding: 60px 70px;
+  box-sizing: border-box;
+}
+
+.tv-pdf-text {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #1f2937;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* ============ Responsive ============ */
+
+/* Tablet: modal grows a bit, header stays one row but wraps if tight */
+@media (max-width: 1024px) {
+  .tv-modal {
+    width: 90vw;
+    height: 85vh;
+  }
+
+  .tv-header {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .tv-header-left {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+}
+
+/* Mobile: header stacks into rows instead of relying on absolute centering,
+   since there's no longer room for header-left + centered pill + close button
+   to share one row without collisions. */
+@media (max-width: 768px) {
+  .tv-modal {
+    width: 95vw;
+    height: 92vh;
+    border-radius: 10px;
+  }
+
+  .tv-header {
+    flex-direction: column;
+    align-items: stretch;
+    /* reserve space at top-right so content doesn't sit under the floating close button */
+    padding: 44px 16px 12px;
+    gap: 10px;
+  }
+
+  .tv-header-left {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .tv-date-range {
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  /* pill leaves the header's absolute-centered layout and becomes a normal,
+     self-centered row so it can never overlap the date range row */
+  .tv-pill {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    align-self: center;
+    order: -1;
+  }
+
+  .tv-modal-close-btn {
+    top: 10px;
+    right: 12px;
+  }
+
+  .tv-pdf-page-scroll {
+    padding: 24px;
+  }
+
+  .tv-pdf-page {
+    padding: 32px 28px;
+    min-height: auto;
+  }
+
+  .tv-sheet-toolbar,
+  .tv-pdf-toolbar {
+    padding: 10px 12px;
+  }
+}
+
+/* Small phone: tighten every control so nothing clips or overflows */
+@media (max-width: 480px) {
+  .tv-modal {
+    width: 100vw;
+    height: 100vh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+
+  .tv-header {
+    padding: 44px 12px 10px;
+  }
+
+  .tv-date-input {
+    flex: 1 1 44%;
+    min-width: 130px;
+    font-size: 12px;
+    padding: 7px 8px;
+  }
+
+  .tv-date-separator {
+    flex-basis: 100%;
+    text-align: center;
+  }
+
+  .tv-generate-btn {
+    flex: 1 1 100%;
+  }
+
+  .tv-pill {
+    width: 170px;
+  }
+
+  .tv-export-btn {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+
+  .tv-sheet-name,
+  .tv-pdf-filename {
+    font-size: 12px;
+  }
+
+  .tv-grid {
+    font-size: 12px;
+  }
+
+  .tv-grid th,
+  .tv-grid td {
+    padding: 6px 8px;
+  }
+
+  .tv-grid-corner {
+    width: 34px;
+  }
+
+  .tv-sheet-tabs {
+    padding: 6px 8px 0;
+  }
+
+  .tv-sheet-tab {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .tv-pdf-page-scroll {
+    padding: 16px;
+  }
+
+  .tv-pdf-page {
+    padding: 24px 18px;
+  }
+
+  .tv-pdf-text {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+}

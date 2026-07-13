@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './style/dashstyle.css'
 import BlogViewer from "../Component/BlogViewer";
+import TableViewer from "../Component/DataViewer/indexx";
 import DataLoading from "../Component/DataLoading";
 import BlogCrud from "../Back/BlogCrud";
 import ContacBack from "../Back/ContactCrud";
@@ -82,6 +83,7 @@ const Dashboard: React.FC = () => {
   const [username,setUsername] = useState<String>();
  const [bloglist,updateBlog] = useState<Blog[]>([]);
  const  [blogViewStatus, changeBlogViewStatus]  =useState(false);
+ const [showTableViewer, setShowTableViewer] = useState(false);
  const [selectedBlogItem, selectBlog] = useState<Number>();
  const [dataLoad , loadData] = useState< DataDetailMore>();
  const [topTable, setTopData] = useState<any[]>([]);
@@ -165,6 +167,9 @@ const loadDataFromTellerRecord = async ()=>{
  
  
 };
+
+
+
 
 
 const loadBlogs = async () => {
@@ -521,7 +526,14 @@ const formatNumber = (
   return (
     <>
       
-           
+      const [showTableViewer, setShowTableViewer] = useState(false);
+
+
+
+      {showTableViewer && (
+        <TableViewer closeOpenAction={() => setShowTableViewer(false)} />
+      )}
+
        {blogViewStatus===true ? <BlogViewer  closeOpenAction={blogViewerACTION} selectedBlogid={Number(selectedBlogItem)}  /> : <></>}
        
       <div className="dashboard-root">
@@ -879,7 +891,7 @@ const formatNumber = (
                   <div className="card">
                     <div className="card-header">
                       <div className="card-title">◆ VOLUME TREND — 7 DAYS</div>
-                       <div className="card-action">
+                       <div className="card-action" onClick={()=>setShowTableViewer(true)}>
                        <b>GENERATE REPORT</b>
                     </div>
                     
@@ -892,7 +904,7 @@ const formatNumber = (
                        
                           <div key={item.datetime} className="bar-wrap">
                             <div className="bar-label">{formatNumber(item.total)}</div>
-                            <div
+                            <div onClick={()=>setShowTableViewer(true)}
                               className="bar"
                               style={{
                                 height: `${
