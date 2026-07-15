@@ -99,8 +99,8 @@ selectHourlyrecordFor = async (date: string): Promise<WholeHourlySet[]> => {
             Top: await this.TopTableByid(e.id),
         }))
     );
-    alert("ids: "+ids.length);
-    alert("sets: "+sets.length)
+  
+    
     return sets;
 };
 

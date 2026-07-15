@@ -142,7 +142,7 @@ const loadDataFromQuery = async () => {
         
           
           hourlySet.map(e =>{
-            alert(e.created);
+           
             SetSetting.push({
               name:formatTaipeiTimeDaysOfTheWeek(e.created)
             })
