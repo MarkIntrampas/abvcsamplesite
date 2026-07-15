@@ -34,6 +34,12 @@ Total:number;
     type RefRow = {
   id: number;
   created_at: string;
+    };
+
+type WholeHourlySet = {
+ created:string;
+ Top: any[];
+
 };
 
 
@@ -84,10 +90,96 @@ class DataBack {
     }));
         };
 
-  
+selectHourlyrecordFor = async (date: string): Promise<WholeHourlySet[]> => {
+    const ids = await this.RefIdsBaseoonDate(date);
+
+    const sets = await Promise.all(
+        ids.map(async (e) => ({
+            created: this.adjustCreatedAtByTaipeiDate(e.created_at,date),
+            Top: await this.TopTableByid(e.id),
+        }))
+    );
+    
+    return sets;
+};
+
+adjustCreatedAtByTaipeiDate = (created_at: string, startingDate: string): string => {
+    const taipeiDate = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Taipei",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).format(new Date());
+
+    const startingTaipeiDate = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Taipei",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).format(new Date(startingDate));
+
+    // If starting date is not today in Taipei, add 1 day
+    if (startingTaipeiDate !== taipeiDate) {
+        const newDate = new Date(created_at);
+        newDate.setDate(newDate.getDate() + 1);
+
+        return newDate.toISOString();
+    }
+
+    // If starting date is today, keep original created_at
+    return created_at;
+};
+
+
+
+formatUTC = (date: Date) => {
+  const pad = (n: number, len = 2) => n.toString().padStart(len, "0");
+
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}T` +
+         `${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}.` +
+         `${pad(date.getUTCMilliseconds(), 3)}000+00:00`;
+};
+
+
+RefIdsBaseoonDate = async (date: string): Promise<RefRow[]> => {
+  const startDate = new Date(date);
+  const endDate = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
+
+
+
+  const { data, error } = await this.supabase.rpc(
+    "data_record_reference_with_starting_date",
+    {
+      p_start: this.formatUTC(startDate),
+      p_end: this.formatUTC(endDate),
+    }
+  );
+
+  if (error) {
+    alert("error from RefIdsBaseoonDate");
+    return [];
+  }
+
+  return data as RefRow[];
+};
 
 
 latestRefIdsDaily = async (): Promise<RefRow[]> => {
+ const { data, error } = await this.supabase
+  .rpc("data_record_reference_time_window_10_00_10_59")
+  .order("created_at", { ascending: false })
+  .limit(7);
+
+  if (error) {
+    console.error('RPC error:', error);
+    throw error;
+  }
+
+  return data ?? [];
+};
+
+
+latestRefIdsDailyWithDateRange = async (): Promise<RefRow[]> => {
  const { data, error } = await this.supabase
   .rpc("data_record_reference_time_window_10_00_10_59")
   .order("created_at", { ascending: false })
@@ -230,6 +322,29 @@ TopTable = async (): Promise<any[]> => {
     .from("SUMMARY_TOP")
     .select("*")
     .eq("RecordRef", ref.id);
+
+  if (error || !data || data.length === 0) {
+    throw error ?? new Error("No data found");
+  }
+
+  // get column names
+  const keys = Object.keys(data[0]);
+
+  // transpose: column -> array
+  const result = keys.map((key) =>
+    data.map((row) => row[key])
+  );
+
+  return result;
+};
+
+TopTableByid = async (id:number): Promise<any[]> => {
+  
+
+  const { data, error } = await this.supabase
+    .from("SUMMARY_TOP")
+    .select("*")
+    .eq("RecordRef", id);
 
   if (error || !data || data.length === 0) {
     throw error ?? new Error("No data found");

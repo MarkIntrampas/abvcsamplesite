@@ -85,11 +85,12 @@ const Dashboard: React.FC = () => {
  const  [blogViewStatus, changeBlogViewStatus]  =useState(false);
  const [showTableViewer, setShowTableViewer] = useState(false);
  const [selectedBlogItem, selectBlog] = useState<Number>();
+ const [analyticsId , setSelectedAnalyticsDate] = useState<string | null>(null);
  const [dataLoad , loadData] = useState< DataDetailMore>();
  const [topTable, setTopData] = useState<any[]>([]);
  const [bottomTable, setBottomTable] = useState<bottom[]>([]);
  const [hourlyTotals, setHourlyTotals] = useState<{ id: number; datetime: string; total: number }[]>([]);
-  const [DailyTotals, setDailyTotal] = useState<{ id: number; datetime: string; total: number }[]>([]);
+const [DailyTotals, setDailyTotal] = useState<{ id: number; datetime: string; total: number }[]>([]);
 
  const [messageList,updateMessage] = useState<Message[]>([]);
 
@@ -531,7 +532,10 @@ const formatNumber = (
 
 
       {showTableViewer && (
-        <TableViewer closeOpenAction={() => setShowTableViewer(false)} />
+     <TableViewer
+      closeOpenAction={() => setShowTableViewer(false)}
+       date={analyticsId}
+      />
       )}
 
        {blogViewStatus===true ? <BlogViewer  closeOpenAction={blogViewerACTION} selectedBlogid={Number(selectedBlogItem)}  /> : <></>}
@@ -904,7 +908,11 @@ const formatNumber = (
                        
                           <div key={item.datetime} className="bar-wrap">
                             <div className="bar-label">{formatNumber(item.total)}</div>
-                            <div onClick={()=>setShowTableViewer(true)}
+                            <div  onClick={() => {
+                                            setSelectedAnalyticsDate(item.datetime);
+                                            setShowTableViewer(true);
+                                          }}
+                                          
                               className="bar"
                               style={{
                                 height: `${

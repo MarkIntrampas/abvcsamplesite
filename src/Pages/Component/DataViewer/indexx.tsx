@@ -1,21 +1,45 @@
 import './TableViewer.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import DataBack from '../../Back/DataCrud';
 
 interface SheetData {
   name: string;
-  headers: string[];
-  rows: (string | number)[][];
+  headers?: string[];
+  rows?: (string | number)[][];
 }
 
 interface TableViewerProps {
   closeOpenAction: () => void;
 }
 
+
+
+
+
+
+
+
+
+type WholeHourlySet = {
+created:string;
+ Top: any[];
+
+};
+
+
+interface TableViewerProps {
+  closeOpenAction: () => void;
+  date?: string | null;
+  start?:string;
+  end?: string;
+}
+
+
 // Placeholder data — replace with a real fetch (e.g. useEffect + backend call),
 // same pattern BlogViewer uses with BlogBack.ViewBlogById
 const title = 'Table Viewer';
 
-const defaultSheets: SheetData[] = [
+/*const defaultSheets: SheetData[] = [
   {
     name: 'Sheet1',
     headers: ['Item', 'Quantity', 'Unit Price', 'Total'],
@@ -33,24 +57,120 @@ const defaultSheets: SheetData[] = [
       ['M. Santos', 'Operations', 152],
     ],
   },
-];
+];*/
 
 const defaultDocumentContent =
   'This document is a placeholder. Pass real content into the documentContent prop to render it here, formatted like a standard word processor page.';
 
-const TableViewer: React.FC<TableViewerProps> = ({ closeOpenAction }) => {
+const TableViewer: React.FC<TableViewerProps> =  ({
+  closeOpenAction,
+  date,
+  start,
+  end,
+}) => {
   const [viewMode, setViewMode] = useState<'SHEET' | 'PDF'>('SHEET');
   const [activeSheetIndex, setActiveSheetIndex] = useState(0);
-  const [sheets] = useState<SheetData[]>(defaultSheets);
+  const [sheets,addSheet] = useState<SheetData[]>([]);
   const [documentContent] = useState<string>(defaultDocumentContent);
   const [startDateTime, setStartDateTime] = useState<string>('');
   const [endDateTime, setEndDateTime] = useState<string>('');
-
+  const [hourlySet ,setHourlySet] = useState<WholeHourlySet[]>([]);
   const activeSheet = sheets[activeSheetIndex];
 
   const handleExportSheet = () => {
     // TODO: wire up real export logic (e.g. SheetJS) here
     console.log('Export sheet:', activeSheet.name);
+  };
+
+   useEffect( () => {
+     
+      loadDataFromQuery();
+
+
+  }, []);
+
+   useEffect( () => {
+     
+     GenerateReport();
+
+  }, hourlySet);
+
+  
+ const roundTime = (timestamp: string): string => {
+    const date = new Date(timestamp);
+
+    if (isNaN(date.getTime())) {
+        return "Invalid Date";
+    }
+
+    const now = new Date();
+
+    const isToday =
+        date.getFullYear() === now.getFullYear() &&
+        date.getMonth() === now.getMonth() &&
+        date.getDate() === now.getDate();
+
+    if (!isToday) {
+        date.setDate(date.getDate() - 1);
+    }
+
+    date.setUTCHours(10, 0, 0, 0);
+
+    const pad = (num: number, size = 2) => num.toString().padStart(size, "0");
+
+    return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}T${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}.${pad(date.getUTCMilliseconds(), 3)}000+00:00`;
+};
+
+
+
+const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
+    const created = new Date(timestamp);
+
+    if (isNaN(created.getTime())) {
+        return "Invalid Date";
+    }
+
+    return new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Taipei",
+        month: "long",
+        day: "2-digit",
+    })
+    .format(created)
+    .replace(/\u00A0/g, " ");
+};
+
+
+const loadDataFromQuery = async () => {
+
+
+  const DataQqeru = new DataBack();
+
+  if (date != null) {
+    const data = await DataQqeru.selectHourlyrecordFor(roundTime(date));
+   
+   setHourlySet(data);
+
+  } else {
+    alert(start);
+    alert(end);
+  }
+};
+
+  const GenerateReport = async ()=>{
+      
+        if(hourlySet){
+           
+          const SetSetting:SheetData[] =[];
+        
+          
+          hourlySet.map(e =>{
+            SetSetting.push({
+              name:formatTaipeiTimeDaysOfTheWeek(e.created)
+            })
+          });
+
+          addSheet(SetSetting);
+        }
   };
 
   const handleExportPdf = () => {
@@ -62,6 +182,8 @@ const TableViewer: React.FC<TableViewerProps> = ({ closeOpenAction }) => {
     // TODO: wire up real fetch/regeneration logic here using startDateTime / endDateTime
     console.log('Generate for range:', startDateTime, '→', endDateTime);
   };
+
+ 
 
   return (
     <div className="tv-overlay">
@@ -128,23 +250,10 @@ const TableViewer: React.FC<TableViewerProps> = ({ closeOpenAction }) => {
 
                 <div className="tv-grid-scroll">
                   <table className="tv-grid">
-                    <thead>
-                      <tr>
-                        <th className="tv-grid-corner"></th>
-                        {activeSheet?.headers.map((h, i) => (
-                          <th key={i} className="tv-grid-col-header">{h}</th>
-                        ))}
-                      </tr>
-                    </thead>
+              
+                     
                     <tbody>
-                      {activeSheet?.rows.map((row, rIdx) => (
-                        <tr key={rIdx}>
-                          <td className="tv-grid-row-header">{rIdx + 1}</td>
-                          {row.map((cell, cIdx) => (
-                            <td key={cIdx} className="tv-grid-cell">{cell}</td>
-                          ))}
-                        </tr>
-                      ))}
+                     
                     </tbody>
                   </table>
                 </div>
