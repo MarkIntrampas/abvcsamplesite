@@ -39,25 +39,6 @@ interface TableViewerProps {
 // same pattern BlogViewer uses with BlogBack.ViewBlogById
 const title = 'Table Viewer';
 
-/*const defaultSheets: SheetData[] = [
-  {
-    name: 'Sheet1',
-    headers: ['Item', 'Quantity', 'Unit Price', 'Total'],
-    rows: [
-      ['Steel Beam', 12, 450, 5400],
-      ['Concrete Mix', 30, 85, 2550],
-      ['Rebar', 200, 3.5, 700],
-    ],
-  },
-  {
-    name: 'Sheet2',
-    headers: ['Employee', 'Department', 'Hours'],
-    rows: [
-      ['J. Cruz', 'Engineering', 160],
-      ['M. Santos', 'Operations', 152],
-    ],
-  },
-];*/
 
 const defaultDocumentContent =
   'This document is a placeholder. Pass real content into the documentContent prop to render it here, formatted like a standard word processor page.';
