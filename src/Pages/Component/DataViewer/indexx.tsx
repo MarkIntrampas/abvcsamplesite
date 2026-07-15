@@ -63,19 +63,16 @@ const TableViewer: React.FC<TableViewerProps> =  ({
     console.log('Export sheet:', activeSheet.name);
   };
 
-   useEffect( () => {
-     
-      loadDataFromQuery();
+  useEffect(() => {
+  loadDataFromQuery();
+}, [date]);
 
 
-  }, []);
-
-   useEffect( () => {
-     
-     GenerateReport();
-
-  }, hourlySet);
-
+useEffect(() => {
+  if (hourlySet.length > 0) {
+    GenerateReport();
+  }
+}, [hourlySet]);
   
  const roundTime = (timestamp: string): string => {
     const date = new Date(timestamp);
