@@ -35,7 +35,11 @@ Total:number;
   id: number;
   created_at: string;
     };
-
+    /*
+type dailySET ={
+HourlySet:WholeHourlySet[];
+};
+*/
 type WholeHourlySet = {
  created:string;
  Top: any[];
@@ -100,7 +104,7 @@ selectHourlyrecordFor = async (date: string): Promise<WholeHourlySet[]> => {
         }))
     );
   
-    
+
     return sets;
 };
 
@@ -170,6 +174,10 @@ latestRefIdsDaily = async (): Promise<RefRow[]> => {
   .rpc("data_record_reference_time_window_10_00_10_59")
   .order("created_at", { ascending: false })
   .limit(7);
+
+
+   
+
 
   if (error) {
     console.error('RPC error:', error);
@@ -283,7 +291,7 @@ BottomTable = async (): Promise<bottom[]> => {
                 if (error || !data) {
                     throw error ?? new Error("Bottom_Record not found");
                 }
-
+             
                 const total = data.reduce((sum, row) => sum + Number(row.Total), 0);
 
                 return total;

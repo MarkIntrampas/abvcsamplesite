@@ -302,6 +302,10 @@ const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
         return "Invalid Date";
     }
 
+    // Subtract 1 day from the created date
+    const adjustedCreated = new Date(created);
+    adjustedCreated.setDate(adjustedCreated.getDate() - 1);
+
     const now = new Date();
 
     // Get today's date in Taipei
@@ -318,32 +322,32 @@ const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
 
     const yesterdayStr = new Intl.DateTimeFormat("en-CA").format(yesterdayTaipei);
 
-    // Get the created date in Taipei
+    // Get the (adjusted) created date in Taipei
     const createdDateStr = new Intl.DateTimeFormat("en-CA", {
         timeZone: "Asia/Taipei",
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
-    }).format(created);
+    }).format(adjustedCreated);
 
-  const dateLabel = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Asia/Taipei",
-    month: "short",
-    day: "2-digit",
-})
-    .format(created)
-    .replace(" ", "/");
+    const dateLabel = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Taipei",
+        month: "short",
+        day: "2-digit",
+    })
+        .format(adjustedCreated)
+        .replace(" ", "/");
 
-// "Yesterday" if applicable, otherwise "Mon", "Tue", etc.
-const dayLabel =
-    createdDateStr === yesterdayStr
-        ? "Yesterday"
-        : new Intl.DateTimeFormat("en-US", {
-              timeZone: "Asia/Taipei",
-              weekday: "short",
-          }).format(created);
+    // "Yesterday" if applicable, otherwise "Mon", "Tue", etc.
+    const dayLabel =
+        createdDateStr === yesterdayStr
+            ? "Yesterday"
+            : new Intl.DateTimeFormat("en-US", {
+                  timeZone: "Asia/Taipei",
+                  weekday: "short",
+              }).format(adjustedCreated);
 
-return `${dateLabel} - ${dayLabel}`;
+    return `${dateLabel} - ${dayLabel}`;
 };
 
 

@@ -34,6 +34,16 @@ interface TableViewerProps {
   end?: string;
 }
 
+interface SheetData {
+  name: string;
+  row:{
+    cell:{
+    type:string;
+    value:string;
+    }[]
+  }[]
+};
+
 
 // Placeholder data — replace with a real fetch (e.g. useEffect + backend call),
 // same pattern BlogViewer uses with BlogBack.ViewBlogById
@@ -73,7 +83,7 @@ useEffect(() => {
     GenerateReport();
   }
 }, [hourlySet]);
-  
+ 
  const roundTime = (timestamp: string): string => {
     const date = new Date(timestamp);
 
@@ -99,7 +109,7 @@ useEffect(() => {
     return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}T${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}.${pad(date.getUTCMilliseconds(), 3)}000+00:00`;
 };
 
-
+/* 
 
 const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
     const created = new Date(timestamp);
@@ -117,16 +127,18 @@ const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
     .replace(/\u00A0/g, " ");
 };
 
-
+*/
 const loadDataFromQuery = async () => {
 
 
   const DataQqeru = new DataBack();
-
+  
   if (date != null) {
     const data = await DataQqeru.selectHourlyrecordFor(roundTime(date));
    
    setHourlySet(data);
+
+
 
   } else {
     alert(start);
@@ -134,21 +146,15 @@ const loadDataFromQuery = async () => {
   }
 };
 
+
+
   const GenerateReport = async ()=>{
       
         if(hourlySet){
            
           const SetSetting:SheetData[] =[];
-        
-          
-          hourlySet.map(e =>{
-           
-            SetSetting.push({
-              name:formatTaipeiTimeDaysOfTheWeek(e.created)
-            })
-          });
-
-          addSheet(SetSetting);
+         
+         addSheet(SetSetting);
         }
   };
 
