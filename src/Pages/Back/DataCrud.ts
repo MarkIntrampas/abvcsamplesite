@@ -35,13 +35,13 @@ Total:number;
   id: number;
   created_at: string;
     };
-    /*
+
 type dailySET ={
+created:string;
 HourlySet:WholeHourlySet[];
 };
-*/
+
 type WholeHourlySet = {
- created:string;
  Top: any[];
 
 };
@@ -94,19 +94,45 @@ class DataBack {
     }));
         };
 
-selectHourlyrecordFor = async (date: string): Promise<WholeHourlySet[]> => {
+DailytHourlyrecordFor = async (date: string): Promise<dailySET[]> => {
     const ids = await this.RefIdsBaseoonDate(date);
 
-    const sets = await Promise.all(
-        ids.map(async (e) => ({
-            created: this.adjustCreatedAtByTaipeiDate(e.created_at,date),
-            Top: await this.TopTableByid(e.id),
-        }))
-    );
-  
+    const sets: dailySET[] = [];
 
-    return sets;
+    for (const e of ids) {
+        const created = new Date(e.created_at);
+        const top = await this.TopTableByid(e.id);
+
+        let daily = sets.find((s) => {
+            const start = new Date(s.created);
+
+            // 21:00 on the day of the first record
+            start.setHours(21, 0, 0, 0);
+
+            // 21:00 on the following day
+            const end = new Date(start);
+            end.setDate(end.getDate() + 1);
+
+            return created >= start && created < end;
+        });
+
+        if (!daily) {
+            daily = {
+                created: created.toISOString(), // or use adjustCreatedAtByTaipeiDate(...)
+                HourlySet: [],
+            };
+
+            sets.push(daily);
+        }
+
+        daily.HourlySet.push({
+            Top: top,
+        });
+    }
+
+    return sets as dailySET[];
 };
+
 
 adjustCreatedAtByTaipeiDate = (created_at: string, startingDate: string): string => {
     const taipeiDate = new Intl.DateTimeFormat("en-CA", {

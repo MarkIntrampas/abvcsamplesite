@@ -20,11 +20,7 @@ interface TableViewerProps {
 
 
 
-type WholeHourlySet = {
-created:string;
- Top: any[];
 
-};
 
 
 interface TableViewerProps {
@@ -43,6 +39,21 @@ interface SheetData {
     }[]
   }[]
 };
+
+
+
+type dailySET ={
+created:string;
+HourlySet:WholeHourlySet[];
+};
+
+type WholeHourlySet = {
+ Top: any[];
+
+};
+
+
+
 
 
 // Placeholder data — replace with a real fetch (e.g. useEffect + backend call),
@@ -65,7 +76,7 @@ const TableViewer: React.FC<TableViewerProps> =  ({
   const [documentContent] = useState<string>(defaultDocumentContent);
   const [startDateTime, setStartDateTime] = useState<string>('');
   const [endDateTime, setEndDateTime] = useState<string>('');
-  const [hourlySet ,setHourlySet] = useState<WholeHourlySet[]>([]);
+  const [DailySet ,setDailySet] = useState<dailySET[]>([]);
   const activeSheet = sheets[activeSheetIndex];
 
   const handleExportSheet = () => {
@@ -79,10 +90,10 @@ const TableViewer: React.FC<TableViewerProps> =  ({
 
 
 useEffect(() => {
-  if (hourlySet.length > 0) {
+  if (DailySet.length > 0) {
     GenerateReport();
   }
-}, [hourlySet]);
+}, [DailySet]);
  
  const roundTime = (timestamp: string): string => {
     const date = new Date(timestamp);
@@ -109,7 +120,7 @@ useEffect(() => {
     return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}T${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}.${pad(date.getUTCMilliseconds(), 3)}000+00:00`;
 };
 
-/* 
+
 
 const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
     const created = new Date(timestamp);
@@ -127,16 +138,16 @@ const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
     .replace(/\u00A0/g, " ");
 };
 
-*/
+
 const loadDataFromQuery = async () => {
 
 
   const DataQqeru = new DataBack();
   
   if (date != null) {
-    const data = await DataQqeru.selectHourlyrecordFor(roundTime(date));
+    const data = await DataQqeru.DailytHourlyrecordFor(roundTime(date));
    
-   setHourlySet(data);
+   setDailySet(data);
 
 
 
@@ -148,15 +159,39 @@ const loadDataFromQuery = async () => {
 
 
 
-  const GenerateReport = async ()=>{
-      
-        if(hourlySet){
-           
-          const SetSetting:SheetData[] =[];
-         
-         addSheet(SetSetting);
-        }
-  };
+  const GenerateReport = async () => {
+    if (DailySet.length > 0) {
+        const SetSetting: SheetData[] = [];
+
+        DailySet.forEach((daily) => {
+            const sheet: SheetData = {
+                name: formatTaipeiTimeDaysOfTheWeek(daily.created),
+                row: []
+            };
+
+            daily.HourlySet.forEach((hourly, index) => {
+                const row = {
+                    cell: [
+                        {
+                            type: "th",
+                            value: `Hour ${index + 1}` // first column
+                        },
+                        ...hourly.Top.map((top) => ({
+                            type: "td",
+                            value: top.toString()
+                        }))
+                    ]
+                };
+
+                sheet.row.push(row);
+            });
+
+            SetSetting.push(sheet);
+        });
+
+        addSheet(SetSetting);
+    }
+};
 
   const handleExportPdf = () => {
     // TODO: wire up real export logic here
@@ -233,15 +268,32 @@ const loadDataFromQuery = async () => {
                   </button>
                 </div>
 
-                <div className="tv-grid-scroll">
-                  <table className="tv-grid">
               
-                     
+
+                  {sheets.map((sheet, sheetIndex) => (
+                <div className="tv-grid-scroll"  style={{
+      display: sheetIndex === activeSheetIndex ? "block" : "none"
+    }} key={sheetIndex}>
+    
+
+                  <table className="tv-grid">
                     <tbody>
-                     
+                      {sheet.row?.map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                          {row.cell.map((cell, cellIndex) =>
+                            cell.type === "th" ? (
+                              <th key={cellIndex}>{cell.value}</th>
+                            ) : (
+                              <td key={cellIndex}>{cell.value}</td>
+                            )
+                          )}
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
+              ))}
+                
 
                 <div className="tv-sheet-tabs">
                   {sheets.map((s, idx) => (
