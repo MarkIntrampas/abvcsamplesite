@@ -160,38 +160,84 @@ const loadDataFromQuery = async () => {
 
 
   const GenerateReport = async () => {
-    if (DailySet.length > 0) {
-        const SetSetting: SheetData[] = [];
+    if (DailySet.length === 0) return;
 
-        DailySet.forEach((daily) => {
-            const sheet: SheetData = {
-                name: formatTaipeiTimeDaysOfTheWeek(daily.created),
-                row: []
-            };
+    const SetSetting: SheetData[] = [];
 
-            daily.HourlySet.forEach((hourly, index) => {
-                const row = {
+    DailySet.forEach((daily) => {
+        const sheet: SheetData = {
+            name: formatTaipeiTimeDaysOfTheWeek(daily.created),
+            row: [],
+        };
+
+        daily.HourlySet.forEach((hourly) => {
+
+          for (let i = 0; i < 3; i++) {
+
+                      sheet.row.push({
+                  cell: [
+                  {
+                      type: "th",
+                      value: " ",
+                  },
+              ],
+                  });
+
+                }
+
+            sheet.row.push(
+                {
                     cell: [
                         {
                             type: "th",
-                            value: `Hour ${index + 1}` // first column
+                            value: "Preprocess ToDo",
                         },
-                        ...hourly.Top.map((top) => ({
+                        {
                             type: "td",
-                            value: top.toString()
-                        }))
-                    ]
-                };
+                            value: hourly.Top[2],
+                        },
+                    ],
+                },
+                {
+                    cell: [
+                        {
+                            type: "th",
+                            value: "Validate ToDo",
+                        },
+                        {
+                            type: "td",
+                            value: hourly.Top[3],
+                        },
+                    ],
+                },
+                {
+                    cell: [
+                        {
+                            type: "th",
+                            value: "Qualitycheck ToDo",
+                        },
+                        {
+                            type: "td",
+                            value: hourly.Top[4],
+                        },
+                    ],
+                }
 
-                sheet.row.push(row);
-            });
-
-            SetSetting.push(sheet);
+              
+            );
+              for (let i = 0; i <50-sheet.row[sheet.row.length - 1].cell.length; i++) {
+             sheet.row[sheet.row.length - 1].cell.push({type: "th",
+                            value: " ",});
+             }
         });
 
-        addSheet(SetSetting);
-    }
+        SetSetting.push(sheet);
+    });
+
+    addSheet(SetSetting);
 };
+
+
 
   const handleExportPdf = () => {
     // TODO: wire up real export logic here

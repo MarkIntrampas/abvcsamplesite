@@ -489,10 +489,26 @@
     font-size: 12px;
   }
 
-  .tv-grid th,
-  .tv-grid td {
-    padding: 6px 8px;
-  }
+  
+.tv-grid {
+  width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+}
+
+.tv-grid th,
+.tv-grid td {
+  padding: 6px 8px;
+  width: fit-content;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.tv-grid th:empty,
+.tv-grid td:empty {
+  width: 100%;
+}
 
   .tv-grid-corner {
     width: 34px;
