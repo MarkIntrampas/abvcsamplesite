@@ -225,10 +225,13 @@ const loadDataFromQuery = async () => {
 
               
             );
-              for (let i = 0; i <50-sheet.row[sheet.row.length - 1].cell.length; i++) {
-             sheet.row[sheet.row.length - 1].cell.push({type: "th",
+              sheet.row.forEach((e) => {
+              
+              for (let i = 0; i <30-e.cell.length; i++) {
+             e.cell.push({type: "th",
                             value: " ",});
              }
+            });
         });
 
         SetSetting.push(sheet);
