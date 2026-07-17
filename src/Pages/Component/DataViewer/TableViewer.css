@@ -247,8 +247,15 @@
   padding: 8px 12px;
   text-align: left;
   white-space: nowrap;
+  font-family: 'Nunito', sans-serif;
+  
+  font-size: 17px;
+  color: #1c1c2e;
+  letter-spacing: 0.2px;
 }
-
+.tv-grid th{
+ font-weight: 800;
+}
 .tv-grid-corner {
   width: 44px;
   background: #f3f4f6;
