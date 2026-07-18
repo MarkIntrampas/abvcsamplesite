@@ -185,6 +185,24 @@ const loadDataFromQuery = async () => {
 
                 }
 
+
+                 sheet.row.push({
+                  cell: [
+                  {
+                      type: "th",
+                      value: " ",
+                  },
+                  {
+                      type: "th",
+                      value: " ",
+                  },
+                  {
+                      type: "th",
+                      value: `${hourly.Top[1]}`,
+                  },
+              ],
+                  });
+
             sheet.row.push(
                 {
                     cell: [

@@ -98,30 +98,38 @@ DailytHourlyrecordFor = async (date: string): Promise<dailySET[]> => {
     const ids = await this.RefIdsBaseoonDate(date);
 
     const sets: dailySET[] = [];
-
+    let tempDate = "";
     for (const e of ids) {
+      
         const created = new Date(e.created_at);
         const top = await this.TopTableByid(e.id);
 
-        let daily = sets.find((s) => {
-            const start = new Date(s.created);
+       let daily = sets.find(() => {
+    const createdDate = new Date(created);
 
-            // 21:00 on the day of the first record
-            start.setHours(21, 0, 0, 0);
+    const start = new Date(createdDate);
+    start.setUTCHours(22, 0, 0, 0);
 
-            // 21:00 on the following day
-            const end = new Date(start);
-            end.setDate(end.getDate() + 1);
+    // If record is before 22:00 UTC, it belongs to yesterday's business day
+    if (createdDate < start) {
+        start.setUTCDate(start.getUTCDate() - 1);
+    }
 
-            return created >= start && created < end;
-        });
+    const end = new Date(start);
+    end.setUTCDate(end.getUTCDate() + 1);
 
+    return created >= start && created < end;
+});
         if (!daily) {
+            if(sets.length>0){
+            sets[sets.length-1].created=tempDate; // Update the last entry's created date
+            }
+
             daily = {
-                created: created.toISOString(), // or use adjustCreatedAtByTaipeiDate(...)
+                created:e.created_at, // Assuming the last entry in 'top' has the correct date
                 HourlySet: [],
             };
-
+             tempDate = e.created_at;
             sets.push(daily);
         }
 
@@ -130,7 +138,7 @@ DailytHourlyrecordFor = async (date: string): Promise<dailySET[]> => {
         });
     }
 
-    return sets as dailySET[];
+    return sets;
 };
 
 
@@ -173,9 +181,16 @@ formatUTC = (date: Date) => {
 
 
 RefIdsBaseoonDate = async (date: string): Promise<RefRow[]> => {
-  const startDate = new Date(date);
-  const endDate = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
+    
+ const startDate = new Date(date);
+ startDate.setUTCDate(startDate.getUTCDate() + 1);
+startDate.setUTCHours(22, 0, 0, 0);
 
+const endDate = new Date(startDate);
+endDate.setUTCDate(endDate.getUTCDate() + 1);
+endDate.setUTCHours(21, 59, 0, 0);
+   console.log("startDate:", startDate.toISOString());
+   console.log("endDate:", endDate.toISOString());
 
 
   const { data, error } = await this.supabase.rpc(

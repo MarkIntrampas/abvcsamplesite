@@ -297,7 +297,7 @@ const reload = ()=>{
 };
 
 
-const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
+const formatTaipeiTimeDaysOfTheWeek= (timestamp: string): string => {
     const created = new Date(timestamp);
 
     if (isNaN(created.getTime())) {
