@@ -356,7 +356,7 @@ const formatTaipeiTime = (timestamp: string): string => {
                 <div className="tv-sheet-toolbar">
                   <span className="tv-sheet-name">{activeSheet?.name}</span>
                   <button className="tv-export-btn" onClick={handleExportSheet}>
-                    <svg viewBox="0 0 24 24"><use href="#ic-export" /></svg>
+                  
                     Export
                   </button>
                 </div>
@@ -405,7 +405,7 @@ const formatTaipeiTime = (timestamp: string): string => {
                 <div className="tv-pdf-toolbar">
                   <span className="tv-pdf-filename">{title}.pdf</span>
                   <button className="tv-export-btn" onClick={handleExportPdf}>
-                    <svg viewBox="0 0 24 24"><use href="#ic-export" /></svg>
+                  
                     Export
                   </button>
                 </div>
