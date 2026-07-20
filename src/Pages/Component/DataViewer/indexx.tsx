@@ -121,7 +121,7 @@ useEffect(() => {
 };
 
 
-
+//aleternative but not final
 const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
     const created = new Date(timestamp);
 
@@ -129,13 +129,16 @@ const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
         return "Invalid Date";
     }
 
+    // Subtract 1 day
+    created.setDate(created.getDate() - 1);
+
     return new Intl.DateTimeFormat("en-US", {
         timeZone: "Asia/Taipei",
         month: "long",
-        day: "2-digit",
+        day: "numeric",
     })
-    .format(created)
-    .replace(/\u00A0/g, " ");
+        .format(created)
+        .replace(/\u00A0/g, " ");
 };
 
 
@@ -157,7 +160,30 @@ const loadDataFromQuery = async () => {
   }
 };
 
+const formatTaipeiTime = (timestamp: string): string => {
+    const created = new Date(timestamp);
 
+    if (isNaN(created.getTime())) {
+        return "Invalid Date";
+    }
+
+    const fmt = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Taipei",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+    });
+
+    const parts = fmt.formatToParts(created);
+
+    const get = (type: Intl.DateTimeFormatPartTypes): string =>
+        parts.find((p) => p.type === type)?.value ?? "";
+
+    return `${get("hour")}:${get("minute")} ${get("dayPeriod")}`;
+};
 
   const GenerateReport = async () => {
     if (DailySet.length === 0) return;
@@ -185,20 +211,20 @@ const loadDataFromQuery = async () => {
 
                 }
 
-
+                
                  sheet.row.push({
                   cell: [
                   {
-                      type: "th",
-                      value: " ",
+                      type: "td",
+                      value: "Filipijnen",
                   },
                   {
                       type: "th",
                       value: " ",
                   },
                   {
-                      type: "th",
-                      value: `${hourly.Top[1]}`,
+                      type: "td",
+                      value: `${formatTaipeiTime(hourly.Top[1])}`,
                   },
               ],
                   });

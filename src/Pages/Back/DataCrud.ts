@@ -108,7 +108,7 @@ DailytHourlyrecordFor = async (date: string): Promise<dailySET[]> => {
     const createdDate = new Date(created);
 
     const start = new Date(createdDate);
-    start.setUTCHours(22, 0, 0, 0);
+    start.setUTCHours(23, 0, 0, 0); 
 
     // If record is before 22:00 UTC, it belongs to yesterday's business day
     if (createdDate < start) {
@@ -184,11 +184,11 @@ RefIdsBaseoonDate = async (date: string): Promise<RefRow[]> => {
     
  const startDate = new Date(date);
  startDate.setUTCDate(startDate.getUTCDate() + 1);
-startDate.setUTCHours(22, 0, 0, 0);
+startDate.setUTCHours(23, 0, 0, 0);
 
 const endDate = new Date(startDate);
 endDate.setUTCDate(endDate.getUTCDate() + 1);
-endDate.setUTCHours(21, 59, 0, 0);
+endDate.setUTCHours(22, 59, 0, 0);
    console.log("startDate:", startDate.toISOString());
    console.log("endDate:", endDate.toISOString());
 
