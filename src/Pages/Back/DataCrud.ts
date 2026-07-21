@@ -94,8 +94,8 @@ class DataBack {
     }));
         };
 
-DailytHourlyrecordFor = async (date: string): Promise<dailySET[]> => {
-    const ids = await this.RefIdsBaseoonDate(date);
+DailytHourlyrecordFor = async (date: string, end?: string): Promise<dailySET[]> => {
+    const ids = await this.RefIdsBaseoonDate(date, end);
 
     const sets: dailySET[] = [];
     let tempDate = "";
@@ -122,7 +122,7 @@ DailytHourlyrecordFor = async (date: string): Promise<dailySET[]> => {
 });
         if (!daily) {
             if(sets.length>0){
-            sets[sets.length-1].created=tempDate; // Update the last entry's created date
+            sets[0].created=tempDate; // Update the last entry's created date
             }
 
             daily = {
@@ -132,6 +132,11 @@ DailytHourlyrecordFor = async (date: string): Promise<dailySET[]> => {
              tempDate = e.created_at;
             sets.push(daily);
         }
+         if(sets.length===1){
+           
+            sets[0].created=tempDate; // Update the last entry's created date
+           
+            }
 
         daily.HourlySet.push({
             Top: top,
@@ -180,18 +185,23 @@ formatUTC = (date: Date) => {
 };
 
 
-RefIdsBaseoonDate = async (date: string): Promise<RefRow[]> => {
+RefIdsBaseoonDate = async (date: string, end?: string): Promise<RefRow[]> => {
     
  const startDate = new Date(date);
  startDate.setUTCDate(startDate.getUTCDate() + 1);
 startDate.setUTCHours(23, 0, 0, 0);
 
-const endDate = new Date(startDate);
-endDate.setUTCDate(endDate.getUTCDate() + 1);
-endDate.setUTCHours(22, 59, 0, 0);
-   console.log("startDate:", startDate.toISOString());
-   console.log("endDate:", endDate.toISOString());
+let endDate: Date;
 
+  if (end) {
+    endDate = new Date(end);
+  } else {
+    endDate = new Date(startDate);
+    endDate.setUTCDate(endDate.getUTCDate() + 1);
+    endDate.setUTCHours(22, 59, 0, 0);
+  }
+  console.log("startDateinRef:", startDate.toISOString());
+  console.log("endDateInRef:", endDate.toISOString());
 
   const { data, error } = await this.supabase.rpc(
     "data_record_reference_with_starting_date",
@@ -274,6 +284,42 @@ latestRefIdsDailyWithDateRange = async (): Promise<RefRow[]> => {
         totalTodo:data[0].Todo,
         totalEntry: data.length,
         datetime:ref.datetime,
+        active:activeProcessor,
+    } as DataDetailMore;
+};
+
+
+
+
+ loadDetailBySinglefId = async (id: number): Promise<DataDetailMore> => {
+     
+    const { data, error } = await this.supabase
+    .from("RECORD_DETAILS")
+    .select("*")
+    .eq("RecordRef", id)
+    .neq("Name", "Average");
+
+    if (error || !data) {
+        throw error ?? new Error("Record not found");
+    }
+
+    let total = 0;
+    let activeProcessor =0 ;
+    
+
+    data.forEach((row) => {
+        total += Number(row.Total ?? 0);
+        //totalTodo += Number(row.Todo ?? 0); // or row.todo ? 1 : 0 if todo is boolean
+    if(row.LastHour>0){activeProcessor++;}
+    
+    });
+ 
+    
+    return {
+        DataTable: data,
+        total:total,
+        totalTodo:data[0].Todo,
+        totalEntry: data.length,
         active:activeProcessor,
     } as DataDetailMore;
 };

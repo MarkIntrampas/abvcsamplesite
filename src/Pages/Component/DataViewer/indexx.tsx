@@ -74,26 +74,88 @@ const TableViewer: React.FC<TableViewerProps> =  ({
   const [activeSheetIndex, setActiveSheetIndex] = useState(0);
   const [sheets,addSheet] = useState<SheetData[]>([]);
   const [documentContent] = useState<string>(defaultDocumentContent);
-  const [startDateTime, setStartDateTime] = useState<string>('');
-  const [endDateTime, setEndDateTime] = useState<string>('');
+ 
   const [DailySet ,setDailySet] = useState<dailySET[]>([]);
   const activeSheet = sheets[activeSheetIndex];
-
+  const [startInput, setStartInputValue] = useState<string>("");
+  const [endInput, setEndInputValue] = useState<string>("");
   const handleExportSheet = () => {
     // TODO: wire up real export logic (e.g. SheetJS) here
     console.log('Export sheet:', activeSheet.name);
   };
 
   useEffect(() => {
+   // alert(date);
+    setStartInputValue(date ? setStartInput(date) : "");
+    if(end){
+      setEndInputValue(end ? setStartInput(end) : "");
+    }else{
+      setEndInputValue(date ? autoEnd(date) : "");
+    }
   loadDataFromQuery();
 }, [date]);
 
 
 useEffect(() => {
+  console.log("DailySet updated length:", DailySet.length);
   if (DailySet.length > 0) {
     GenerateReport();
   }
 }, [DailySet]);
+
+
+
+const setStartInput = (date: string): string => {
+  const parsedDate = new Date(date);
+
+  if (isNaN(parsedDate.getTime())) {
+    return "";
+  }
+ parsedDate.setHours(7, 0, 0, 0);
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  });
+
+  const parts = formatter.formatToParts(parsedDate);
+
+  const get = (type: string) =>
+    parts.find((p) => p.type === type)?.value ?? "";
+
+  return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`;
+};
+
+
+
+const autoEnd = (date: string): string => {
+  const parsedDate = new Date(date);
+
+  if (isNaN(parsedDate.getTime())) {
+    return "";
+  }
+
+  // Move to the next day
+  parsedDate.setDate(parsedDate.getDate() + 1);
+
+  // Set time to 6:00 AM
+  parsedDate.setHours(6, 59, 0, 0);
+
+  const year = parsedDate.getFullYear();
+  const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+  const day = String(parsedDate.getDate()).padStart(2, "0");
+  const hours = String(parsedDate.getHours()).padStart(2, "0");
+  const minutes = String(parsedDate.getMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
+
+
  
  const roundTime = (timestamp: string): string => {
     const date = new Date(timestamp);
@@ -129,8 +191,8 @@ const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
         return "Invalid Date";
     }
 
-    // Subtract 1 day
-    created.setDate(created.getDate() - 1);
+    // Subtract 8 hours
+    created.setHours(created.getHours() - 8);
 
     return new Intl.DateTimeFormat("en-US", {
         timeZone: "Asia/Taipei",
@@ -141,7 +203,6 @@ const formatTaipeiTimeDaysOfTheWeek = (timestamp: string): string => {
         .replace(/\u00A0/g, " ");
 };
 
-
 const loadDataFromQuery = async () => {
 
 
@@ -151,6 +212,28 @@ const loadDataFromQuery = async () => {
     const data = await DataQqeru.DailytHourlyrecordFor(roundTime(date));
    
    setDailySet(data);
+
+
+
+  } else {
+    alert(start);
+    alert(end);
+  }
+};
+
+
+
+const loadDataFromQueryonClick = async () => {
+
+  alert("Data load clicked");
+  const DataQqeru = new DataBack();
+  
+  if (date != null) {
+    const data = await DataQqeru.DailytHourlyrecordFor(startInput, endInput);
+  
+   
+   setDailySet(data);
+   alert("Data loaded successfully!");
 
 
 
@@ -185,6 +268,9 @@ const formatTaipeiTime = (timestamp: string): string => {
     return `${get("hour")}:${get("minute")} ${get("dayPeriod")}`;
 };
 
+
+
+
   const GenerateReport = async () => {
     if (DailySet.length === 0) return;
 
@@ -192,7 +278,7 @@ const formatTaipeiTime = (timestamp: string): string => {
 
     DailySet.forEach((daily) => {
         const sheet: SheetData = {
-            name: formatTaipeiTimeDaysOfTheWeek(daily.created),
+            name: formatTaipeiTimeDaysOfTheWeek(DailySet[0].created),
             row: [],
         };
 
@@ -291,10 +377,6 @@ const formatTaipeiTime = (timestamp: string): string => {
     console.log('Export document as PDF');
   };
 
-  const handleGenerate = () => {
-    // TODO: wire up real fetch/regeneration logic here using startDateTime / endDateTime
-    console.log('Generate for range:', startDateTime, '→', endDateTime);
-  };
 
  
 
@@ -315,18 +397,18 @@ const formatTaipeiTime = (timestamp: string): string => {
               <div className="tv-date-range">
                 <input
                   type="datetime-local"
-                  className="tv-date-input"
-                  value={startDateTime}
-                  onChange={(e) => setStartDateTime(e.target.value)}
+                  className="tv-date-input start-date-input"
+                  value={startInput}
+                  onChange={(e) => setStartInputValue(e.target.value)}
                 />
                 <span className="tv-date-separator">to</span>
                 <input
                   type="datetime-local"
                   className="tv-date-input"
-                  value={endDateTime}
-                  onChange={(e) => setEndDateTime(e.target.value)}
+                  value={endInput}
+                  onChange={(e) => setEndInputValue(e.target.value)}
                 />
-                <button className="tv-generate-btn" onClick={handleGenerate}>
+                <button className="tv-generate-btn" onClick={loadDataFromQueryonClick}>
                   Generate
                 </button>
               </div>
