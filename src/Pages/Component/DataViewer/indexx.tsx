@@ -41,6 +41,27 @@ interface SheetData {
 };
 
 
+type DataDetail = {
+    Num: number;
+    Name:string;
+    LastHour: number;
+    Todo:number;
+    Total:number;
+    EndOfDayTotal:number;
+    InactivityTime:string;
+    PauseTime:string;
+    RecordRef:number;
+    id:number;
+};
+
+type DataDetailMore = {
+    DataTable:DataDetail[];
+    total:number;
+    totalTodo:number;
+    totalEntry:number; 
+    datetime:string;
+    active:number;
+};
 
 type dailySET ={
 created:string;
@@ -49,6 +70,7 @@ HourlySet:WholeHourlySet[];
 
 type WholeHourlySet = {
  Top: any[];
+ details?: DataDetailMore;
 
 };
 
@@ -271,104 +293,128 @@ const formatTaipeiTime = (timestamp: string): string => {
 
 
 
-  const GenerateReport = async () => {
-    if (DailySet.length === 0) return;
+ const GenerateReport = () => {
+    if (!DailySet?.length) return;
 
-    const SetSetting: SheetData[] = [];
+    const TOTAL_COLUMNS = 30;
+    const EMPTY_CELL = {
+        type: "th",
+        value: " ",
+    };
 
-    DailySet.forEach((daily) => {
+    const createEmptyCells = (count: number) =>
+        Array.from({ length: count }, () => ({ ...EMPTY_CELL }));
+
+    const normalizeRow = (row: SheetData["row"][number]) => {
+        const missing = TOTAL_COLUMNS - row.cell.length;
+
+        if (missing > 0) {
+            row.cell.push(...createEmptyCells(missing));
+        }
+
+        return row;
+    };
+
+    const SetSetting: SheetData[] = DailySet.map((daily) => {
+
         const sheet: SheetData = {
-            name: formatTaipeiTimeDaysOfTheWeek(DailySet[0].created),
+            name: formatTaipeiTimeDaysOfTheWeek(daily.created),
             row: [],
         };
 
         daily.HourlySet.forEach((hourly) => {
 
-          for (let i = 0; i < 3; i++) {
-
-                      sheet.row.push({
-                  cell: [
-                  {
-                      type: "th",
-                      value: " ",
-                  },
-              ],
-                  });
-
-                }
-
-                
-                 sheet.row.push({
-                  cell: [
-                  {
-                      type: "td",
-                      value: "Filipijnen",
-                  },
-                  {
-                      type: "th",
-                      value: " ",
-                  },
-                  {
-                      type: "td",
-                      value: `${formatTaipeiTime(hourly.Top[1])}`,
-                  },
-              ],
-                  });
-
-            sheet.row.push(
-                {
-                    cell: [
-                        {
-                            type: "th",
-                            value: "Preprocess ToDo",
-                        },
-                        {
-                            type: "td",
-                            value: hourly.Top[2],
-                        },
-                    ],
-                },
-                {
-                    cell: [
-                        {
-                            type: "th",
-                            value: "Validate ToDo",
-                        },
-                        {
-                            type: "td",
-                            value: hourly.Top[3],
-                        },
-                    ],
-                },
-                {
-                    cell: [
-                        {
-                            type: "th",
-                            value: "Qualitycheck ToDo",
-                        },
-                        {
-                            type: "td",
-                            value: hourly.Top[4],
-                        },
-                    ],
-                }
-
-              
-            );
-              sheet.row.forEach((e) => {
-              
-              for (let i = 0; i <30-e.cell.length; i++) {
-             e.cell.push({type: "th",
-                            value: " ",});
-             }
+            // spacing rows
+            sheet.row.push({
+                cell: createEmptyCells(3),
             });
+
+            // Location / time row
+            sheet.row.push({
+                cell: [
+                    {
+                        type: "td",
+                        value: "Filipijnen",
+                    },
+                    {
+                        type: "th",
+                        value: " ",
+                    },
+                    {
+                        type: "td",
+                        value: formatTaipeiTime(hourly.Top?.[1] ?? ""),
+                    },
+                ],
+            });
+
+            // Task rows
+            const tasks = [
+                ["Preprocess ToDo", hourly.Top?.[2]],
+                ["Validate ToDo", hourly.Top?.[3]],
+                ["Qualitycheck ToDo", hourly.Top?.[4]],
+            ];
+
+            tasks.forEach(([label, value]) => {
+                sheet.row.push({
+                    cell: [
+                        {
+                            type: "th",
+                            value: label,
+                        },
+                        {
+                            type: "td",
+                            value: value ?? "",
+                        },
+                    ],
+                });
+            });
+                 // Header
+        sheet.row.push({
+            cell: [
+                "#",
+                "Name",
+                "Last hour",
+                "ToDo",
+                "Todo",
+                "Todo",
+                "Total",
+                "End of day total",
+                "Inactivity Time",
+                "Pause Time",
+            ].map(value => ({
+                type: "th",
+                value,
+            })),  
+        });
+       
+
+          hourly.details?.DataTable.forEach(detail => {
+        sheet.row.push({
+          cell: Object.values(detail).map(value => ({
+            type: "td",
+            value: value?.toString() ?? "",
+          }))
+        });
+      });
+          for(let i =1; i < 5; i++) {
+             sheet.row.push({
+                cell: createEmptyCells(6),
+            });
+          }
+       
         });
 
-        SetSetting.push(sheet);
+
+        // Normalize all rows once
+        sheet.row = sheet.row.map(normalizeRow);
+
+        return sheet;
     });
+
 
     addSheet(SetSetting);
 };
+
 
 
 
