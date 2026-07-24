@@ -44,6 +44,7 @@ HourlySet:WholeHourlySet[];
 type WholeHourlySet = {
  Top: any[];
  details?: DataDetailMore;
+ bottom?:bottom[];
 
 };
 
@@ -105,6 +106,7 @@ DailytHourlyrecordFor = async (date: string, end?: string): Promise<dailySET[]> 
         const created = new Date(e.created_at);
         const top = await this.TopTableByid(e.id);
         const details = await this.loadDetailBySinglefId(e.id);
+        const bottom = await this.BottomTableById(e.id);
 
        let daily = sets.find(() => {
     const createdDate = new Date(created);
@@ -143,6 +145,7 @@ DailytHourlyrecordFor = async (date: string, end?: string): Promise<dailySET[]> 
         daily.HourlySet.push({
             Top: top,
             details: details, 
+            bottom: bottom,
         });
     }
 
@@ -299,7 +302,8 @@ latestRefIdsDailyWithDateRange = async (): Promise<RefRow[]> => {
     const { data, error } = await this.supabase
     .from("RECORD_DETAILS")
     .select("*")
-    .eq("RecordRef", id);
+    .eq("RecordRef", id)
+    .neq("Name", "Average");
 
     if (error || !data) {
         throw error ?? new Error("Record not found");
@@ -368,6 +372,26 @@ BottomTable = async (): Promise<bottom[]> => {
    
     return data as bottom[];
 }
+
+BottomTableById = async (ref: number): Promise<bottom[]> => {
+
+   
+
+    const { data, error } = await this.supabase
+        .from("Bottom_Record")
+        .select("*")
+        .eq("ref", ref);
+
+    if (error || !data) {
+        throw error ?? new Error("Bottom_Record not found");
+    }
+
+    
+   
+    return data as bottom[];
+}
+
+
 
             BottomTableTotal = async (ref:number): Promise<number> => {
               

@@ -1,6 +1,8 @@
 import './TableViewer.css'
 import { useEffect, useState } from 'react';
+import DataLoading from '../DataLoading';
 import DataBack from '../../Back/DataCrud';
+
 
 interface SheetData {
   name: string;
@@ -63,6 +65,15 @@ type DataDetailMore = {
     active:number;
 };
 
+
+type bottom = {
+SolutionGroup:string;
+LastHour:number;
+Todo:number;
+Total:number;
+
+};
+
 type dailySET ={
 created:string;
 HourlySet:WholeHourlySet[];
@@ -71,6 +82,7 @@ HourlySet:WholeHourlySet[];
 type WholeHourlySet = {
  Top: any[];
  details?: DataDetailMore;
+ bottom?:bottom[];
 
 };
 
@@ -94,6 +106,7 @@ const TableViewer: React.FC<TableViewerProps> =  ({
 }) => {
   const [viewMode, setViewMode] = useState<'SHEET' | 'PDF'>('SHEET');
   const [activeSheetIndex, setActiveSheetIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [sheets,addSheet] = useState<SheetData[]>([]);
   const [documentContent] = useState<string>(defaultDocumentContent);
  
@@ -340,6 +353,11 @@ const formatTaipeiTime = (timestamp: string): string => {
                         type: "th",
                         value: " ",
                     },
+                      {
+                        type: "th",
+                        value: " ",
+                    },
+                    
                     {
                         type: "td",
                         value: formatTaipeiTime(hourly.Top?.[1] ?? ""),
@@ -396,6 +414,24 @@ const formatTaipeiTime = (timestamp: string): string => {
           }))
         });
       });
+
+
+       for(let i =1; i < 3; i++) {
+             sheet.row.push({
+                cell: createEmptyCells(6),
+            });
+          }
+
+               hourly.bottom?.forEach(detail => {
+        sheet.row.push({
+          cell: Object.values(detail).map(value => ({
+            type: "td",
+            value: value?.toString() ?? "",
+          }))
+        });
+      });
+
+
           for(let i =1; i < 5; i++) {
              sheet.row.push({
                 cell: createEmptyCells(6),
@@ -413,6 +449,7 @@ const formatTaipeiTime = (timestamp: string): string => {
 
 
     addSheet(SetSetting);
+    setLoading(false);
 };
 
 
@@ -479,6 +516,7 @@ const formatTaipeiTime = (timestamp: string): string => {
           </div>
 
           <div className="tv-body">
+             {loading ? <div className="loadingContainer"><DataLoading /></div> : null}
             {viewMode === 'SHEET' ? (
               <div className="tv-sheet-view">
                 <div className="tv-sheet-toolbar">
