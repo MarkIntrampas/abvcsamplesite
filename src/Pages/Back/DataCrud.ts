@@ -330,6 +330,40 @@ latestRefIdsDailyWithDateRange = async (): Promise<RefRow[]> => {
     } as DataDetailMore;
 };
 
+lastmonthTotal = async (): Promise<number> => {
+
+   const now = new Date();
+const taipeiNow = new Date(
+  now.toLocaleString("en-US", { timeZone: "Asia/Taipei" })
+);
+
+const year = taipeiNow.getFullYear();
+const month = taipeiNow.getMonth();
+
+// First day of previous month (Taipei)
+const startTaipei = new Date(year, month - 1, 1, 0, 0, 0, 0);
+
+// Last day of previous month (Taipei)
+const endTaipei = new Date(year, month, 0, 23, 59, 59, 999);
+
+// Convert Taipei time to UTC
+const startUtc = new Date(startTaipei.getTime() - 8 * 60 * 60 * 1000);
+const endUtc = new Date(endTaipei.getTime() - 8 * 60 * 60 * 1000);
+
+const ref = await this.RefIdsBaseoonDate(
+  startUtc.toISOString(),
+  endUtc.toISOString()
+);
+
+    let lastMonthTotal = 0;
+
+    for (const row of ref) {
+        lastMonthTotal += await this.BottomTableTotal(row.id);
+    }
+
+
+    return lastMonthTotal;
+};
 
 
  DailyTotal = async (): Promise<number> => {
@@ -409,6 +443,9 @@ BottomTableById = async (ref: number): Promise<bottom[]> => {
 
                 return total;
             };
+
+
+     
         
 
  hourlyTotal = async (): Promise<{ id: number; datetime: string; total: number }[]> => {
