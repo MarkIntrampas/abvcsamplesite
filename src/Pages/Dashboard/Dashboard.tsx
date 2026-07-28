@@ -91,6 +91,7 @@ const Dashboard: React.FC = () => {
  const [dataLoad , loadData] = useState< DataDetailMore>();
  const [topTable, setTopData] = useState<any[]>([]);
  const [bottomTable, setBottomTable] = useState<bottom[]>([]);
+ const [totalLastMonth, setTotalLastMonth] = useState<number>(0);
  const [hourlyTotals, setHourlyTotals] = useState<{ id: number; datetime: string; total: number }[]>([]);
 const [DailyTotals, setDailyTotal] = useState<{ id: number; datetime: string; total: number }[]>([]);
 
@@ -158,6 +159,7 @@ const loadDataFromTellerRecord = async ()=>{
   const bottomdata= await Data.BottomTable();
   const hourly = await Data.hourlyTotal();
   const daily = await Data.DailyTotalInAweek();
+  const lastMonthTotal = await Data.lastmonthTotal();
 
   
   loadData(Teller);
@@ -165,6 +167,7 @@ const loadDataFromTellerRecord = async ()=>{
   setBottomTable(bottomdata);
   setHourlyTotals(hourly);
   setDailyTotal(daily);
+  setTotalLastMonth(lastMonthTotal);
   
   
  
@@ -886,10 +889,23 @@ const formatNumber = (
                     <div className="mini-stat-trend">↑ 12%</div>
                   </div>
                   <div className="mini-stat">
-                    <div className="mini-stat-label">Accuracy Rate</div>
-                    <div className="mini-stat-val">99.2%</div>
-                    <div className="mini-stat-sub">Data validation pass</div>
-                    <div className="mini-stat-trend">↑ 0.4%</div>
+
+
+                      {!totalLastMonth ? (
+                      <>
+                      <div className="mini-stat-label">Last Month Total</div>
+                      <DataLoading />
+                      </>
+                    ) : (
+                      <>
+                          <div className="mini-stat-label">Last Month Total</div>
+                          <div className="mini-stat-val">{totalLastMonth?.toLocaleString()}</div>
+                          <div className="mini-stat-sub">Data validation pass</div>
+                          <div className="mini-stat-trend">↑ 0.4%</div>
+                      </>
+                    )}
+
+                 
                   </div>
                   <div className="mini-stat">
                     <div className="mini-stat-label">SLA Compliance</div>

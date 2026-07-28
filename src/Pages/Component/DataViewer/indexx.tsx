@@ -422,14 +422,16 @@ const formatTaipeiTime = (timestamp: string): string => {
             });
           }
 
-               hourly.bottom?.forEach(detail => {
+         hourly.bottom?.forEach(detail => {
         sheet.row.push({
-          cell: Object.values(detail).map(value => ({
+          cell: Object.values(detail).map((value) => ({
             type: "td",
             value: value?.toString() ?? "",
-          }))
+          })),
         });
-      });
+      });   
+
+
 
 
           for(let i =1; i < 5; i++) {

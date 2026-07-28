@@ -356,10 +356,20 @@ const ref = await this.RefIdsBaseoonDate(
 );
 
     let lastMonthTotal = 0;
+      console.log(ref.length  + " records found for last month");
+      
+ for (const row of ref) {
+    const date = new Date(row.created_at);
 
-    for (const row of ref) {
+    const timeInMinutes =
+        date.getUTCHours() * 60 + date.getUTCMinutes();
+
+
+    if (timeInMinutes >= (20 * 60 + 59) && timeInMinutes <= (22 * 60)) {
         lastMonthTotal += await this.BottomTableTotal(row.id);
+        console.log(`Adding total for ref ${row.id}: ${lastMonthTotal} at ${row.created_at}   `);
     }
+}
 
 
     return lastMonthTotal;
