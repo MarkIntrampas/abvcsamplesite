@@ -187,6 +187,13 @@
   background:  #E91F68;
 }
 
+.tv-date-range-error{
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 600;
+  text-align: center;
+}
+
 /* Shared export button */
 .tv-export-btn {
   display: flex;

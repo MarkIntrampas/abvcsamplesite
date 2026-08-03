@@ -101,7 +101,6 @@ const defaultDocumentContent =
 const TableViewer: React.FC<TableViewerProps> =  ({
   closeOpenAction,
   date,
-  start,
   end,
 }) => {
   const [viewMode, setViewMode] = useState<'SHEET' | 'PDF'>('SHEET');
@@ -251,8 +250,7 @@ const loadDataFromQuery = async () => {
 
 
   } else {
-    alert(start);
-    alert(end);
+    setLoading(false);
   }
 };
 
@@ -260,21 +258,22 @@ const loadDataFromQuery = async () => {
 
 const loadDataFromQueryonClick = async () => {
 
-  alert("Data load clicked");
+  
+  setLoading(true);
   const DataQqeru = new DataBack();
   
-  if (date != null) {
+  if (startInput != null && endInput != null) {
     const data = await DataQqeru.DailytHourlyrecordFor(startInput, endInput);
   
    
    setDailySet(data);
-   alert("Data loaded successfully!");
+
 
 
 
   } else {
-    alert(start);
-    alert(end);
+    alert("Please provide both start and end dates.");
+    alert(`Start: ${startInput}, End: ${endInput}`);
   }
 };
 
@@ -519,6 +518,12 @@ const formatTaipeiTime = (timestamp: string): string => {
 
           <div className="tv-body">
              {loading ? <div className="loadingContainer"><DataLoading /></div> : null}
+              {date===null ? <div className="loadingContainer"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <line x1="12" y1="8" x2="12" y2="12"></line>
+  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+  </svg>
+  <h3 className="tv-date-range-error">Please select a date range.</h3></div> : null}
             {viewMode === 'SHEET' ? (
               <div className="tv-sheet-view">
                 <div className="tv-sheet-toolbar">
