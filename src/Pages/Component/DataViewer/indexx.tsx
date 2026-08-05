@@ -1,5 +1,6 @@
 import './TableViewer.css'
 import { useEffect, useState } from 'react';
+import * as XLSX from "xlsx";
 import DataLoading from '../DataLoading';
 import DataBack from '../../Back/DataCrud';
 
@@ -112,10 +113,7 @@ const TableViewer: React.FC<TableViewerProps> =  ({
   const activeSheet = sheets[activeSheetIndex];
   const [startInput, setStartInputValue] = useState<string>("");
   const [endInput, setEndInputValue] = useState<string>("");
-  const handleExportSheet = () => {
-    // TODO: wire up real export logic (e.g. SheetJS) here
-    console.log('Export sheet:', activeSheet.name);
-  };
+ 
 
   useEffect(() => {
  
@@ -424,11 +422,64 @@ const formatTaipeiTime = (timestamp: string): string => {
 
 
 
-  const handleExportPdf = () => {
-    // TODO: wire up real export logic here
-    console.log('Export document as PDF');
-  };
 
+const handleExportPdf = () => {
+
+};
+
+  const handleExportSheet = () => {
+  if (sheets.length === 0) {
+    alert("There is no report to export.");
+    return;
+  }
+
+  // Create workbook
+  const workbook = XLSX.utils.book_new();
+
+  sheets.forEach((sheet) => {
+    // Convert your rows/cells into a 2D array
+    const worksheetData = sheet.row.map((row) =>
+      row.cell.map((cell) => cell.value)
+    );
+
+    // Create worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // Auto-size columns
+    const maxCols = Math.max(...worksheetData.map((r) => r.length));
+
+    worksheet["!cols"] = Array.from({ length: maxCols }, (_, col) => {
+      const width = Math.max(
+        ...worksheetData.map((row) =>
+          row[col] ? row[col].toString().length : 0
+        )
+      );
+
+      return {
+        wch: Math.min(Math.max(width + 2, 12), 40),
+      };
+    });
+
+    // Excel sheet names are limited to 31 characters
+    const sheetName = sheet.name.substring(0, 31);
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+  });
+
+   const firstDate = sheets[0].name;
+  const lastDate = sheets[sheets.length - 1].name;
+
+  let fileName: string;
+
+  if (firstDate === lastDate) {
+    fileName = `Teller record for ${firstDate}.xlsx`;
+  } else {
+    fileName = `Teller record for ${firstDate} - ${lastDate}.xlsx`;
+  }
+
+  XLSX.writeFile(workbook, fileName);
+
+};
 
  
 
