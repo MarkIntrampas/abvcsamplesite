@@ -1,6 +1,6 @@
 import './TableViewer.css'
 import { useEffect, useState } from 'react';
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 import DataLoading from '../DataLoading';
 import DataBack from '../../Back/DataCrud';
 
@@ -358,8 +358,6 @@ const formatTaipeiTime = (timestamp: string): string => {
                 "Name",
                 "Last hour",
                 "ToDo",
-                "Todo",
-                "Todo",
                 "Total",
                 "End of day total",
                 "Inactivity Time",
@@ -371,14 +369,16 @@ const formatTaipeiTime = (timestamp: string): string => {
         });
        
 
-          hourly.details?.DataTable.forEach(detail => {
-        sheet.row.push({
-          cell: Object.values(detail).map(value => ({
-            type: "td",
-            value: value?.toString() ?? "",
-          }))
-        });
-      });
+        hourly.details?.DataTable.forEach(detail => {
+  sheet.row.push({
+    cell: Object.values(detail)
+      .slice(0, -2) // remove last and second-to-last columns
+      .map(value => ({
+        type: "td",
+        value: value?.toString() ?? "",
+      }))
+  });
+});
 
 
        for(let i =1; i < 3; i++) {
@@ -427,23 +427,119 @@ const handleExportPdf = () => {
 
 };
 
-  const handleExportSheet = () => {
+ const handleExportSheet = () => {
   if (sheets.length === 0) {
     alert("There is no report to export.");
     return;
   }
 
-  // Create workbook
   const workbook = XLSX.utils.book_new();
 
   sheets.forEach((sheet) => {
-    // Convert your rows/cells into a 2D array
+
     const worksheetData = sheet.row.map((row) =>
       row.cell.map((cell) => cell.value)
     );
 
-    // Create worksheet
     const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+    // Apply styles based on your original TableViewer cell type
+    sheet.row.forEach((row, rowIndex) => {
+      row.cell.forEach((cell, colIndex) => {
+
+        const address = XLSX.utils.encode_cell({
+          r: rowIndex,
+          c: colIndex,
+        });
+        
+   const shouldFillCell = (
+  value: any,
+  row: SheetData["row"][number],
+  colIndex: number
+): boolean => {
+
+  const text = value?.toString().trim() ?? "";
+
+  // Detect time formats:
+  // 7:00 PM, 07:00 PM, 19:00, 07:00
+  const isTime = /^(\d{1,2}):(\d{2})(\s?(AM|PM))?$/i.test(text);
+
+  // Skip only the time cell beside "Filipijnen"
+  const isFilipijnenTime =
+    row.cell[0]?.value === "Filipijnen" &&
+    colIndex === 3 &&
+    isTime;
+
+  if (isFilipijnenTime) {
+    return false;
+  }
+
+  // Blank cell handling
+  if (text === "") {
+
+    // If this is the ToDo column and first column is a number, fill it
+const firstColumnValue = row.cell[0]?.value?.toString().trim();
+
+const firstColumnIsNumber =
+  firstColumnValue !== "" &&
+  firstColumnValue !== null &&
+  firstColumnValue !== undefined &&
+  !isNaN(Number(firstColumnValue));
+
+const isTodoColumn = colIndex === 5;
+
+if (isTodoColumn && firstColumnIsNumber) {
+  return true;
+}
+
+    return false;
+  }
+
+  return true;
+};
+
+        if (!worksheet[address]) return;
+
+        const isHeader = cell.type === "th";
+
+        worksheet[address].s = {
+         font: {
+            name: "Tahoma",
+            sz: cell.value?.toString().trim() === "Filipijnen" ? 18 : 10,
+            bold: isHeader,
+          },
+          alignment: {
+            vertical: "center",
+            horizontal: isHeader ? "center" : "left",
+            wrapText: true,
+          },
+          border: {
+            top: {
+              style: "thin",
+              color: { rgb: "D9D9D9" },
+            },
+            bottom: {
+              style: "thin",
+              color: { rgb: "D9D9D9" },
+            },
+            left: {
+              style: "thin",
+              color: { rgb: "D9D9D9" },
+            },
+            right: {
+              style: "thin",
+              color: { rgb: "D9D9D9" },
+            },
+          },
+         fill: shouldFillCell(cell.value, row, colIndex)
+  ? {
+      fgColor: { rgb: "E7E6E6" },
+    }
+  : undefined,
+        };
+      });
+    });
+
 
     // Auto-size columns
     const maxCols = Math.max(...worksheetData.map((r) => r.length));
@@ -460,13 +556,15 @@ const handleExportPdf = () => {
       };
     });
 
+
     // Excel sheet names are limited to 31 characters
     const sheetName = sheet.name.substring(0, 31);
 
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
   });
 
-   const firstDate = sheets[0].name;
+
+  const firstDate = sheets[0].name;
   const lastDate = sheets[sheets.length - 1].name;
 
   let fileName: string;
@@ -476,9 +574,7 @@ const handleExportPdf = () => {
   } else {
     fileName = `Teller record for ${firstDate} - ${lastDate}.xlsx`;
   }
-
-  XLSX.writeFile(workbook, fileName);
-
+ XLSX.writeFile(workbook, fileName);
 };
 
  
