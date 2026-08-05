@@ -96,58 +96,60 @@ class DataBack {
     }));
         };
 
-DailytHourlyrecordFor = async (date: string, end?: string): Promise<dailySET[]> => {
+DailytHourlyrecordFor = async (
+    date: string,
+    end?: string
+): Promise<dailySET[]> => {
     const ids = await this.RefIdsBaseoonDate(date, end);
 
+    console.log("ids length:", ids.length);
+
     const sets: dailySET[] = [];
-    let tempDate = "";
+
     for (const e of ids) {
-      
         const created = new Date(e.created_at);
+
         const top = await this.TopTableByid(e.id);
         const details = await this.loadDetailBySinglefId(e.id);
         const bottom = await this.BottomTableById(e.id);
 
-       let daily = sets.find(() => {
-    const createdDate = new Date(created);
+        // Find an existing business-day group
+        let daily = sets.find((group) => {
+            const groupDate = new Date(group.created);
 
-    const start = new Date(createdDate);
-    start.setUTCHours(23, 0, 0, 0); 
+            const start = new Date(groupDate);
+            start.setUTCHours(23, 0, 0, 0);
 
-    // If record is before 22:00 UTC, it belongs to yesterday's business day
-    if (createdDate < start) {
-        start.setUTCDate(start.getUTCDate() - 1);
-    }
-
-    const end = new Date(start);
-    end.setUTCDate(end.getUTCDate() + 1);
-
-    return created >= start && created < end;
-});
-        if (!daily) {
-            if(sets.length>0){
-            sets[0].created=tempDate; // Update the last entry's created date
+            // If the group's created time is before 23:00 UTC,
+            // its business day started the previous calendar day.
+            if (groupDate < start) {
+                start.setUTCDate(start.getUTCDate() - 1);
             }
 
+            const end = new Date(start);
+            end.setUTCDate(end.getUTCDate() + 1);
+
+            return created >= start && created < end;
+        });
+
+        // Create a new business-day group if one doesn't exist
+        if (!daily) {
             daily = {
-                created:e.created_at, // Assuming the last entry in 'top' has the correct date
+                created: e.created_at,
                 HourlySet: [],
             };
-             tempDate = e.created_at;
+
             sets.push(daily);
         }
-         if(sets.length===1){
-           
-            sets[0].created=tempDate; // Update the last entry's created date
-           
-            }
 
         daily.HourlySet.push({
             Top: top,
-            details: details, 
+            details: details,
             bottom: bottom,
         });
     }
+
+    console.log("sets length:", sets.length);
 
     return sets;
 };
@@ -193,21 +195,21 @@ formatUTC = (date: Date) => {
 
 RefIdsBaseoonDate = async (date: string, end?: string): Promise<RefRow[]> => {
     
- const startDate = new Date(date);
- startDate.setUTCDate(startDate.getUTCDate() + 1);
-startDate.setUTCHours(23, 0, 0, 0);
+ 
 
 let endDate: Date;
+let startDate: Date;
 
-  if (end) {
-    endDate = new Date(end);
-  } else {
-    endDate = new Date(startDate);
+   startDate = new Date(date);
+    startDate.setUTCDate(end ? startDate.getUTCDate(): startDate.getUTCDate() + 1);
+    startDate.setUTCHours(23, 0, 0, 0);
+    
+    endDate = new Date(end ?? startDate);
     endDate.setUTCDate(endDate.getUTCDate() + 1);
     endDate.setUTCHours(22, 59, 0, 0);
-  }
-  console.log("startDateinRef:", startDate.toISOString());
-  console.log("endDateInRef:", endDate.toISOString());
+
+  console.log("startDateinRef:", this.formatUTC(startDate));
+  console.log("endDateInRef:", this.formatUTC(endDate));
 
   const { data, error } = await this.supabase.rpc(
     "data_record_reference_with_starting_date",
@@ -221,7 +223,7 @@ let endDate: Date;
     alert("error from RefIdsBaseoonDate");
     return [];
   }
-
+  
   return data as RefRow[];
 };
 

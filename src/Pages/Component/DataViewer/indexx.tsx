@@ -101,7 +101,6 @@ const defaultDocumentContent =
 const TableViewer: React.FC<TableViewerProps> =  ({
   closeOpenAction,
   date,
-  end,
 }) => {
   const [viewMode, setViewMode] = useState<'SHEET' | 'PDF'>('SHEET');
   const [activeSheetIndex, setActiveSheetIndex] = useState(0);
@@ -119,16 +118,14 @@ const TableViewer: React.FC<TableViewerProps> =  ({
   };
 
   useEffect(() => {
-   // alert(date);
-    setStartInputValue(date ? setStartInput(date) : "");
-    if(end){
-      setEndInputValue(end ? setStartInput(end) : "");
-    }else{
-      setEndInputValue(date ? autoEnd(date) : "");
-    }
+ 
   loadDataFromQuery();
 }, [date]);
 
+useEffect(() => {
+    setStartInputValue(date ? setStartInput(date) : "");
+    setEndInputValue(date ? setStartInput(date) : " ");
+},[]);
 
 useEffect(() => {
   console.log("DailySet updated length:", DailySet.length);
@@ -145,48 +142,17 @@ const setStartInput = (date: string): string => {
   if (isNaN(parsedDate.getTime())) {
     return "";
   }
- parsedDate.setHours(7, 0, 0, 0);
-  const formatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Taipei",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  });
-
-  const parts = formatter.formatToParts(parsedDate);
-
-  const get = (type: string) =>
-    parts.find((p) => p.type === type)?.value ?? "";
-
-  return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`;
-};
-
-
-
-const autoEnd = (date: string): string => {
-  const parsedDate = new Date(date);
-
-  if (isNaN(parsedDate.getTime())) {
-    return "";
-  }
-
-  // Move to the next day
-  parsedDate.setDate(parsedDate.getDate() + 1);
-
-  // Set time to 6:00 AM
-  parsedDate.setHours(6, 59, 0, 0);
 
   const year = parsedDate.getFullYear();
   const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
-  const day = String(parsedDate.getDate()).padStart(2, "0");
-  const hours = String(parsedDate.getHours()).padStart(2, "0");
-  const minutes = String(parsedDate.getMinutes()).padStart(2, "0");
+  const day = String(parsedDate.getDate()-1).padStart(2, "0");
 
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  return `${year}-${month}-${day}`;
 };
+
+
+
+
 
 
 
@@ -260,12 +226,14 @@ const loadDataFromQueryonClick = async () => {
 
   
   setLoading(true);
+  addSheet([]);
+setActiveSheetIndex(0);
   const DataQqeru = new DataBack();
   
   if (startInput != null && endInput != null) {
     const data = await DataQqeru.DailytHourlyrecordFor(startInput, endInput);
   
-   
+   console.log("Data fetched length:", data.length);
    setDailySet(data);
 
 
@@ -478,24 +446,34 @@ const formatTaipeiTime = (timestamp: string): string => {
 
           <div className="tv-header">
             <div className="tv-header-left">
-              <div className="tv-date-range">
-                <input
-                  type="datetime-local"
-                  className="tv-date-input start-date-input"
-                  value={startInput}
-                  onChange={(e) => setStartInputValue(e.target.value)}
-                />
-                <span className="tv-date-separator">to</span>
-                <input
-                  type="datetime-local"
-                  className="tv-date-input"
-                  value={endInput}
-                  onChange={(e) => setEndInputValue(e.target.value)}
-                />
-                <button className="tv-generate-btn" onClick={loadDataFromQueryonClick}>
-                  Generate
-                </button>
-              </div>
+            
+                    <div className="tv-date-range">
+                    
+                      <input
+                        type="date"
+                        className="tv-date-input start-date-input"
+                        value={startInput}
+                        onChange={(e) => setStartInputValue(e.target.value)}
+                      />
+
+                      <span className="tv-date-separator">to</span>
+
+                      <input
+                        type="date"
+                        className="tv-date-input"
+                        value={endInput}
+                        onChange={(e) => setEndInputValue(e.target.value)}
+                      />
+
+                      <button
+                        className="tv-generate-btn"
+                        onClick={loadDataFromQueryonClick}
+                      >
+                        Generate
+                      </button>
+                     
+                    </div>
+               
             </div>
 
             <div className="tv-pill">
@@ -518,7 +496,7 @@ const formatTaipeiTime = (timestamp: string): string => {
 
           <div className="tv-body">
              {loading ? <div className="loadingContainer"><DataLoading /></div> : null}
-              {date===null ? <div className="loadingContainer"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              {date===null && DailySet.length<=0  && !loading ? <div className="loadingContainer"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <circle cx="12" cy="12" r="10"></circle>
   <line x1="12" y1="8" x2="12" y2="12"></line>
   <line x1="12" y1="16" x2="12.01" y2="16"></line>
