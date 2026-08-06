@@ -395,20 +395,33 @@ const formatTaipeiTime = (timestamp: string): string => {
                 cell: createEmptyCells(6),
             });
           }
-
-         hourly.bottom?.forEach(detail => {
-        sheet.row.push({
-          cell: Object.values(detail).map((value) => ({
-            type: "td",
-            value: value?.toString() ?? "",
-          })),
+        
+         sheet.row.push({
+            cell: [
+                "SolutionGroup",
+                "Last hour",
+                "Todo",
+                "Total",
+            ].map(value => ({
+                type: "th",
+                value,
+            })),  
         });
-      });   
+        hourly.bottom?.forEach(detail => {
+        sheet.row.push({
+          cell: Object.values(detail)
+            .slice(0, -2) // remove last and second-to-last values
+            .map((value) => ({
+              type: "td",
+              value: value?.toString() ?? "",
+            })),
+        });
+      });  
 
       
        sheet.row.push({
         cell: [
-          ...createEmptyCells(6),
+          ...createEmptyCells(4),
         
           {
             type: "th",
@@ -494,8 +507,8 @@ const handleExportSheet = () => {
             return false;
           }
 
-          // Do not fill column index 6 if everything after it is blank
-          if (colIndex === 6) {
+          // Do not fill column index 4 if everything after it is blank
+          if (colIndex === 4) {
             const hasValueAfter = row.cell
               .slice(colIndex + 1)
               .some(
