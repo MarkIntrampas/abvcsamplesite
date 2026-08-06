@@ -301,7 +301,7 @@ const formatTaipeiTime = (timestamp: string): string => {
         };
 
         daily.HourlySet.forEach((hourly) => {
-
+            
             // spacing rows
             sheet.row.push({
                 cell: createEmptyCells(3),
@@ -315,11 +315,11 @@ const formatTaipeiTime = (timestamp: string): string => {
                         value: "Filipijnen",
                     },
                     {
-                        type: "th",
+                        type: "td",
                         value: " ",
                     },
                       {
-                        type: "th",
+                        type: "td",
                         value: " ",
                     },
                     
@@ -368,16 +368,25 @@ const formatTaipeiTime = (timestamp: string): string => {
             })),  
         });
        
+      let hourlyTotal = 0;
 
-        hourly.details?.DataTable.forEach(detail => {
-  sheet.row.push({
-    cell: Object.values(detail)
-      .slice(0, -2) // remove last and second-to-last columns
-      .map(value => ({
-        type: "td",
-        value: value?.toString() ?? "",
-      }))
-  });
+      hourly.details?.DataTable.forEach(detail => {
+        const values = Object.values(detail);
+
+        // Add the value at index 4 to the total
+        hourlyTotal += Number(values[4]) || 0;
+
+        sheet.row.push({
+          cell: values
+            .slice(0, -2) // remove last and second-to-last columns
+            .map(value => ({
+              type: "td",
+              value: value?.toString() ?? "",
+            }))
+        });
+
+     
+
 });
 
 
@@ -395,6 +404,18 @@ const formatTaipeiTime = (timestamp: string): string => {
           })),
         });
       });   
+
+      
+       sheet.row.push({
+        cell: [
+          ...createEmptyCells(6),
+        
+          {
+            type: "th",
+            value: hourlyTotal.toString(),
+          },
+        ],
+      });
 
 
 
@@ -427,7 +448,7 @@ const handleExportPdf = () => {
 
 };
 
- const handleExportSheet = () => {
+const handleExportSheet = () => {
   if (sheets.length === 0) {
     alert("There is no report to export.");
     return;
@@ -436,81 +457,98 @@ const handleExportPdf = () => {
   const workbook = XLSX.utils.book_new();
 
   sheets.forEach((sheet) => {
-
     const worksheetData = sheet.row.map((row) =>
       row.cell.map((cell) => cell.value)
     );
 
     const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
 
-    // Apply styles based on your original TableViewer cell type
+    // Apply styles
     sheet.row.forEach((row, rowIndex) => {
       row.cell.forEach((cell, colIndex) => {
-
         const address = XLSX.utils.encode_cell({
           r: rowIndex,
           c: colIndex,
         });
-        
-   const shouldFillCell = (
-  value: any,
-  row: SheetData["row"][number],
-  colIndex: number
-): boolean => {
-
-  const text = value?.toString().trim() ?? "";
-
-  // Detect time formats:
-  // 7:00 PM, 07:00 PM, 19:00, 07:00
-  const isTime = /^(\d{1,2}):(\d{2})(\s?(AM|PM))?$/i.test(text);
-
-  // Skip only the time cell beside "Filipijnen"
-  const isFilipijnenTime =
-    row.cell[0]?.value === "Filipijnen" &&
-    colIndex === 3 &&
-    isTime;
-
-  if (isFilipijnenTime) {
-    return false;
-  }
-
-  // Blank cell handling
-  if (text === "") {
-
-    // If this is the ToDo column and first column is a number, fill it
-const firstColumnValue = row.cell[0]?.value?.toString().trim();
-
-const firstColumnIsNumber =
-  firstColumnValue !== "" &&
-  firstColumnValue !== null &&
-  firstColumnValue !== undefined &&
-  !isNaN(Number(firstColumnValue));
-
-const isTodoColumn = colIndex === 5;
-
-if (isTodoColumn && firstColumnIsNumber) {
-  return true;
-}
-
-    return false;
-  }
-
-  return true;
-};
 
         if (!worksheet[address]) return;
 
+        const shouldFillCell = (
+          value: any,
+          row: SheetData["row"][number],
+          colIndex: number
+        ): boolean => {
+          const text = value?.toString().trim() ?? "";
+
+          // Detect time formats
+          const isTime =
+            /^(\d{1,2}):(\d{2})(\s?(AM|PM))?$/i.test(text);
+
+          // Skip only the time beside "Filipijnen"
+          const isFilipijnenTime =
+            row.cell[0]?.value === "Filipijnen" &&
+            colIndex === 3 &&
+            isTime;
+
+          if (isFilipijnenTime) {
+            return false;
+          }
+
+          // Do not fill column index 6 if everything after it is blank
+          if (colIndex === 6) {
+            const hasValueAfter = row.cell
+              .slice(colIndex + 1)
+              .some(
+                (c) =>
+                  (c.value?.toString().trim() ?? "") !== ""
+              );
+
+            if (!hasValueAfter) {
+              return false;
+            }
+          }
+
+          // Blank cell handling
+          if (text === "") {
+            const firstColumnValue =
+              row.cell[0]?.value?.toString().trim();
+
+            const firstColumnIsNumber =
+              firstColumnValue !== "" &&
+              firstColumnValue !== null &&
+              firstColumnValue !== undefined &&
+              !isNaN(Number(firstColumnValue));
+
+            const isTodoColumn = colIndex === 5;
+
+            // Fill ToDo column only when first column is numeric
+            if (isTodoColumn && firstColumnIsNumber) {
+              return true;
+            }
+
+            return false;
+          }
+
+          return true;
+        };
+
         const isHeader = cell.type === "th";
 
+        const isFilipijnen =
+          cell.value?.toString().trim() === "Filipijnen";
+
         worksheet[address].s = {
-         font: {
-            name: "Tahoma",
-            sz: cell.value?.toString().trim() === "Filipijnen" ? 18 : 10,
+          font: {
+            name: isFilipijnen ? "Dosis" : "Tahoma",
+            sz: isFilipijnen ? 18 : 10,
             bold: isHeader,
-          },
+              color: isFilipijnen
+        ? { rgb: "A48888" }
+        : { rgb: "000000" },
+              },
           alignment: {
             vertical: "center",
-            horizontal: isHeader ? "center" : "left",
+            horizontal: "left",
             wrapText: true,
           },
           border: {
@@ -531,15 +569,14 @@ if (isTodoColumn && firstColumnIsNumber) {
               color: { rgb: "D9D9D9" },
             },
           },
-         fill: shouldFillCell(cell.value, row, colIndex)
-  ? {
-      fgColor: { rgb: "E7E6E6" },
-    }
-  : undefined,
+          fill: shouldFillCell(cell.value, row, colIndex)
+            ? {
+                fgColor: { rgb: "E7E6E6" },
+              }
+            : undefined,
         };
       });
     });
-
 
     // Auto-size columns
     const maxCols = Math.max(...worksheetData.map((r) => r.length));
@@ -556,28 +593,22 @@ if (isTodoColumn && firstColumnIsNumber) {
       };
     });
 
-
     // Excel sheet names are limited to 31 characters
     const sheetName = sheet.name.substring(0, 31);
 
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
   });
 
-
   const firstDate = sheets[0].name;
   const lastDate = sheets[sheets.length - 1].name;
 
-  let fileName: string;
+  const fileName =
+    firstDate === lastDate
+      ? `Teller record for ${firstDate}.xlsx`
+      : `Teller record for ${firstDate} - ${lastDate}.xlsx`;
 
-  if (firstDate === lastDate) {
-    fileName = `Teller record for ${firstDate}.xlsx`;
-  } else {
-    fileName = `Teller record for ${firstDate} - ${lastDate}.xlsx`;
-  }
- XLSX.writeFile(workbook, fileName);
+  XLSX.writeFile(workbook, fileName);
 };
-
- 
 
   return (
     <div className="tv-overlay">
